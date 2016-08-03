@@ -1,0 +1,110 @@
+Name:                   pinpon
+Version:                0.0.0.0
+Cabal-Version:          >= 1.10
+Build-Type:             Simple
+Author:                 Drew Hess <src@drewhess.com>
+Maintainer:             Drew Hess <src@drewhess.com>
+-- Homepage:
+-- Bug-Reports:
+Stability:              experimental
+License:                BSD3
+License-File:           LICENSE
+Copyright:              Copyright (c) 2016, Drew Hess
+-- Tested-With:
+-- Category:
+-- Synopsis:               
+-- Description:            
+Extra-Doc-Files:        README.md
+Extra-Source-Files:     changelog.md
+
+-- Build doctests
+Flag test-doctests
+  Default: True
+  Manual: True
+
+-- Build hlint test
+Flag test-hlint
+  Default: True
+  Manual: True
+
+-- Build the executable
+Flag executable
+  Default: True
+  Manual: True
+
+Library
+  Default-Language:     Haskell2010
+  HS-Source-Dirs:       src
+  GHC-Options:          -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  If impl(ghc > 8)
+    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  Else
+    -- provide/emulate `Control.Monad.Fail` and `Data.Semigroups` API for pre-GHC8
+    Build-Depends:      fail == 4.9.*
+                      , semigroups == 0.18.*
+  Exposed-Modules:      Network.PinPon
+                      , Network.PinPon.Actions
+  Other-Modules:        Network.PinPon.Internal
+  Other-Extensions:     Safe
+                      , Trustworthy
+  Build-Depends:        base >= 4 && < 5
+
+Executable pinpon
+  Main-Is:              Main.hs
+  Default-Language:     Haskell2010
+  HS-Source-Dirs:       pinpon
+  GHC-Options:          -Wall -threaded
+  If impl(ghc > 8)
+    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints -fno-warn-redundant-constraints
+  If !flag(executable)
+    Buildable:          False
+  Else
+    Build-Depends:      base >= 4 && < 5
+                      , optparse-applicative >= 0.11.0 && < 0.13
+                      , pinpon
+
+Test-Suite hlint
+  Type:                 exitcode-stdio-1.0
+  Default-Language:     Haskell2010
+  Hs-Source-Dirs:       test
+  Ghc-Options:          -w -threaded -rtsopts -with-rtsopts=-N
+  Main-Is:              hlint.hs
+  If !flag(test-hlint)
+    Buildable: False
+  Else
+    Build-Depends:      base
+                      , hlint
+
+Test-Suite doctest
+  Type:                 exitcode-stdio-1.0
+  Default-Language:     Haskell2010
+  Hs-Source-Dirs:       test
+  Ghc-Options:          -Wall -threaded
+  If impl(ghc > 8)
+    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints -fno-warn-redundant-constraints
+  Main-Is:              doctest.hs
+  If !flag(test-doctests)
+    Buildable: False
+  Else
+    Build-Depends:      base
+                      , doctest >= 0.10.1 && < 1
+
+Test-Suite spec
+  Type:                 exitcode-stdio-1.0
+  Default-Language:     Haskell2010
+  Hs-Source-Dirs:       src
+                      , test
+  Ghc-Options:          -w -threaded -rtsopts -with-rtsopts=-N
+  Main-Is:              Spec.hs
+  Build-Depends:        base
+                      , hspec
+  Other-Modules:        Network.PinPon
+
+Source-Repository head
+  Type:                 git
+  --  Location:             
+
+Source-Repository this
+  Type:                 git
+  -- Location:
+  -- Tag:               v0.0.0.0
