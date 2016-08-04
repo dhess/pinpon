@@ -1,3 +1,3 @@
-module Network.PinPon where
-
-import Network.PinPon.Internal
+module Network.PinPon
+  ()
+  where

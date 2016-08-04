@@ -1,92 +1,68 @@
-module Main where
+ {-# LANGUAGE OverloadedStrings #-}
 
-import Network.PinPon.Actions (greet, sup, ciao, goodbye)
-import Options.Applicative
+ module Main where
 
-data Verbosity
-  = Normal
-  | Verbose
+ import            Control.Lens
+ import            Control.Monad
+ import            Control.Monad.Catch (throwM)
+ import            Control.Monad.IO.Class
+ import            Control.Monad.Trans.AWS
+ import            Data.Text                (Text)
+ import qualified  Data.Text                as Text
+ import qualified  Data.Text.IO             as Text
+ import            Data.Time.Clock.POSIX
+ import            Network.AWS (AWS)
+ import            Network.AWS.EC2
+ import            System.IO
 
-data GlobalOptions =
-  GlobalOptions {quiet :: Bool
-                ,verbose :: Verbosity
-                ,cmd :: Command}
+ main :: IO ()
+ main = do
+     hSetBuffering stdout LineBuffering
 
-data Command
-  = Hello HelloOptions
-  | Sup String
-  | Ciao
-  | GoodBye GoodByeOptions
+     ts  <- Text.pack . show <$> getTimestamp
+     env <- newEnv Oregon Discover
+     r   <- runResourceT . runAWST env $ do
+         say "Create KeyPair " ts
+         k <- send (createKeyPair ts)
 
-data HelloOptions =
-  HelloOptions {greeting :: String
-               ,target :: String}
+         let key    = Text.unpack ts ++ ".pem"
+             trusty = "ami-d732f0b7" -- hvm:ebs-ssd for us-west-2
 
-data GoodByeOptions =
-  GoodByeOptions {signoff :: String
-                 ,goodbyeTarget :: String}
+         say "Writing KeyPair material to " key
+         liftIO (Text.writeFile key (k ^. ckprsKeyMaterial))
 
-helloCmd :: Parser Command
-helloCmd = Hello <$> helloOptions
+         say "Create SecurityGroup " ts
+         g <- view csgrsGroupId <$>
+             send (createSecurityGroup ts "amazonka-examples")
 
-helloOptions :: Parser HelloOptions
-helloOptions =
-  HelloOptions <$>
-  strOption (long "greeting" <>
-             short 'g' <>
-             value "Hello" <>
-             metavar "GREETING" <>
-             help "The greeting") <*>
-  argument str (metavar "TARGET")
+         say "Authorizing SSH on SecurityGroup " g
+         void . send $ authorizeSecurityGroupIngress
+             & asgiGroupId    ?~ g
+             & asgiIPProtocol ?~ "tcp"
+             & asgiFromPort   ?~ 22
+             & asgiToPort     ?~ 22
+             & asgiCIdRIP     ?~ "0.0.0.0/0"
 
-supCmd :: Parser Command
-supCmd =
-  Sup <$>
-  (argument str (metavar "TARGET"))
+         say "Launching Instance with ImageId " trusty
+         i <- trying _Error $ send $ runInstances trusty 1 1
+             & rKeyName          ?~ ts
+             & rInstanceType     ?~ T2_Micro
+             & rSecurityGroupIds .~ [g]
 
-goodByeCmd :: Parser Command
-goodByeCmd = GoodBye <$> goodByeOptions
+         either (\e -> do
+                    say "Failed to Launch Instance " e
+                    say "Deleting SecurityGroup " g
+                    void . send $ deleteSecurityGroup & dsgGroupId ?~ g
+                    say "Deleting KeyPair " ts
+                    void . send $ deleteKeyPair ts
+                    throwM e)
+                return
+                i
 
-goodByeOptions :: Parser GoodByeOptions
-goodByeOptions =
-  GoodByeOptions <$>
-  strOption (long "signoff" <>
-             short 's' <>
-             value "Bye" <>
-             metavar "SIGNOFF" <>
-             help "The signoff") <*>
-  argument str (metavar "TARGET")
+     print r
 
-cmds :: Parser GlobalOptions
-cmds =
-  GlobalOptions <$>
-  switch (long "quiet" <>
-          short 'q' <>
-          help "Be quiet") <*>
-  flag Normal
-       Verbose
-       (long "verbose" <>
-        short 'v' <>
-        help "Enable verbose mode") <*>
-  hsubparser
-    (command "hello" (info helloCmd (progDesc "Say hello")) <>
-     command "sup" (info supCmd (progDesc "Informal greeting")) <>
-     command "ciao"
-             (info (pure Ciao)
-                   (progDesc "Informal goodbye")) <>
-     command "goodbye" (info goodByeCmd (progDesc "Say goodbye")))
+ getTimestamp :: IO Integer
+ getTimestamp = truncate <$> getPOSIXTime
 
-run :: GlobalOptions -> IO ()
-run (GlobalOptions False _ (Hello (HelloOptions g t))) = greet g t
-run (GlobalOptions False _ (Sup t)) = sup t
-run (GlobalOptions False _ Ciao) = ciao
-run (GlobalOptions False _ (GoodBye (GoodByeOptions s t))) = goodbye s t
-run _ = return ()
-
-main :: IO ()
-main = execParser opts >>= run
-  where opts =
-          info (helper <*> cmds)
-               (fullDesc <>
-                progDesc "Say hello and goodbye" <>
-                header "pinpon-cmd - a command-based CLI for pinpon")
+ say :: Show a => Text -> a -> AWS ()
+ say msg = liftIO . Text.putStrLn . mappend msg . Text.pack . show

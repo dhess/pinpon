@@ -4,16 +4,19 @@ Cabal-Version:          >= 1.10
 Build-Type:             Simple
 Author:                 Drew Hess <src@drewhess.com>
 Maintainer:             Drew Hess <src@drewhess.com>
--- Homepage:
--- Bug-Reports:
+Homepage:               https://github.com/dhess/pinpon/
+Bug-Reports:            https://github.com/dhess/pinpon/issues/
 Stability:              experimental
 License:                BSD3
 License-File:           LICENSE
 Copyright:              Copyright (c) 2016, Drew Hess
--- Tested-With:
--- Category:
--- Synopsis:               
--- Description:            
+Tested-With:            GHC == 8.0.1
+Category:               Network
+Synopsis:               A network-enabled doorbell service
+Description:
+  @pinpon@ is a network-enabled doorbell service. It uses Amazon SNS
+  to deliver doorbell notifications to subscribers.
+
 Extra-Doc-Files:        README.md
 Extra-Source-Files:     changelog.md
 
@@ -43,11 +46,13 @@ Library
     Build-Depends:      fail == 4.9.*
                       , semigroups == 0.18.*
   Exposed-Modules:      Network.PinPon
-                      , Network.PinPon.Actions
-  Other-Modules:        Network.PinPon.Internal
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        base >= 4 && < 5
+                      , amazonka
+                      , amazonka-sns
+                      , lens
+                      , text
 
 Executable pinpon
   Main-Is:              Main.hs
@@ -59,9 +64,15 @@ Executable pinpon
   If !flag(executable)
     Buildable:          False
   Else
-    Build-Depends:      base >= 4 && < 5
+    Build-Depends:      amazonka
+                      , amazonka-ec2
+                      , base >= 4 && < 5
+                      , exceptions
+                      , lens
                       , optparse-applicative >= 0.11.0 && < 0.13
                       , pinpon
+                      , text
+                      , time
 
 Test-Suite hlint
   Type:                 exitcode-stdio-1.0
@@ -102,9 +113,9 @@ Test-Suite spec
 
 Source-Repository head
   Type:                 git
-  --  Location:             
+  Location:             git://github.com/dhess/pinpon.git
 
 Source-Repository this
   Type:                 git
-  -- Location:
+  Location:             git://github.com/dhess/pinpon.git
   -- Tag:               v0.0.0.0
