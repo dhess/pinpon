@@ -66,7 +66,10 @@ Executable pinpon
   Else
     Build-Depends:      amazonka
                       , amazonka-ec2
+                      , amazonka-sns
                       , base >= 4 && < 5
+                      , conduit
+                      , conduit-combinators
                       , exceptions
                       , lens
                       , optparse-applicative >= 0.11.0 && < 0.13

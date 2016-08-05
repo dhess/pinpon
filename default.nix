@@ -1,6 +1,6 @@
-{ mkDerivation, amazonka, amazonka-ec2, amazonka-sns, base, doctest
-, exceptions, hlint, hspec, lens, optparse-applicative, stdenv
-, text, time
+{ mkDerivation, amazonka, amazonka-ec2, amazonka-sns, base, conduit
+, conduit-combinators, doctest, exceptions, hlint, hspec, lens
+, optparse-applicative, stdenv, text, time
 }:
 mkDerivation {
   pname = "pinpon";
@@ -10,8 +10,8 @@ mkDerivation {
   isExecutable = true;
   libraryHaskellDepends = [ amazonka amazonka-sns base lens text ];
   executableHaskellDepends = [
-    amazonka amazonka-ec2 base exceptions lens optparse-applicative
-    text time
+    amazonka amazonka-ec2 amazonka-sns base conduit conduit-combinators
+    exceptions lens optparse-applicative text time
   ];
   testHaskellDepends = [ base doctest hlint hspec ];
   homepage = "https://github.com/dhess/pinpon/";
