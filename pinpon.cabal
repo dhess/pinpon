@@ -19,6 +19,7 @@ Description:
 
 Extra-Doc-Files:        README.md
 Extra-Source-Files:     changelog.md
+                      , examples/*.hs
 
 -- Build doctests
 Flag test-doctests
@@ -27,6 +28,11 @@ Flag test-doctests
 
 -- Build hlint test
 Flag test-hlint
+  Default: True
+  Manual: True
+
+-- Build the server example
+Flag server-example
   Default: True
   Manual: True
 
@@ -45,14 +51,31 @@ Library
     -- provide/emulate `Control.Monad.Fail` and `Data.Semigroups` API for pre-GHC8
     Build-Depends:      fail == 4.9.*
                       , semigroups == 0.18.*
-  Exposed-Modules:      Network.PinPon
+  Exposed-Modules:      Network.PinPon.Server
+                      , Network.PinPon.Server.API
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        base >= 4 && < 5
+                      , aeson
                       , amazonka
                       , amazonka-sns
+                      , bytestring     == 0.10.*
+                      , http-client    == 0.4.*
+                      , http-types     == 0.9.*
                       , lens
-                      , text
+                      , lucid          == 2.9.*
+                      , mellon-core    == 0.7.*
+                      , servant        >= 0.7.1 && < 0.10
+                      , servant-client >= 0.7.1 && < 0.10
+                      , servant-docs   >= 0.7.1 && < 0.10
+                      , servant-lucid  >= 0.7.1 && < 0.10
+                      , servant-server >= 0.7.1 && < 0.10
+                      , text           == 1.2.*
+                      , time           >= 1.5   && < 2
+                      , transformers   >= 0.4.2 && < 0.6
+                      , wai            == 3.2.*
+                      , warp           == 3.2.*
+
 
 Executable pinpon
   Main-Is:              Main.hs
@@ -76,6 +99,26 @@ Executable pinpon
                       , pinpon
                       , text
                       , time
+
+Executable pinpon-server
+  Main-Is:              PinPonServer.hs
+  Default-Language:     Haskell2010
+  HS-Source-Dirs:       examples
+  GHC-Options:          -Wall -threaded -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  If impl(ghc > 8)
+    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  Other-Extensions:     OverloadedStrings
+  If !flag(server-example)
+    Buildable:         False
+  Else
+    Build-Depends:      base
+                      , exceptions           >= 0.8.0  && < 1
+                      , mtl
+                      , pinpon
+                      , network              == 2.6.*
+                      , optparse-applicative >= 0.11.0 && < 0.13
+                      , transformers
+                      , warp
 
 Test-Suite hlint
   Type:                 exitcode-stdio-1.0
