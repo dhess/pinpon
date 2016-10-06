@@ -77,16 +77,16 @@ instance ToHtml Key where
 type Config = ()
 
 type PinPonAPI =
-  "ring" :> ReqBody '[JSON] Key :> Post '[JSON, HTML] Key
+  "notify" :> ReqBody '[JSON] Key :> Post '[JSON, HTML] Key
 
 type AppM c m = ReaderT Config (ExceptT ServantErr m)
 
 serverT :: (MonadIO m) => ServerT PinPonAPI (AppM c m)
 serverT =
-  ring
+  notify
   where
-    ring :: (MonadIO m) => Key -> AppM c m Key
-    ring key =
+    notify :: (MonadIO m) => Key -> AppM c m Key
+    notify key =
       do config <- ask
          return key
 
