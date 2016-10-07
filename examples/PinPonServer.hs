@@ -2,7 +2,6 @@
 
 module Main where
 
-import Control.Monad.IO.Class (liftIO)
 import Network (PortID(..), listenOn)
 import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket, setHost, setPort)
 import Options.Applicative

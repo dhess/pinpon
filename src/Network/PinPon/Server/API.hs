@@ -34,22 +34,17 @@ module Network.PinPon.Server.API
 
 import Control.Monad.Trans.Reader (ReaderT, runReaderT, ask)
 import Control.Monad.Trans.Except (ExceptT)
-import Control.Monad.IO.Class (MonadIO, liftIO)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Aeson.Types
-       (FromJSON(..), ToJSON(..), Options(..), SumEncoding(TaggedObject),
-        defaultOptions, genericToEncoding, genericParseJSON, tagFieldName,
-        contentsFieldName)
+       (FromJSON(..), ToJSON(..), defaultOptions, genericToEncoding)
 import Data.Text (Text)
-import Data.Time.Calendar (fromGregorian)
-import Data.Time.Clock (UTCTime(..), getCurrentTime)
 import GHC.Generics
 import Lucid
        (ToHtml(..), HtmlT, doctypehtml_, head_, title_, body_)
 import Network.Wai (Application)
 import Servant
-       ((:>), (:<|>)(..), (:~>)(..), JSON, Get, ReqBody, Post, Proxy(..),
-        ServerT, Server, ServantErr, enter, serve)
-import Servant.Docs (ToSample(..))
+       ((:>), (:~>)(..), JSON, ReqBody, Post, Proxy(..), ServerT, Server,
+        ServantErr, enter, serve)
 import Servant.HTML.Lucid (HTML)
 
 wrapBody :: Monad m => HtmlT m () -> HtmlT m a -> HtmlT m a
