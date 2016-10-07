@@ -15,7 +15,7 @@ the REST service methods and document types.
 -}
 
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
@@ -23,8 +23,7 @@ the REST service methods and document types.
 module Network.PinPon.Server.API
          ( -- * Types
            PinPonAPI
-         , Config
-         , Key(..)
+         , Config(..)
 
            -- * Servant / WAI functions
          , app
@@ -35,44 +34,19 @@ module Network.PinPon.Server.API
 import Control.Monad.Trans.Reader (ReaderT, runReaderT, ask)
 import Control.Monad.Trans.Except (ExceptT)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Aeson.Types
-       (FromJSON(..), ToJSON(..), defaultOptions, genericToEncoding)
+import qualified Data.Map.Strict as Map (Map, lookup)
 import Data.Text (Text)
-import GHC.Generics
-import Lucid
-       (ToHtml(..), HtmlT, doctypehtml_, head_, title_, body_)
 import Network.Wai (Application)
 import Servant
-       ((:>), (:~>)(..), JSON, ReqBody, Post, Proxy(..), ServerT, Server,
-        ServantErr, enter, serve)
+       ((:>), (:~>)(..), Capture, JSON, Post, Proxy(..), ServerT, Server,
+        ServantErr(..), enter, err404, serve, throwError)
 import Servant.HTML.Lucid (HTML)
 
-wrapBody :: Monad m => HtmlT m () -> HtmlT m a -> HtmlT m a
-wrapBody title body =
-  doctypehtml_ $
-    do head_ $
-         title_ title
-       body_ body
-
-data Key =
-  Key {name :: Text}
-  deriving (Generic,Show)
-
-instance ToJSON Key where
-  toEncoding = genericToEncoding defaultOptions
-instance FromJSON Key
-
-keyDocument :: Monad m => HtmlT m a -> HtmlT m a
-keyDocument = wrapBody "PinPon key"
-
-instance ToHtml Key where
-  toHtml (Key key) = keyDocument $ toHtml key
-  toHtmlRaw = toHtml
-
-type Config = ()
+data Config =
+  Config {_keyToTopic :: Map.Map Text Text}
 
 type PinPonAPI =
-  "notify" :> ReqBody '[JSON] Key :> Post '[JSON, HTML] Key
+  "notify" :> Capture "key" Text :> Post '[JSON, HTML] Text
 
 type AppM c m = ReaderT Config (ExceptT ServantErr m)
 
@@ -80,10 +54,12 @@ serverT :: (MonadIO m) => ServerT PinPonAPI (AppM c m)
 serverT =
   notify
   where
-    notify :: (MonadIO m) => Key -> AppM c m Key
+    notify :: (MonadIO m) => Text -> AppM c m Text
     notify key =
       do config <- ask
-         return key
+         case Map.lookup key (_keyToTopic config) of
+           Nothing -> throwError $ err404 { errBody = "key not found" }
+           Just arn -> return arn
 
 pinPonAPI :: Proxy PinPonAPI
 pinPonAPI = Proxy
