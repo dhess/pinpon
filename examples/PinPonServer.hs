@@ -7,6 +7,7 @@ import Data.Text (Text)
 import Network (PortID(..), listenOn)
 import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket, setHost, setPort)
 import Options.Applicative
+import Network.PinPon.App (Config(..))
 import Network.PinPon.Server.API
 
 data Options = Options {_port :: !Int}

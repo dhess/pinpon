@@ -19,7 +19,7 @@ let
         isExecutable = true;
         libraryHaskellDepends = [
           aeson amazonka amazonka-sns base bytestring containers http-client
-          http-types lens lucid mellon-core servant servant-client
+          http-types lens lucid mellon-core mtl servant servant-client
           servant-docs servant-lucid servant-server text time transformers
           wai warp
         ];

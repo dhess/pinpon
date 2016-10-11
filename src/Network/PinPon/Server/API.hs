@@ -24,7 +24,6 @@ the REST service methods and document types.
 module Network.PinPon.Server.API
          ( -- * Types
            PinPonAPI
-         , Config(..)
          , Notification(..)
 
            -- * Servant / WAI functions
@@ -33,13 +32,12 @@ module Network.PinPon.Server.API
          , server
          ) where
 
-import Control.Monad.Trans.Reader (ReaderT, runReaderT, ask)
+import Control.Monad.Reader (runReaderT, asks)
 import Control.Monad.Trans.Except (ExceptT)
-import Control.Monad.IO.Class (MonadIO)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), Options(..), camelTo2, defaultOptions,
         genericParseJSON, genericToEncoding)
-import qualified Data.Map.Strict as Map (Map, lookup)
+import qualified Data.Map.Strict as Map (lookup)
 import Data.Text (Text)
 import GHC.Generics
 import Lucid
@@ -50,13 +48,12 @@ import Servant
         Server, ServantErr(..), enter, err404, serve, throwError)
 import Servant.HTML.Lucid (HTML)
 
+import Network.PinPon.App (App(..), Config(..))
+
 localOptions :: Options
 localOptions =
   defaultOptions {fieldLabelModifier = drop 1
                  ,constructorTagModifier = camelTo2 '_'}
-
-data Config =
-  Config {_keyToTopic :: Map.Map Text Text}
 
 data Notification =
   Notification {_body :: Text}
@@ -84,24 +81,22 @@ wrapBody title body =
 type PinPonAPI =
   "notify" :> Capture "key" Text :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
 
-type AppM c m = ReaderT Config (ExceptT ServantErr m)
-
-serverT :: (MonadIO m) => ServerT PinPonAPI (AppM c m)
+serverT :: ServerT PinPonAPI App
 serverT =
   notify
   where
-    notify :: (MonadIO m) => Text -> Notification -> AppM c m Notification
-    notify key n =
-      do config <- ask
-         case Map.lookup key (_keyToTopic config) of
+    notify :: Text -> Notification -> App Notification
+    notify k n =
+      do m <- asks _keyToTopic
+         case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }
            Just _ -> return n
 
 pinPonAPI :: Proxy PinPonAPI
 pinPonAPI = Proxy
 
-serverToEither :: (MonadIO m) => Config -> AppM c m :~> ExceptT ServantErr m
-serverToEither config = Nat $ \m -> runReaderT m config
+appToExceptT :: Config -> App :~> ExceptT ServantErr IO
+appToExceptT config = Nat $ \a -> runReaderT (runApp a) config
 
 -- | A Servant 'Server' which serves the 'PinPonAPI' on the given
 -- 'Config'.
@@ -109,7 +104,7 @@ serverToEither config = Nat $ \m -> runReaderT m config
 -- Normally you will just use 'app', but this function is exported so
 -- that you can extend/wrap 'PinPonAPI'.
 server :: Config -> Server PinPonAPI
-server config = enter (serverToEither config) serverT
+server config = enter (appToExceptT config) serverT
 
 -- | A WAI 'Network.Wai.Application' which runs the service, using the
 -- given 'Config'.
