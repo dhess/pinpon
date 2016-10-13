@@ -52,8 +52,8 @@ Library
     Build-Depends:      fail == 4.9.*
                       , semigroups == 0.18.*
   Exposed-Modules:      Network.PinPon.Config
-                      , Network.PinPon.Server
-                      , Network.PinPon.Server.API
+                      , Network.PinPon.API
+                      , Network.PinPon.API.Notify
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        base >= 4 && < 5

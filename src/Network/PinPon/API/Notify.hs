@@ -1,19 +1,3 @@
-{-|
-Module      : Network.PinPon.Server.API
-Description : A REST web service for @pinpon@
-Copyright   : (c) 2016, Drew Hess
-License     : BSD3
-Maintainer  : Drew Hess <src@drewhess.com>
-Stability   : experimental
-Portability : non-portable
-
-This module provides a "Servant" REST web service for @pinpon@
-
-See the included <API.md API.md> file for detailed documentation on
-the REST service methods and document types.
-
--}
-
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE LambdaCase #-}
@@ -21,19 +5,16 @@ the REST service methods and document types.
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Network.PinPon.Server.API
+module Network.PinPon.API.Notify
          ( -- * Types
-           PinPonAPI
-         , Notification(..)
+           Notification(..)
+         , NotifyAPI
 
-           -- * Servant / WAI functions
-         , app
-         , pinPonAPI
-         , server
+           -- * Servant functions
+         , notifyServer
          ) where
 
-import Control.Monad.Reader (runReaderT, asks)
-import Control.Monad.Trans.Except (ExceptT)
+import Control.Monad.Reader (asks)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), Options(..), camelTo2, defaultOptions,
         genericParseJSON, genericToEncoding)
@@ -42,10 +23,9 @@ import Data.Text (Text)
 import GHC.Generics
 import Lucid
        (ToHtml(..), HtmlT, doctypehtml_, head_, title_, body_)
-import Network.Wai (Application)
 import Servant
-       ((:>), (:~>)(..), Capture, JSON, Post, Proxy(..), ReqBody, ServerT,
-        Server, ServantErr(..), enter, err404, serve, throwError)
+       ((:>), Capture, JSON, Post, ReqBody, ServerT, ServantErr(..),
+        err404, throwError)
 import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.Config (App(..), Config(..))
@@ -78,11 +58,11 @@ wrapBody title body =
          title_ title
        body_ body
 
-type PinPonAPI =
+type NotifyAPI =
   "notify" :> Capture "key" Text :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
 
-serverT :: ServerT PinPonAPI App
-serverT =
+notifyServer :: ServerT NotifyAPI App
+notifyServer =
   notify
   where
     notify :: Text -> Notification -> App Notification
@@ -91,22 +71,3 @@ serverT =
          case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }
            Just _ -> return n
-
-pinPonAPI :: Proxy PinPonAPI
-pinPonAPI = Proxy
-
-appToExceptT :: Config -> App :~> ExceptT ServantErr IO
-appToExceptT config = Nat $ \a -> runReaderT (runApp a) config
-
--- | A Servant 'Server' which serves the 'PinPonAPI' on the given
--- 'Config'.
---
--- Normally you will just use 'app', but this function is exported so
--- that you can extend/wrap 'PinPonAPI'.
-server :: Config -> Server PinPonAPI
-server config = enter (appToExceptT config) serverT
-
--- | A WAI 'Network.Wai.Application' which runs the service, using the
--- given 'Config'.
-app :: Config -> Application
-app = serve pinPonAPI . server
