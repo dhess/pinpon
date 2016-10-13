@@ -48,7 +48,7 @@ import Servant
         Server, ServantErr(..), enter, err404, serve, throwError)
 import Servant.HTML.Lucid (HTML)
 
-import Network.PinPon.App (App(..), Config(..))
+import Network.PinPon.Config (App(..), Config(..))
 
 localOptions :: Options
 localOptions =

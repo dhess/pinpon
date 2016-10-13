@@ -51,7 +51,7 @@ Library
     -- provide/emulate `Control.Monad.Fail` and `Data.Semigroups` API for pre-GHC8
     Build-Depends:      fail == 4.9.*
                       , semigroups == 0.18.*
-  Exposed-Modules:      Network.PinPon.App
+  Exposed-Modules:      Network.PinPon.Config
                       , Network.PinPon.Server
                       , Network.PinPon.Server.API
   Other-Extensions:     Safe

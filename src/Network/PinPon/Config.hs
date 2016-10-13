@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module Network.PinPon.App
+module Network.PinPon.Config
   ( -- * Types
     App(..)
   , Config(..)
