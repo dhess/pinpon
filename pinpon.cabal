@@ -62,6 +62,7 @@ Library
                       , amazonka-sns
                       , bytestring     == 0.10.*
                       , containers
+                      , exceptions
                       , http-client    == 0.4.*
                       , http-types     == 0.9.*
                       , lens
@@ -77,6 +78,7 @@ Library
                       , text           == 1.2.*
                       , time           >= 1.5   && < 2
                       , transformers   >= 0.4.2 && < 0.6
+                      , transformers-base
                       , wai            == 3.2.*
                       , warp           == 3.2.*
 

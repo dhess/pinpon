@@ -12,11 +12,13 @@ module Network.PinPon.Config
   ) where
 
 import Control.Lens
+import Control.Monad.Base (MonadBase(..))
+import Control.Monad.Catch (MonadCatch(..), MonadThrow(..))
 import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Except (ExceptT, MonadError)
-import Control.Monad.Reader (MonadReader(..), ReaderT)
-import Control.Monad.Trans.AWS (Env, HasEnv(..))
-import Control.Monad.Trans.Resource (ResourceT)
+import Control.Monad.Reader (MonadReader(..))
+import Control.Monad.Trans.AWS (AWST', Env, HasEnv(..))
+import Control.Monad.Trans.Resource (MonadResource(..), ResourceT)
 import Data.Map.Strict (Map)
 import Data.Text (Text)
 import Servant (ServantErr)
@@ -31,5 +33,5 @@ instance HasEnv Config where
   environment = awsEnv
 
 newtype App a =
-  App {runApp :: ReaderT Config (ResourceT (ExceptT ServantErr IO)) a}
-  deriving (Functor,Applicative,Monad,MonadError ServantErr,MonadReader Config,MonadIO)
+  App {runApp :: AWST' Config (ResourceT (ExceptT ServantErr IO)) a}
+  deriving (Functor,Applicative,Monad,MonadBase IO,MonadError ServantErr,MonadCatch,MonadThrow,MonadReader Config,MonadIO,MonadResource)

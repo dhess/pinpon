@@ -14,7 +14,10 @@ module Network.PinPon.API.Notify
          , notifyServer
          ) where
 
+import Control.Lens ((&), (?~))
+import Control.Monad (void)
 import Control.Monad.Reader (asks)
+import Control.Monad.Trans.AWS (send)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), Options(..), camelTo2, defaultOptions,
         genericParseJSON, genericToEncoding)
@@ -23,6 +26,7 @@ import Data.Text (Text)
 import GHC.Generics
 import Lucid
        (ToHtml(..), HtmlT, doctypehtml_, head_, title_, body_)
+import Network.AWS.SNS.Publish (publish, pSubject, pTargetARN)
 import Servant
        ((:>), Capture, JSON, Post, ReqBody, ServerT, ServantErr(..),
         err404, throwError)
@@ -36,7 +40,8 @@ localOptions =
                  ,constructorTagModifier = camelTo2 '_'}
 
 data Notification =
-  Notification {_body :: Text}
+  Notification {_subject :: Text
+               ,_body :: Text}
   deriving (Generic)
 
 instance ToJSON Notification where
@@ -44,19 +49,16 @@ instance ToJSON Notification where
 instance FromJSON Notification where
   parseJSON = genericParseJSON localOptions
 
-notificationDocument :: Monad m => HtmlT m a -> HtmlT m a
-notificationDocument = wrapBody "PinPon Notification"
+notificationDocument :: Monad m => HtmlT m a -> HtmlT m a -> HtmlT m a
+notificationDocument subj body =
+  doctypehtml_ $
+    do void $ head_ $
+                title_ subj
+       body_ body
 
 instance ToHtml Notification where
-  toHtml (Notification body) = notificationDocument $ toHtml body
+  toHtml (Notification subj body) = notificationDocument (toHtml subj) (toHtml body)
   toHtmlRaw = toHtml
-
-wrapBody :: Monad m => HtmlT m () -> HtmlT m a -> HtmlT m a
-wrapBody title body =
-  doctypehtml_ $
-    do head_ $
-         title_ title
-       body_ body
 
 type NotifyAPI =
   "notify" :> Capture "key" Text :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
@@ -70,4 +72,8 @@ notifyServer =
       do m <- asks _keyToTopic
          case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }
-           Just _ -> return n
+           Just arn ->
+             do void $ send $ publish (_body n)
+                                & pSubject ?~ (_subject n)
+                                & pTargetARN ?~ arn
+                return n
