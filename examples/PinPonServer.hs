@@ -2,6 +2,8 @@
 
 module Main where
 
+import Control.Monad.Trans.AWS
+       (Region(Oregon), Credentials(Discover), newEnv)
 import qualified Data.Map.Strict as Map (fromList)
 import Data.Text (Text)
 import Network (PortID(..), listenOn)
@@ -15,9 +17,11 @@ data Options = Options {_port :: !Int}
 targetARN :: Text
 targetARN = "arn:aws:sns:us-west-2:948017695415:test1"
 
-defaultConfig :: Config
+defaultConfig :: IO Config
 defaultConfig =
-  Config { _keyToTopic = Map.fromList [("test1", targetARN)] }
+  do env <- newEnv Oregon Discover
+     return Config {_awsEnv = env
+                   ,_keyToTopic = Map.fromList [("test1",targetARN)]}
 
 options :: Parser Options
 options =
@@ -30,8 +34,9 @@ options =
 
 run :: Options -> IO ()
 run (Options port) =
-  do sock <- listenOn (PortNumber (fromIntegral port))
-     runSettingsSocket (setPort port $ setHost "*" defaultSettings) sock (app defaultConfig)
+  do config <- defaultConfig
+     sock <- listenOn (PortNumber (fromIntegral port))
+     runSettingsSocket (setPort port $ setHost "*" defaultSettings) sock (app config)
 
 main :: IO ()
 main = execParser opts >>= run

@@ -13,6 +13,7 @@ module Network.PinPon.API
 
 import Control.Monad.Reader (runReaderT)
 import Control.Monad.Trans.Except (ExceptT)
+import Control.Monad.Trans.Resource (runResourceT)
 import Network.Wai (Application)
 import Servant
        ((:~>)(..), Proxy(..), Server, ServantErr(..), enter, serve)
@@ -28,7 +29,7 @@ pinPonAPI :: Proxy PinPonAPI
 pinPonAPI = Proxy
 
 appToExceptT :: Config -> App :~> ExceptT ServantErr IO
-appToExceptT config = Nat $ \a -> runReaderT (runApp a) config
+appToExceptT config = Nat $ \a -> runResourceT (runReaderT (runApp a) config)
 
 -- | A Servant 'Server' which serves the 'PinPonAPI' on the given
 -- 'Config'.

@@ -68,6 +68,7 @@ Library
                       , lucid          == 2.9.*
                       , mellon-core    == 0.7.*
                       , mtl
+                      , resourcet      >= 1.1
                       , servant        >= 0.7.1 && < 0.10
                       , servant-client >= 0.7.1 && < 0.10
                       , servant-docs   >= 0.7.1 && < 0.10
@@ -115,6 +116,7 @@ Executable pinpon-server
     Buildable:         False
   Else
     Build-Depends:      base
+                      , amazonka
                       , containers
                       , exceptions           >= 0.8.0  && < 1
                       , mtl
