@@ -17,10 +17,11 @@ import Control.Monad.Catch (MonadCatch(..), MonadThrow(..))
 import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Except (ExceptT, MonadError)
 import Control.Monad.Reader (MonadReader(..))
-import Control.Monad.Trans.AWS (AWST', Env, HasEnv(..))
+import Control.Monad.Trans.Reader (ReaderT)
 import Control.Monad.Trans.Resource (MonadResource(..), ResourceT)
 import Data.Map.Strict (Map)
 import Data.Text (Text)
+import Network.AWS (Env, HasEnv(..))
 import Servant (ServantErr)
 
 data Config =
@@ -33,5 +34,5 @@ instance HasEnv Config where
   environment = awsEnv
 
 newtype App a =
-  App {runApp :: AWST' Config (ResourceT (ExceptT ServantErr IO)) a}
+  App {runApp :: ReaderT Config (ResourceT (ExceptT ServantErr IO)) a}
   deriving (Functor,Applicative,Monad,MonadBase IO,MonadError ServantErr,MonadCatch,MonadThrow,MonadReader Config,MonadIO,MonadResource)

@@ -32,6 +32,7 @@ import Servant
         err404, throwError)
 import Servant.HTML.Lucid (HTML)
 
+import Network.PinPon.AWS (runAWS)
 import Network.PinPon.Config (App(..), Config(..))
 
 localOptions :: Options
@@ -72,7 +73,7 @@ notifyServer =
       do m <- asks _keyToTopic
          case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }
-           Just arn ->
+           Just arn -> runAWS $
              do void $ send $ publish (_body n)
                                 & pSubject ?~ (_subject n)
                                 & pTargetARN ?~ arn

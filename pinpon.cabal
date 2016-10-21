@@ -54,6 +54,7 @@ Library
   Exposed-Modules:      Network.PinPon.Config
                       , Network.PinPon.API
                       , Network.PinPon.API.Notify
+                      , Network.PinPon.AWS
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        base >= 4 && < 5
