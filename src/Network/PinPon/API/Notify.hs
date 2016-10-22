@@ -17,7 +17,6 @@ module Network.PinPon.API.Notify
 import Control.Lens ((&), (?~))
 import Control.Monad (void)
 import Control.Monad.Reader (asks)
-import Control.Monad.Trans.AWS (send)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), Options(..), camelTo2, defaultOptions,
         genericParseJSON, genericToEncoding)
@@ -32,7 +31,7 @@ import Servant
         err404, throwError)
 import Servant.HTML.Lucid (HTML)
 
-import Network.PinPon.AWS (runAWS)
+import Network.PinPon.AWS (runSNS)
 import Network.PinPon.Config (App(..), Config(..))
 
 localOptions :: Options
@@ -73,8 +72,8 @@ notifyServer =
       do m <- asks _keyToTopic
          case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }
-           Just arn -> runAWS $
-             do void $ send $ publish (_body n)
-                                & pSubject ?~ (_subject n)
-                                & pTargetARN ?~ arn
+           Just arn ->
+             do void $ runSNS $ publish (_body n)
+                                         & pSubject ?~ (_subject n)
+                                         & pTargetARN ?~ arn
                 return n
