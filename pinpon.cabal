@@ -60,6 +60,7 @@ Library
   Build-Depends:        base >= 4 && < 5
                       , aeson
                       , amazonka
+                      , amazonka-core
                       , amazonka-sns
                       , bytestring     == 0.10.*
                       , containers
