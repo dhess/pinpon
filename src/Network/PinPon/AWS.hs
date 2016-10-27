@@ -5,13 +5,13 @@ module Network.PinPon.AWS
   ( runSNS
   ) where
 
-import Control.Lens
+import Control.Lens ((^.))
 import Control.Monad.Catch (catch)
 import Control.Monad.Reader (asks)
 import Control.Monad.Trans.AWS (runAWST, send)
 import Data.ByteString.Lazy (fromStrict)
 import qualified Data.ByteString.Lazy as BL (ByteString)
-import qualified Data.ByteString.Lazy.Char8 as C8 (pack)
+import Data.ByteString.Lens (packedChars)
 import Network.AWS.Data.ByteString (ToByteString(..))
 import Network.AWS.Data.Text (ToText(..))
 import Network.AWS.Types (Error(..), serializeMessage, serviceMessage)
@@ -36,5 +36,5 @@ errCode _ = err502
 
 errMsg :: Error -> BL.ByteString
 errMsg (ServiceError e) = maybe "Unspecified error" (fromStrict . toBS . toText) $ e ^. serviceMessage
-errMsg (SerializeError e) = C8.pack $ e ^. serializeMessage
-errMsg (TransportError e) = C8.pack $ show e
+errMsg (SerializeError e) = e ^. serializeMessage ^. packedChars
+errMsg (TransportError e) = show e ^. packedChars
