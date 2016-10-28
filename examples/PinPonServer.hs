@@ -9,7 +9,7 @@ import Data.Text (Text)
 import Network (PortID(..), listenOn)
 import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket, setHost, setPort)
 import Options.Applicative
-import Network.PinPon.Config (Config(..))
+import Network.PinPon.Config (Config(..), Service(..))
 import Network.PinPon.API (app)
 
 data Options = Options {_port :: !Int}
@@ -21,7 +21,7 @@ defaultConfig :: IO Config
 defaultConfig =
   do env <- newEnv Oregon Discover
      return Config {_awsEnv = env
-                   ,_keyToTopic = Map.fromList [("test1",targetARN)]}
+                   ,_keyToTopic = Map.fromList [("test1", AWS targetARN)]}
 
 options :: Parser Options
 options =

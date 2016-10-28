@@ -32,7 +32,7 @@ import Servant
 import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
-import Network.PinPon.Config (App(..), Config(..))
+import Network.PinPon.Config (App(..), Config(..), Service(..))
 
 localOptions :: Options
 localOptions =
@@ -72,7 +72,7 @@ notifyServer =
       do m <- asks _keyToTopic
          case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }
-           Just arn ->
+           Just (AWS arn) ->
              do void $ runSNS $ publish (_body n)
                                          & pSubject ?~ (_subject n)
                                          & pTargetARN ?~ arn

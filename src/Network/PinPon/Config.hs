@@ -5,6 +5,7 @@ module Network.PinPon.Config
   ( -- * Types
     App(..)
   , Config(..)
+  , Service(..)
 
     -- * Lenses
   , awsEnv
@@ -24,9 +25,15 @@ import Data.Text (Text)
 import Network.AWS (Env, HasEnv(..))
 import Servant (ServantErr)
 
+-- | Supported notification services and their notification identifier
+-- type.
+data Service =
+  AWS Text
+  -- ^ AWS uses a 'Text' "ARN" to identify resources.
+
 data Config =
   Config {_awsEnv :: Env
-         ,_keyToTopic :: Map Text Text}
+         ,_keyToTopic :: Map Text Service}
 
 makeClassy ''Config
 
