@@ -59,9 +59,9 @@ Library
                       , Trustworthy
   Build-Depends:        base >= 4 && < 5
                       , aeson
-                      , amazonka
-                      , amazonka-core
-                      , amazonka-sns
+                      , amazonka       == 1.4.3.*
+                      , amazonka-core  == 1.4.3.*
+                      , amazonka-sns   == 1.4.3.*
                       , bytestring     == 0.10.*
                       , containers
                       , exceptions
