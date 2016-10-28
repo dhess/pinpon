@@ -25,6 +25,7 @@ import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), defaultOptions, genericParseJSON,
         genericToEncoding)
 import Data.Map.Strict (Map)
+import Data.Swagger (ToSchema(..))
 import Data.Text (Text)
 import GHC.Generics
 import Network.AWS (Env, HasEnv(..))
@@ -41,6 +42,8 @@ instance ToJSON Service where
   toEncoding = genericToEncoding defaultOptions
 instance FromJSON Service where
   parseJSON = genericParseJSON defaultOptions
+
+instance ToSchema Service
 
 data Config =
   Config {_awsEnv :: Env

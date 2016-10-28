@@ -14,13 +14,17 @@ module Network.PinPon.API.Notify
          , notifyServer
          ) where
 
-import Control.Lens ((&), (?~))
+import Control.Lens ((&), (?~), mapped)
 import Control.Monad (void)
 import Control.Monad.Reader (asks)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), Options(..), camelTo2, defaultOptions,
         genericParseJSON, genericToEncoding)
 import qualified Data.Map.Strict as Map (lookup, toList)
+import qualified Data.Swagger as Swagger (SchemaOptions(..))
+import Data.Swagger
+       (ToSchema(..), defaultSchemaOptions, description, example,
+        genericDeclareNamedSchema, schema)
 import Data.Text (Text)
 import GHC.Generics
 import Lucid
@@ -34,20 +38,37 @@ import Servant.HTML.Lucid (HTML)
 import Network.PinPon.AWS (runSNS)
 import Network.PinPon.Config (App(..), Config(..), Service(..))
 
+-- $setup
+-- >>> :set -XOverloadedStrings
+-- >>> import Data.Swagger.Schema.Validation
+
+data Notification =
+  Notification {_subject :: Text
+               ,_body :: Text}
+  deriving (Show,Generic)
+
 localOptions :: Options
 localOptions =
   defaultOptions {fieldLabelModifier = drop 1
                  ,constructorTagModifier = camelTo2 '_'}
 
-data Notification =
-  Notification {_subject :: Text
-               ,_body :: Text}
-  deriving (Generic)
-
 instance ToJSON Notification where
   toEncoding = genericToEncoding localOptions
 instance FromJSON Notification where
   parseJSON = genericParseJSON localOptions
+
+localSchemaOptions :: Swagger.SchemaOptions
+localSchemaOptions =
+  defaultSchemaOptions {Swagger.fieldLabelModifier = drop 1
+                       ,Swagger.constructorTagModifier = camelTo2 '_'}
+
+-- $
+-- >>> validateToJSON $ Notification "Hi" "Test"
+-- []
+instance ToSchema Notification where
+  declareNamedSchema proxy = genericDeclareNamedSchema localSchemaOptions proxy
+    & mapped.schema.description ?~ "A notification"
+    & mapped.schema.example ?~ toJSON (Notification "Hi from AWS" "Hope you're doing well!")
 
 notificationDocument :: Monad m => HtmlT m a -> HtmlT m a -> HtmlT m a
 notificationDocument subj body =

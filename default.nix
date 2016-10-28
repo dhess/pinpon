@@ -1,10 +1,11 @@
-{ mkDerivation, aeson, amazonka, amazonka-core, amazonka-ec2
-, amazonka-sns, base, bytestring, conduit, conduit-combinators
-, containers, doctest, exceptions, hlint, hspec, http-client
-, http-types, lens, lucid, mellon-core, mtl, network
-, optparse-applicative, resourcet, servant, servant-client
-, servant-docs, servant-lucid, servant-server, stdenv, text, time
-, transformers, transformers-base, wai, warp
+{ mkDerivation, aeson, aeson-pretty, amazonka, amazonka-core
+, amazonka-ec2, amazonka-sns, base, bytestring, conduit
+, conduit-combinators, containers, doctest, exceptions, hlint
+, hspec, http-client, http-types, lens, lucid, mellon-core, mtl
+, network, optparse-applicative, QuickCheck, resourcet, servant
+, servant-client, servant-docs, servant-lucid, servant-server
+, servant-swagger, stdenv, swagger2, text, time, transformers
+, transformers-base, wai, warp
 }:
 mkDerivation {
   pname = "pinpon";
@@ -13,10 +14,11 @@ mkDerivation {
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    aeson amazonka amazonka-core amazonka-sns base bytestring
-    containers exceptions http-client http-types lens lucid mellon-core
-    mtl resourcet servant servant-client servant-docs servant-lucid
-    servant-server text time transformers transformers-base wai warp
+    aeson aeson-pretty amazonka amazonka-core amazonka-sns base
+    bytestring containers exceptions http-client http-types lens lucid
+    mellon-core mtl QuickCheck resourcet servant servant-client
+    servant-docs servant-lucid servant-server servant-swagger swagger2
+    text time transformers transformers-base wai warp
   ];
   executableHaskellDepends = [
     amazonka amazonka-ec2 amazonka-sns base conduit conduit-combinators

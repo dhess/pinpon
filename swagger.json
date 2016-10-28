@@ -1,0 +1,106 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.1",
+        "title": "PinPon API",
+        "license": {
+            "url": "https://opensource.org/licenses/BSD-3-Clause",
+            "name": "BSD3"
+        },
+        "description": "Send notifications to various cloud services"
+    },
+    "definitions": {
+        "Notification": {
+            "example": {
+                "_subject": "Hi from AWS",
+                "_body": "Hope you're doing well!"
+            },
+            "required": [
+                "subject",
+                "body"
+            ],
+            "type": "object",
+            "description": "A notification",
+            "properties": {
+                "subject": {
+                    "type": "string"
+                },
+                "body": {
+                    "type": "string"
+                }
+            }
+        },
+        "Service": {
+            "type": "string"
+        }
+    },
+    "paths": {
+        "/notify": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "items": {
+                                "items": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "$ref": "#/definitions/Service"
+                                    }
+                                ],
+                                "type": "array"
+                            },
+                            "type": "array"
+                        },
+                        "description": ""
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
+        "/notify/{key}": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "404": {
+                        "description": "`key` not found"
+                    },
+                    "400": {
+                        "description": "Invalid `body`"
+                    },
+                    "200": {
+                        "schema": {
+                            "$ref": "#/definitions/Notification"
+                        },
+                        "description": ""
+                    }
+                },
+                "produces": [
+                    "application/json",
+                    "text/html;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "path",
+                        "name": "key",
+                        "type": "string"
+                    },
+                    {
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Notification"
+                        },
+                        "in": "body",
+                        "name": "body"
+                    }
+                ]
+            }
+        }
+    }
+}
