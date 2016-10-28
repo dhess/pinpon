@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 
@@ -20,8 +21,12 @@ import Control.Monad.Except (ExceptT, MonadError)
 import Control.Monad.Reader (MonadReader(..))
 import Control.Monad.Trans.Reader (ReaderT)
 import Control.Monad.Trans.Resource (MonadResource(..), ResourceT)
+import Data.Aeson.Types
+       (FromJSON(..), ToJSON(..), defaultOptions, genericParseJSON,
+        genericToEncoding)
 import Data.Map.Strict (Map)
 import Data.Text (Text)
+import GHC.Generics
 import Network.AWS (Env, HasEnv(..))
 import Servant (ServantErr)
 
@@ -30,6 +35,12 @@ import Servant (ServantErr)
 data Service =
   AWS Text
   -- ^ AWS uses a 'Text' "ARN" to identify resources.
+  deriving (Show,Generic)
+
+instance ToJSON Service where
+  toEncoding = genericToEncoding defaultOptions
+instance FromJSON Service where
+  parseJSON = genericParseJSON defaultOptions
 
 data Config =
   Config {_awsEnv :: Env
