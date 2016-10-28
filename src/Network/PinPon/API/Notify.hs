@@ -19,7 +19,7 @@ import Control.Monad (void)
 import Control.Monad.Reader (asks)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), Options(..), camelTo2, defaultOptions,
-        genericParseJSON, genericToEncoding)
+        genericParseJSON, genericToEncoding, genericToJSON)
 import qualified Data.Map.Strict as Map (lookup, toList)
 import qualified Data.Swagger as Swagger (SchemaOptions(..))
 import Data.Swagger
@@ -53,6 +53,7 @@ localOptions =
                  ,constructorTagModifier = camelTo2 '_'}
 
 instance ToJSON Notification where
+  toJSON = genericToJSON localOptions
   toEncoding = genericToEncoding localOptions
 instance FromJSON Notification where
   parseJSON = genericParseJSON localOptions

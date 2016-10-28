@@ -12,8 +12,8 @@
     "definitions": {
         "Notification": {
             "example": {
-                "_subject": "Hi from AWS",
-                "_body": "Hope you're doing well!"
+                "subject": "Hi from AWS",
+                "body": "Hope you're doing well!"
             },
             "required": [
                 "subject",
