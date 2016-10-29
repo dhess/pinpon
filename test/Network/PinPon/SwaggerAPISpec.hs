@@ -1,10 +1,10 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Network.PinPon.SwaggerSpec (spec) where
+module Network.PinPon.SwaggerAPISpec (spec) where
 
-import Network.PinPon.API (pinPonAPI)
+import Network.PinPon.API (api)
 import Network.PinPon.API.Notify (Notification(..))
 import Network.PinPon.Config (Service(..))
-import Network.PinPon.Swagger (pinPonSwagger)
+import Network.PinPon.SwaggerAPI (pinPonSwagger)
 
 import Data.Aeson (eitherDecode)
 import qualified Data.ByteString.Lazy.Char8 as C8 (readFile)
@@ -18,7 +18,7 @@ spec :: Spec
 spec =
   do describe "Swagger" $
        do context "ToJSON matches ToSchema" $
-            validateEveryToJSON pinPonAPI
+            validateEveryToJSON api
           context "swagger.json" $
             it "matches current file contents" $
               do path <- getDataFileName "swagger.json"

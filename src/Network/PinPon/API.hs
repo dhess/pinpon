@@ -4,11 +4,11 @@
 
 module Network.PinPon.API
   ( -- * Types
-    PinPonAPI
+    API
 
     -- * Servant / WAI functions
   , app
-  , pinPonAPI
+  , api
   , server
   )
   where
@@ -25,10 +25,10 @@ import Network.PinPon.Config (App(..), Config(..))
 
 -- | Combine all of the various individual service APIs into a single
 -- API type.
-type PinPonAPI = NotifyAPI
+type API = NotifyAPI
 
-pinPonAPI :: Proxy PinPonAPI
-pinPonAPI = Proxy
+api :: Proxy API
+api = Proxy
 
 appToExceptT :: Config -> App :~> ExceptT ServantErr IO
 appToExceptT config = Nat $ \a -> runResourceT (runReaderT (runApp a) config)
@@ -37,11 +37,11 @@ appToExceptT config = Nat $ \a -> runResourceT (runReaderT (runApp a) config)
 -- 'Config'.
 --
 -- Normally you will just use 'app', but this function is exported so
--- that you can extend/wrap 'PinPonAPI'.
-server :: Config -> Server PinPonAPI
+-- that you can extend/wrap 'API'.
+server :: Config -> Server API
 server config = enter (appToExceptT config) notifyServer
 
 -- | A WAI 'Network.Wai.Application' which runs the service, using the
 -- given 'Config'.
 app :: Config -> Application
-app = serve pinPonAPI . server
+app = serve api . server

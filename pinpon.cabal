@@ -55,7 +55,7 @@ Library
                       , Network.PinPon.API
                       , Network.PinPon.API.Notify
                       , Network.PinPon.AWS
-                      , Network.PinPon.Swagger
+                      , Network.PinPon.SwaggerAPI
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        base           >= 4 && < 5
@@ -206,9 +206,9 @@ Test-Suite spec
                       , Network.PinPon.API
                       , Network.PinPon.API.Notify
                       , Network.PinPon.AWS
-                      , Network.PinPon.Swagger
+                      , Network.PinPon.SwaggerAPI
                       , Spec
-                      , Network.PinPon.SwaggerSpec
+                      , Network.PinPon.SwaggerAPISpec
 
 Source-Repository head
   Type:                 git

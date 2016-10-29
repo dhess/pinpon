@@ -2,13 +2,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Network.PinPon.Swagger
+module Network.PinPon.SwaggerAPI
   ( -- * Types
-    PinPonAPI
+    API
 
     -- * Servant / WAI functions
   , app
-  , pinPonAPI
+  , api
   , server
 
     -- * Swagger
@@ -29,33 +29,33 @@ import Servant ((:<|>)(..), Proxy(..), Server, serve)
 import Servant.Swagger (toSwagger)
 import Servant.Swagger.UI (SwaggerSchemaUI, swaggerSchemaUIServer)
 
-import qualified Network.PinPon.API as PinPon (PinPonAPI, pinPonAPI, server)
+import qualified Network.PinPon.API as PinPon (API, api, server)
 import Network.PinPon.Config (Config(..))
 
 -- | Combine all of the various individual service APIs (plus Swagger
 -- support) into a single API type.
-type PinPonAPI =
-  PinPon.PinPonAPI :<|>
+type API =
+  PinPon.API :<|>
   SwaggerSchemaUI "swagger-ui" "swagger.json"
 
-pinPonAPI :: Proxy PinPonAPI
-pinPonAPI = Proxy
+api :: Proxy API
+api = Proxy
 
--- | A Servant 'Server' which serves the 'PinPonAPI' (including the
--- Swagger schema) on the given 'Config'.
+-- | A Servant 'Server' which serves the 'API' (including the Swagger
+-- schema) on the given 'Config'.
 --
 -- Normally you will just use 'app', but this function is exported so
--- that you can extend/wrap 'PinPonAPI'.
-server :: Config -> Server PinPonAPI
+-- that you can extend/wrap 'API'.
+server :: Config -> Server API
 server config = PinPon.server config :<|> swaggerSchemaUIServer pinPonSwagger
 
 -- | A WAI 'Network.Wai.Application' which runs the service, using the
 -- given 'Config'.
 app :: Config -> Application
-app = serve pinPonAPI . server
+app = serve api . server
 
 pinPonSwagger :: Swagger
-pinPonSwagger = toSwagger PinPon.pinPonAPI
+pinPonSwagger = toSwagger PinPon.api
   & info.title .~ "PinPon API"
   & info.version .~ "0.1"
   & info.description ?~ "Send notifications to various cloud services"
