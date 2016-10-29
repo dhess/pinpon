@@ -102,6 +102,6 @@ notifyServer =
            Nothing -> throwError $ err404 { errBody = "key not found" }
            Just (AWS arn) ->
              do void $ runSNS $ publish (_body n)
-                                         & pSubject ?~ (_subject n)
+                                         & pSubject ?~ _subject n
                                          & pTargetARN ?~ arn
                 return n
