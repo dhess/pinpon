@@ -80,6 +80,7 @@ Library
                       , servant-lucid  >= 0.7.1 && < 0.10
                       , servant-server >= 0.7.1 && < 0.10
                       , servant-swagger
+                      , servant-swagger-ui
                       , swagger2
                       , text           == 1.2.*
                       , time           >= 1.5   && < 2
@@ -193,6 +194,7 @@ Test-Suite spec
                       , servant-lucid
                       , servant-server
                       , servant-swagger
+                      , servant-swagger-ui
                       , swagger2
                       , text
                       , time

@@ -10,8 +10,8 @@ let
       , hspec, http-client, http-types, lens, lucid, mellon-core, mtl
       , network, optparse-applicative, QuickCheck, quickcheck-instances
       , resourcet, servant, servant-client, servant-docs, servant-lucid
-      , servant-server, servant-swagger, stdenv, swagger2, text, time
-      , transformers, transformers-base, wai, warp
+      , servant-server, servant-swagger, servant-swagger-ui, stdenv
+      , swagger2, text, time, transformers, transformers-base, wai, warp
       }:
       mkDerivation {
         pname = "pinpon";
@@ -23,8 +23,8 @@ let
           aeson aeson-pretty amazonka amazonka-core amazonka-sns base
           bytestring containers exceptions http-client http-types lens lucid
           mellon-core mtl resourcet servant servant-client servant-docs
-          servant-lucid servant-server servant-swagger swagger2 text time
-          transformers transformers-base wai warp
+          servant-lucid servant-server servant-swagger servant-swagger-ui
+          swagger2 text time transformers transformers-base wai warp
         ];
         executableHaskellDepends = [
           amazonka amazonka-ec2 amazonka-sns base conduit conduit-combinators
@@ -36,8 +36,8 @@ let
           bytestring containers doctest exceptions hlint hspec http-client
           http-types lens lucid mellon-core mtl QuickCheck
           quickcheck-instances resourcet servant servant-client servant-docs
-          servant-lucid servant-server servant-swagger swagger2 text time
-          transformers transformers-base wai warp
+          servant-lucid servant-server servant-swagger servant-swagger-ui
+          swagger2 text time transformers transformers-base wai warp
         ];
         homepage = "https://github.com/dhess/pinpon/";
         description = "A network-enabled doorbell service";
