@@ -55,6 +55,7 @@ Library
                       , Network.PinPon.API
                       , Network.PinPon.API.Notify
                       , Network.PinPon.AWS
+                      , Network.PinPon.Swagger
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        QuickCheck     >= 2.7.6 && < 2.10
