@@ -3,8 +3,11 @@
 {-# LANGUAGE TypeOperators #-}
 
 module Network.PinPon.Swagger
-  ( -- * Convenience functions
-    writeSwaggerJSON
+  ( -- * Swagger
+    pinPonSwagger
+
+    -- * Convenience functions
+  , writeSwaggerJSON
   )
   where
 
