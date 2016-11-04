@@ -20,12 +20,12 @@ import Network.Wai (Application)
 import Servant
        ((:~>)(..), Proxy(..), Server, ServantErr(..), enter, serve)
 
-import Network.PinPon.API.Notify (NotifyAPI, notifyServer)
+import Network.PinPon.API.Topic (TopicAPI, topicServer)
 import Network.PinPon.Config (App(..), Config(..))
 
 -- | Combine all of the various individual service APIs into a single
 -- API type.
-type API = NotifyAPI
+type API = TopicAPI
 
 api :: Proxy API
 api = Proxy
@@ -39,7 +39,7 @@ appToExceptT config = Nat $ \a -> runResourceT (runReaderT (runApp a) config)
 -- Normally you will just use 'app', but this function is exported so
 -- that you can extend/wrap 'API'.
 server :: Config -> Server API
-server config = enter (appToExceptT config) notifyServer
+server config = enter (appToExceptT config) topicServer
 
 -- | A WAI 'Network.Wai.Application' which runs the service, using the
 -- given 'Config'.

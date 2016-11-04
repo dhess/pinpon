@@ -5,13 +5,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Network.PinPon.API.Notify
+module Network.PinPon.API.Topic
          ( -- * Types
            Notification(..)
-         , NotifyAPI
+         , TopicAPI
 
            -- * Servant functions
-         , notifyServer
+         , topicServer
          ) where
 
 import Control.Lens ((&), (?~), mapped)
@@ -82,21 +82,21 @@ instance ToHtml Notification where
   toHtml (Notification subj body) = notificationDocument (toHtml subj) (toHtml body)
   toHtmlRaw = toHtml
 
-type NotifyAPI =
-  "notify" :> Get '[JSON] [(Text, Service)] :<|>
-  "notify" :> Capture "key" Text :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
+type TopicAPI =
+  "topic" :> Get '[JSON] [(Text, Service)] :<|>
+  "topic" :> Capture "key" Text :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
 
-notifyServer :: ServerT NotifyAPI App
-notifyServer =
+topicServer :: ServerT TopicAPI App
+topicServer =
   allEndpoints :<|>
-  notify
+  topic
   where
     allEndpoints :: App [(Text, Service)]
     allEndpoints =
       do m <- asks _keyToTopic
          return $ Map.toList m
-    notify :: Text -> Notification -> App Notification
-    notify k n =
+    topic :: Text -> Notification -> App Notification
+    topic k n =
       do m <- asks _keyToTopic
          case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }

@@ -53,7 +53,7 @@ Library
                       , semigroups == 0.18.*
   Exposed-Modules:      Network.PinPon.Config
                       , Network.PinPon.API
-                      , Network.PinPon.API.Notify
+                      , Network.PinPon.API.Topic
                       , Network.PinPon.AWS
                       , Network.PinPon.SwaggerAPI
   Other-Extensions:     Safe
