@@ -51,11 +51,11 @@ Library
     -- provide/emulate `Control.Monad.Fail` and `Data.Semigroups` API for pre-GHC8
     Build-Depends:      fail == 4.9.*
                       , semigroups == 0.18.*
-  Exposed-Modules:      Network.PinPon.Config
-                      , Network.PinPon.API
+  Exposed-Modules:      Network.PinPon.API
                       , Network.PinPon.API.Topic
                       , Network.PinPon.AWS
                       , Network.PinPon.SwaggerAPI
+                      , Network.PinPon.Types
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        base           >= 4 && < 5
@@ -202,11 +202,11 @@ Test-Suite spec
                       , transformers-base
                       , wai
                       , warp
-  Other-Modules:        Network.PinPon.Config
-                      , Network.PinPon.API
+  Other-Modules:        Network.PinPon.API
                       , Network.PinPon.API.Notify
                       , Network.PinPon.AWS
                       , Network.PinPon.SwaggerAPI
+                      , Network.PinPon.Types
                       , Spec
                       , Network.PinPon.SwaggerAPISpec
 

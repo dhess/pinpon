@@ -30,7 +30,7 @@ import Servant.Swagger (toSwagger)
 import Servant.Swagger.UI (SwaggerSchemaUI, swaggerSchemaUIServer)
 
 import qualified Network.PinPon.API as PinPon (API, api, server)
-import Network.PinPon.Config (Config(..))
+import Network.PinPon.Types (Config(..))
 
 -- | Combine all of the various individual service APIs (plus Swagger
 -- support) into a single API type.

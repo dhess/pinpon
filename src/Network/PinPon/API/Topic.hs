@@ -36,7 +36,7 @@ import Servant
 import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
-import Network.PinPon.Config (App(..), Config(..), Service(..))
+import Network.PinPon.Types (App(..), Config(..), Service(..))
 
 -- $setup
 -- >>> :set -XOverloadedStrings

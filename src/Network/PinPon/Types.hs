@@ -2,7 +2,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Network.PinPon.Config
+module Network.PinPon.Types
   ( -- * Types
     App(..)
   , Config(..)

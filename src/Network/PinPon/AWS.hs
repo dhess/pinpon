@@ -19,7 +19,7 @@ import Network.AWS.SNS.Publish (Publish, PublishResponse)
 import Network.HTTP.Client (HttpException(..))
 import Servant (ServantErr(..), err502, err504, throwError)
 
-import Network.PinPon.Config (App(..), Config(..))
+import Network.PinPon.Types (App(..), Config(..))
 
 runSNS :: Publish -> App PublishResponse
 runSNS publish =
