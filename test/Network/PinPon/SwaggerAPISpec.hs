@@ -2,8 +2,8 @@
 module Network.PinPon.SwaggerAPISpec (spec) where
 
 import Network.PinPon.API (api)
-import Network.PinPon.API.Notify (Notification(..))
-import Network.PinPon.Config (Service(..))
+import Network.PinPon.API.Topic (Notification(..))
+import Network.PinPon.Types (Service(..))
 import Network.PinPon.SwaggerAPI (pinPonSwagger)
 
 import Data.Aeson (eitherDecode)

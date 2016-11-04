@@ -203,7 +203,7 @@ Test-Suite spec
                       , wai
                       , warp
   Other-Modules:        Network.PinPon.API
-                      , Network.PinPon.API.Notify
+                      , Network.PinPon.API.Topic
                       , Network.PinPon.AWS
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Types

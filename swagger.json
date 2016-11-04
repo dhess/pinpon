@@ -35,33 +35,7 @@
         }
     },
     "paths": {
-        "/notify": {
-            "get": {
-                "responses": {
-                    "200": {
-                        "schema": {
-                            "items": {
-                                "items": [
-                                    {
-                                        "type": "string"
-                                    },
-                                    {
-                                        "$ref": "#/definitions/Service"
-                                    }
-                                ],
-                                "type": "array"
-                            },
-                            "type": "array"
-                        },
-                        "description": ""
-                    }
-                },
-                "produces": [
-                    "application/json"
-                ]
-            }
-        },
-        "/notify/{key}": {
+        "/topic/{key}": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -99,6 +73,32 @@
                         "in": "body",
                         "name": "body"
                     }
+                ]
+            }
+        },
+        "/topic": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "items": {
+                                "items": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "$ref": "#/definitions/Service"
+                                    }
+                                ],
+                                "type": "array"
+                            },
+                            "type": "array"
+                        },
+                        "description": ""
+                    }
+                },
+                "produces": [
+                    "application/json"
                 ]
             }
         }
