@@ -12,10 +12,34 @@ License-File:           LICENSE
 Copyright:              Copyright (c) 2016, Drew Hess
 Tested-With:            GHC == 8.0.1
 Category:               Network
-Synopsis:               A network-enabled doorbell service
+Synopsis:               A gateway for various cloud notification services
 Description:
-  @pinpon@ is a network-enabled doorbell service. It uses Amazon SNS
-  to deliver doorbell notifications to subscribers.
+  @pinpon@ is a gateway for various cloud notification services, such
+  as the Amazon AWS SNS service.
+  .
+  Think of @pinpon@ as a hub for dispatching notifications originating
+  from multiple notification sources. Clients of the @pinpon@ service
+  create topics and send notifications via the REST-ish @pinpon@
+  service, and the @pinpon@ server takes care of the per-service
+  details and communicating with the upstream cloud services.
+  .
+  Advantages of this approach, compared to programming directly to the
+  individual notification services' interfaces, are:
+  .
+  * A common API for all supported notification services.
+  .
+  * The secret credentials required to communicate with each cloud
+    notification service can be kept in a central location (namely,
+    the @pinpon@ server), rather than being distributed to each
+    notification source host, therefore reducing the attack surface.
+  .
+  * Hosts which send notifications via the @pinpon@ gateway can be
+    firewalled from the public Internet. This is especially useful in
+    IoT applications.
+  .
+  Currently-supported notification services:
+  .
+  * Amazon AWS SNS
 
 Extra-Doc-Files:        README.md
 Extra-Source-Files:     changelog.md

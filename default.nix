@@ -34,6 +34,6 @@ mkDerivation {
     swagger2 text time transformers transformers-base wai warp
   ];
   homepage = "https://github.com/dhess/pinpon/";
-  description = "A network-enabled doorbell service";
+  description = "A gateway for various cloud notification services";
   license = stdenv.lib.licenses.bsd3;
 }
