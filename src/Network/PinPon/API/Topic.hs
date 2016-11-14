@@ -32,11 +32,12 @@ import Lucid
 import Network.AWS.SNS.Publish (publish, pSubject, pTargetARN)
 import Servant
        ((:>), (:<|>)(..), Capture, Get, JSON, Post, ReqBody, ServerT,
-        ServantErr(..), err404, throwError)
+        ServantErr(..), err404, err501, throwError)
 import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
-import Network.PinPon.Types (App(..), Config(..), Service(..))
+import Network.PinPon.Types
+       (App(..), Config(..), Service(..), Topic(..))
 
 -- $setup
 -- >>> :set -XOverloadedStrings
@@ -47,19 +48,19 @@ data Notification =
                ,_body :: Text}
   deriving (Show,Generic)
 
-localOptions :: Options
-localOptions =
+sumTypeJSONOptions :: Options
+sumTypeJSONOptions =
   defaultOptions {fieldLabelModifier = drop 1
                  ,constructorTagModifier = camelTo2 '_'}
 
 instance ToJSON Notification where
-  toJSON = genericToJSON localOptions
-  toEncoding = genericToEncoding localOptions
+  toJSON = genericToJSON sumTypeJSONOptions
+  toEncoding = genericToEncoding sumTypeJSONOptions
 instance FromJSON Notification where
-  parseJSON = genericParseJSON localOptions
+  parseJSON = genericParseJSON sumTypeJSONOptions
 
-localSchemaOptions :: Swagger.SchemaOptions
-localSchemaOptions =
+sumTypeSwaggerOptions :: Swagger.SchemaOptions
+sumTypeSwaggerOptions =
   defaultSchemaOptions {Swagger.fieldLabelModifier = drop 1
                        ,Swagger.constructorTagModifier = camelTo2 '_'}
 
@@ -67,7 +68,7 @@ localSchemaOptions =
 -- >>> validateToJSON $ Notification "Hi" "Test"
 -- []
 instance ToSchema Notification where
-  declareNamedSchema proxy = genericDeclareNamedSchema localSchemaOptions proxy
+  declareNamedSchema proxy = genericDeclareNamedSchema sumTypeSwaggerOptions proxy
     & mapped.schema.description ?~ "A notification"
     & mapped.schema.example ?~ toJSON (Notification "Hi from AWS" "Hope you're doing well!")
 
@@ -83,7 +84,7 @@ instance ToHtml Notification where
   toHtmlRaw = toHtml
 
 type TopicAPI =
-  "topic" :> Get '[JSON] [(Text, Service)] :<|>
+  "topic" :> Get '[JSON] [(Text, Topic)] :<|>
   "topic" :> Capture "key" Text :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
 
 topicServer :: ServerT TopicAPI App
@@ -91,7 +92,7 @@ topicServer =
   allEndpoints :<|>
   topic
   where
-    allEndpoints :: App [(Text, Service)]
+    allEndpoints :: App [(Text, Topic)]
     allEndpoints =
       do m <- asks _keyToTopic
          return $ Map.toList m
@@ -100,8 +101,11 @@ topicServer =
       do m <- asks _keyToTopic
          case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }
-           Just (AWS arn) ->
+           Just (Topic AWS arn) ->
              do void $ runSNS $ publish (_body n)
                                          & pSubject ?~ _subject n
                                          & pTargetARN ?~ arn
                 return n
+           Just (Topic FCM _) ->
+             throwError $
+               err501 { errBody = "Firebase Cloud Messaging currently unsupported" }
