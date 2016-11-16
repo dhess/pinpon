@@ -18,13 +18,12 @@ import Control.Lens ((&), (?~), mapped)
 import Control.Monad (void)
 import Control.Monad.Reader (asks)
 import Data.Aeson.Types
-       (FromJSON(..), ToJSON(..), Options(..), camelTo2, defaultOptions,
-        genericParseJSON, genericToEncoding, genericToJSON)
+       (FromJSON(..), ToJSON(..), genericParseJSON, genericToEncoding,
+        genericToJSON)
 import qualified Data.Map.Strict as Map (lookup, toList)
-import qualified Data.Swagger as Swagger (SchemaOptions(..))
 import Data.Swagger
-       (ToSchema(..), defaultSchemaOptions, description, example,
-        genericDeclareNamedSchema, schema)
+       (ToSchema(..), description, example, genericDeclareNamedSchema,
+        schema)
 import Data.Text (Text)
 import GHC.Generics
 import Lucid
@@ -38,6 +37,8 @@ import Servant.HTML.Lucid (HTML)
 import Network.PinPon.AWS (runSNS)
 import Network.PinPon.Types
        (App(..), Config(..), Service(..), Topic(..))
+import Network.PinPon.Util
+       (sumTypeJSONOptions, sumTypeSwaggerOptions)
 
 -- $setup
 -- >>> :set -XOverloadedStrings
@@ -48,21 +49,11 @@ data Notification =
                ,_body :: Text}
   deriving (Show,Generic)
 
-sumTypeJSONOptions :: Options
-sumTypeJSONOptions =
-  defaultOptions {fieldLabelModifier = drop 1
-                 ,constructorTagModifier = camelTo2 '_'}
-
 instance ToJSON Notification where
   toJSON = genericToJSON sumTypeJSONOptions
   toEncoding = genericToEncoding sumTypeJSONOptions
 instance FromJSON Notification where
   parseJSON = genericParseJSON sumTypeJSONOptions
-
-sumTypeSwaggerOptions :: Swagger.SchemaOptions
-sumTypeSwaggerOptions =
-  defaultSchemaOptions {Swagger.fieldLabelModifier = drop 1
-                       ,Swagger.constructorTagModifier = camelTo2 '_'}
 
 -- $
 -- >>> validateToJSON $ Notification "Hi" "Test"

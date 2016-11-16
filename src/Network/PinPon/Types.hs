@@ -26,31 +26,23 @@ import Control.Monad.Reader (MonadReader(..))
 import Control.Monad.Trans.Reader (ReaderT)
 import Control.Monad.Trans.Resource (MonadResource(..), ResourceT)
 import Data.Aeson.Types
-       (FromJSON(..), Options(..), ToJSON(..), camelTo2, defaultOptions,
-        genericParseJSON, genericToEncoding, genericToJSON)
+       (FromJSON(..), ToJSON(..), defaultOptions, genericParseJSON,
+        genericToEncoding, genericToJSON)
 import Data.Map.Strict (Map)
-import qualified Data.Swagger as Swagger (SchemaOptions(..))
 import Data.Swagger
-       (ToSchema(..), defaultSchemaOptions, description, example,
-        genericDeclareNamedSchema, schema)
+       (ToSchema(..), description, example, genericDeclareNamedSchema,
+        schema)
 import Data.Text (Text)
 import GHC.Generics
 import Network.AWS (Env, HasEnv(..))
 import Servant (ServantErr)
 
+import Network.PinPon.Util
+       (sumTypeJSONOptions, sumTypeSwaggerOptions)
+
 -- $setup
 -- >>> :set -XOverloadedStrings
 -- >>> import Data.Swagger.Schema.Validation
-
-sumTypeJSONOptions :: Options
-sumTypeJSONOptions =
-  defaultOptions {fieldLabelModifier = drop 1
-                 ,constructorTagModifier = camelTo2 '_'}
-
-sumTypeSwaggerOptions :: Swagger.SchemaOptions
-sumTypeSwaggerOptions =
-  defaultSchemaOptions {Swagger.fieldLabelModifier = drop 1
-                       ,Swagger.constructorTagModifier = camelTo2 '_'}
 
 -- | Supported notification services.
 data Service

@@ -80,6 +80,7 @@ Library
                       , Network.PinPon.AWS
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Types
+                      , Network.PinPon.Util
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        base           >= 4 && < 5
@@ -231,6 +232,7 @@ Test-Suite spec
                       , Network.PinPon.AWS
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Types
+                      , Network.PinPon.Util
                       , Spec
                       , Network.PinPon.SwaggerAPISpec
 
