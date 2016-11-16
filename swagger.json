@@ -31,7 +31,31 @@
             }
         },
         "Service": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+                "AWS",
+                "FCM"
+            ]
+        },
+        "Topic": {
+            "example": {
+                "service": "AWS",
+                "topicName": "test_topic_1"
+            },
+            "required": [
+                "service",
+                "topicName"
+            ],
+            "type": "object",
+            "description": "A topic",
+            "properties": {
+                "service": {
+                    "$ref": "#/definitions/Service"
+                },
+                "topicName": {
+                    "type": "string"
+                }
+            }
         }
     },
     "paths": {
@@ -87,7 +111,7 @@
                                         "type": "string"
                                     },
                                     {
-                                        "$ref": "#/definitions/Service"
+                                        "$ref": "#/definitions/Topic"
                                     }
                                 ],
                                 "type": "array"

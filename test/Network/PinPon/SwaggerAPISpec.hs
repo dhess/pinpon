@@ -3,7 +3,7 @@ module Network.PinPon.SwaggerAPISpec (spec) where
 
 import Network.PinPon.API (api)
 import Network.PinPon.API.Topic (Notification(..))
-import Network.PinPon.Types (Service(..))
+import Network.PinPon.Types (Service(..), Topic(..))
 import Network.PinPon.SwaggerAPI (pinPonSwagger)
 
 import Data.Aeson (eitherDecode)
@@ -11,7 +11,7 @@ import qualified Data.ByteString.Lazy.Char8 as C8 (readFile)
 import Paths_pinpon
 import Servant.Swagger.Test
 import Test.Hspec
-import Test.QuickCheck (Arbitrary(..), oneof, property)
+import Test.QuickCheck (Arbitrary(..), elements, oneof, property)
 import Test.QuickCheck.Instances ()
 
 spec :: Spec
@@ -26,7 +26,10 @@ spec =
                  swagger `shouldBe` Right pinPonSwagger
 
 instance Arbitrary Service where
-  arbitrary = oneof [AWS <$> arbitrary]
+  arbitrary = oneof [elements [AWS, FCM]]
+
+instance Arbitrary Topic where
+  arbitrary = Topic <$> arbitrary <*> arbitrary
 
 instance Arbitrary Notification where
   arbitrary = Notification <$> arbitrary <*> arbitrary
