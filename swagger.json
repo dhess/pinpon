@@ -59,7 +59,7 @@
         }
     },
     "paths": {
-        "/topic/{key}": {
+        "/topic/{key}/notification": {
             "post": {
                 "consumes": [
                     "application/json"

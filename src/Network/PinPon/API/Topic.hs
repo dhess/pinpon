@@ -76,7 +76,7 @@ instance ToHtml Notification where
 
 type TopicAPI =
   "topic" :> Get '[JSON] [(Text, Topic)] :<|>
-  "topic" :> Capture "key" Text :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
+  "topic" :> Capture "key" Text :> "notification" :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
 
 topicServer :: ServerT TopicAPI App
 topicServer =
