@@ -38,7 +38,7 @@ import Network.PinPon.AWS (runSNS)
 import Network.PinPon.Types
        (App(..), Config(..), Service(..), Topic(..))
 import Network.PinPon.Util
-       (sumTypeJSONOptions, sumTypeSwaggerOptions)
+       (recordTypeJSONOptions, recordTypeSwaggerOptions)
 
 -- $setup
 -- >>> :set -XOverloadedStrings
@@ -50,16 +50,16 @@ data Notification =
   deriving (Show,Generic)
 
 instance ToJSON Notification where
-  toJSON = genericToJSON sumTypeJSONOptions
-  toEncoding = genericToEncoding sumTypeJSONOptions
+  toJSON = genericToJSON recordTypeJSONOptions
+  toEncoding = genericToEncoding recordTypeJSONOptions
 instance FromJSON Notification where
-  parseJSON = genericParseJSON sumTypeJSONOptions
+  parseJSON = genericParseJSON recordTypeJSONOptions
 
 -- $
 -- >>> validateToJSON $ Notification "Hi" "Test"
 -- []
 instance ToSchema Notification where
-  declareNamedSchema proxy = genericDeclareNamedSchema sumTypeSwaggerOptions proxy
+  declareNamedSchema proxy = genericDeclareNamedSchema recordTypeSwaggerOptions proxy
     & mapped.schema.description ?~ "A notification"
     & mapped.schema.example ?~ toJSON (Notification "Hi from AWS" "Hope you're doing well!")
 

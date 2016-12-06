@@ -38,7 +38,7 @@ import Network.AWS (Env, HasEnv(..))
 import Servant (ServantErr)
 
 import Network.PinPon.Util
-       (sumTypeJSONOptions, sumTypeSwaggerOptions)
+       (recordTypeJSONOptions, recordTypeSwaggerOptions)
 
 -- $setup
 -- >>> :set -XOverloadedStrings
@@ -67,10 +67,10 @@ data Topic =
 makeClassy ''Topic
 
 instance ToJSON Topic where
-  toJSON = genericToJSON sumTypeJSONOptions
-  toEncoding = genericToEncoding sumTypeJSONOptions
+  toJSON = genericToJSON recordTypeJSONOptions
+  toEncoding = genericToEncoding recordTypeJSONOptions
 instance FromJSON Topic where
-  parseJSON = genericParseJSON sumTypeJSONOptions
+  parseJSON = genericParseJSON recordTypeJSONOptions
 
 -- $
 -- >>> validateToJSON $ Topic AWS "test1"
@@ -78,7 +78,7 @@ instance FromJSON Topic where
 -- >>> validateToJSON $ Topic FCM "test2"
 -- []
 instance ToSchema Topic where
-  declareNamedSchema proxy = genericDeclareNamedSchema sumTypeSwaggerOptions proxy
+  declareNamedSchema proxy = genericDeclareNamedSchema recordTypeSwaggerOptions proxy
     & mapped.schema.description ?~ "A topic"
     & mapped.schema.example ?~ toJSON (Topic AWS "test_topic_1")
 
