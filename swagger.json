@@ -59,6 +59,24 @@
         }
     },
     "paths": {
+        "/service": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "items": {
+                                "$ref": "#/definitions/Service"
+                            },
+                            "type": "array"
+                        },
+                        "description": ""
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
         "/topic/{key}/notification": {
             "post": {
                 "consumes": [

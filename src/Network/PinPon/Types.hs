@@ -8,6 +8,7 @@ module Network.PinPon.Types
     App(..)
   , Config(..)
   , Service(..)
+  , allServices
   , Topic(..)
 
     -- * Lenses
@@ -57,6 +58,10 @@ instance FromJSON Service where
   parseJSON = genericParseJSON defaultOptions
 
 instance ToSchema Service
+
+-- | The list of all 'Service' values.
+allServices :: [Service]
+allServices = [(minBound :: Service) ..]
 
 -- | Notification topics.
 data Topic =
