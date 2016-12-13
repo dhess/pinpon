@@ -14,9 +14,9 @@ module Network.PinPon.API.Topic
          , topicServer
          ) where
 
-import Control.Lens ((&), (?~), mapped)
+import Control.Lens ((&), (^.), (?~), (%=), at, mapped)
 import Control.Monad (void)
-import Control.Monad.Reader (asks)
+import Control.Monad.State (gets)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), genericParseJSON, genericToEncoding,
         genericToJSON)
@@ -28,6 +28,7 @@ import Data.Text (Text)
 import GHC.Generics
 import Lucid
        (ToHtml(..), HtmlT, doctypehtml_, head_, title_, body_)
+import Network.AWS.SNS (createTopic, ctrsTopicARN)
 import Network.AWS.SNS.Publish (publish, pSubject, pTargetARN)
 import Servant
        ((:>), (:<|>)(..), Capture, Get, JSON, Post, ReqBody, ServerT,
@@ -36,7 +37,8 @@ import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
 import Network.PinPon.Types
-       (App(..), Config(..), Service(..), Topic(..))
+       (App(..), Config(..), Service(..), Topic(..), keyToTopic, service,
+        topicName)
 import Network.PinPon.Util
        (recordTypeJSONOptions, recordTypeSwaggerOptions)
 
@@ -76,20 +78,40 @@ instance ToHtml Notification where
 
 type TopicAPI =
   "topic" :> Get '[JSON] [(Text, Topic)] :<|>
+  "topic" :> ReqBody '[JSON] Topic :> Post '[JSON] Text :<|>
   "topic" :> Capture "key" Text :> "notification" :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
 
 topicServer :: ServerT TopicAPI App
 topicServer =
-  allEndpoints :<|>
-  topic
+  allTopics :<|>
+  newTopic :<|>
+  notify
   where
-    allEndpoints :: App [(Text, Topic)]
-    allEndpoints =
-      do m <- asks _keyToTopic
+    allTopics :: App [(Text, Topic)]
+    allTopics =
+      do m <- gets _keyToTopic
          return $ Map.toList m
-    topic :: Text -> Notification -> App Notification
-    topic k n =
-      do m <- asks _keyToTopic
+
+    newTopic :: Topic -> App Text
+    newTopic topic = newTopic' $ topic ^. service
+      where
+        newTopic' :: Service -> App Text
+        newTopic' AWS =
+          do result <- runSNS $ createTopic $ topic ^. topicName
+             case result ^. ctrsTopicARN of
+               Just arn ->
+                 do keyToTopic %= (at (topic ^. topicName) ?~ Topic AWS arn)
+                    return arn
+               Nothing ->
+                 throwError $
+                   err501 { errBody = "AWS returned a success code, but no topic ARN" }
+        newTopic' FCM =
+          throwError $
+            err501 { errBody = "Firebase Cloud Messaging currently unsupported" }
+
+    notify :: Text -> Notification -> App Notification
+    notify k n =
+      do m <- gets _keyToTopic
          case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }
            Just (Topic AWS arn) ->

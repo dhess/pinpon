@@ -7,24 +7,23 @@ module Network.PinPon.AWS
 
 import Control.Lens ((^.))
 import Control.Monad.Catch (catch)
-import Control.Monad.Reader (asks)
+import Control.Monad.State (gets)
 import Control.Monad.Trans.AWS (runAWST, send)
 import Data.ByteString.Lazy (fromStrict)
 import qualified Data.ByteString.Lazy as BL (ByteString)
 import Data.ByteString.Lens (packedChars)
 import Network.AWS.Data.ByteString (ToByteString(..))
 import Network.AWS.Data.Text (ToText(..))
-import Network.AWS.Types (Error(..), serializeMessage, serviceMessage)
-import Network.AWS.SNS.Publish (Publish, PublishResponse)
+import Network.AWS.Types (AWSRequest, Error(..), Rs, serializeMessage, serviceMessage)
 import Network.HTTP.Client (HttpException(..))
 import Servant (ServantErr(..), err502, err504, throwError)
 
 import Network.PinPon.Types (App(..), Config(..))
 
-runSNS :: Publish -> App PublishResponse
-runSNS publish =
-  do env <- asks _awsEnv
-     catch (runAWST env $ send publish) $ throwError . snsErrToServant
+runSNS :: (AWSRequest a) => a -> App (Rs a)
+runSNS req =
+  do env <- gets _awsEnv
+     catch (runAWST env $ send req) $ throwError . snsErrToServant
 
 snsErrToServant :: Error -> ServantErr
 snsErrToServant e = (errCode e) { errBody = mconcat ["Upstream AWS SNS error: ", errMsg e ] }

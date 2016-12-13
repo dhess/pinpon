@@ -119,6 +119,35 @@
             }
         },
         "/topic": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid `body`"
+                    },
+                    "200": {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": ""
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Topic"
+                        },
+                        "in": "body",
+                        "name": "body"
+                    }
+                ]
+            },
             "get": {
                 "responses": {
                     "200": {

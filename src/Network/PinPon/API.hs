@@ -14,7 +14,7 @@ module Network.PinPon.API
   where
 
 import Control.Monad.Trans.Except (ExceptT)
-import Control.Monad.Trans.Reader (runReaderT)
+import Control.Monad.State.Strict (evalStateT)
 import Control.Monad.Trans.Resource (runResourceT)
 import Network.Wai (Application)
 import Servant
@@ -33,7 +33,7 @@ api :: Proxy API
 api = Proxy
 
 appToExceptT :: Config -> App :~> ExceptT ServantErr IO
-appToExceptT config = Nat $ \a -> runResourceT (runReaderT (runApp a) config)
+appToExceptT config = Nat $ \a -> runResourceT (evalStateT (runApp a) config)
 
 -- | A Servant 'Server' which serves the 'PinPonAPI' on the given
 -- 'Config'.

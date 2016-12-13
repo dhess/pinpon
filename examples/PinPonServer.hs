@@ -4,24 +4,20 @@ module Main where
 
 import Control.Monad.Trans.AWS
        (Region(Oregon), Credentials(Discover), newEnv)
-import qualified Data.Map.Strict as Map (fromList)
-import Data.Text (Text)
+import qualified Data.Map.Strict as Map (empty)
 import Network (PortID(..), listenOn)
 import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket, setHost, setPort)
 import Options.Applicative
-import Network.PinPon.Types (Config(..), Service(..), Topic(..))
+import Network.PinPon.Types (Config(..))
 import Network.PinPon.SwaggerAPI (app)
 
 data Options = Options {_port :: !Int}
-
-targetARN :: Text
-targetARN = "arn:aws:sns:us-west-2:948017695415:test1"
 
 defaultConfig :: IO Config
 defaultConfig =
   do env <- newEnv Oregon Discover
      return Config {_awsEnv = env
-                   ,_keyToTopic = Map.fromList [("test1", Topic AWS targetARN)]}
+                   ,_keyToTopic = Map.empty }
 
 options :: Parser Options
 options =

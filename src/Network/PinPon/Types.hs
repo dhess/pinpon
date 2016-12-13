@@ -23,8 +23,7 @@ import Control.Monad.Base (MonadBase(..))
 import Control.Monad.Catch (MonadCatch(..), MonadThrow(..))
 import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Except (ExceptT, MonadError)
-import Control.Monad.Reader (MonadReader(..))
-import Control.Monad.Trans.Reader (ReaderT)
+import Control.Monad.State.Strict (MonadState(..), StateT)
 import Control.Monad.Trans.Resource (MonadResource(..), ResourceT)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), defaultOptions, genericParseJSON,
@@ -97,5 +96,5 @@ instance HasEnv Config where
   environment = awsEnv
 
 newtype App a =
-  App {runApp :: ReaderT Config (ResourceT (ExceptT ServantErr IO)) a}
-  deriving (Functor,Applicative,Monad,MonadBase IO,MonadError ServantErr,MonadCatch,MonadThrow,MonadReader Config,MonadIO,MonadResource)
+  App {runApp :: StateT Config (ResourceT (ExceptT ServantErr IO)) a}
+  deriving (Functor,Applicative,Monad,MonadBase IO,MonadError ServantErr,MonadCatch,MonadThrow,MonadState Config,MonadIO,MonadResource)
