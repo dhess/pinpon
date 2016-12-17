@@ -14,13 +14,16 @@ module Network.PinPon.API.Topic
          , topicServer
          ) where
 
+import Control.Concurrent.STM (atomically)
+import Control.Concurrent.STM.TVar (modifyTVar', readTVar)
 import Control.Lens ((&), (^.), (?~), mapped)
 import Control.Monad (void)
+import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Reader (asks)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), genericParseJSON, genericToEncoding,
         genericToJSON)
-import qualified Data.Map.Strict as Map (lookup, toList)
+import qualified Data.Map.Strict as Map (insert, lookup, toList)
 import Data.Swagger
        (ToSchema(..), description, example, genericDeclareNamedSchema,
         schema)
@@ -88,8 +91,10 @@ topicServer =
   where
     allTopics :: App [(Text, Topic)]
     allTopics =
-      do m <- asks _keyToTopic
-         return $ Map.toList m
+      do tvar <- asks _keyToTopic
+         liftIO $ atomically $
+           do m <- readTVar tvar
+              return $! Map.toList m
 
     newTopic :: Topic -> App Text
     newTopic topic = newTopic' $ topic ^. service
@@ -98,7 +103,12 @@ topicServer =
         newTopic' AWS =
           do result <- runSNS $ createTopic $ topic ^. topicName
              case result ^. ctrsTopicARN of
-               Just arn -> return arn
+               Just arn ->
+                 do tvar <- asks _keyToTopic
+                    liftIO $
+                      atomically $
+                        modifyTVar' tvar $ Map.insert (topic ^. topicName) (Topic AWS arn)
+                    return arn
                Nothing ->
                  throwError $
                    err501 { errBody = "AWS returned a success code, but no topic ARN" }
@@ -108,8 +118,11 @@ topicServer =
 
     notify :: Text -> Notification -> App Notification
     notify k n =
-      do m <- asks _keyToTopic
-         case Map.lookup k m of
+      do tvar <- asks _keyToTopic
+         t <- liftIO $ atomically $
+           do m <- readTVar tvar
+              return $ Map.lookup k m
+         case t of
            Nothing -> throwError $ err404 { errBody = "key not found" }
            Just (Topic AWS arn) ->
              do void $ runSNS $ publish (_body n)

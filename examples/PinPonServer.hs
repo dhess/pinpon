@@ -2,6 +2,8 @@
 
 module Main where
 
+import Control.Concurrent.STM (atomically)
+import Control.Concurrent.STM.TVar (newTVar)
 import Control.Monad.Trans.AWS
        (Region(Oregon), Credentials(Discover), newEnv)
 import qualified Data.Map.Strict as Map (empty)
@@ -16,8 +18,9 @@ data Options = Options {_port :: !Int}
 defaultConfig :: IO Config
 defaultConfig =
   do env <- newEnv Oregon Discover
+     m <- atomically $ newTVar Map.empty
      return Config {_awsEnv = env
-                   ,_keyToTopic = Map.empty }
+                   ,_keyToTopic = m }
 
 options :: Parser Options
 options =

@@ -18,6 +18,7 @@ module Network.PinPon.Types
   , topicName
   ) where
 
+import Control.Concurrent.STM.TVar (TVar)
 import Control.Lens
 import Control.Monad.Base (MonadBase(..))
 import Control.Monad.Catch (MonadCatch(..), MonadThrow(..))
@@ -88,7 +89,7 @@ instance ToSchema Topic where
 
 data Config =
   Config {_awsEnv :: Env
-         ,_keyToTopic :: Map Text Topic}
+         ,_keyToTopic :: TVar (Map Text Topic)}
 
 makeClassy ''Config
 

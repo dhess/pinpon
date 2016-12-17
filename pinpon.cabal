@@ -107,6 +107,7 @@ Library
                       , servant-server >= 0.7.1 && < 0.10
                       , servant-swagger
                       , servant-swagger-ui
+                      , stm
                       , swagger2
                       , text           == 1.2.*
                       , time           >= 1.5   && < 2
@@ -158,6 +159,7 @@ Executable pinpon-server
                       , pinpon
                       , network              == 2.6.*
                       , optparse-applicative >= 0.11.0 && < 0.13
+                      , stm
                       , text
                       , transformers
                       , warp
@@ -221,6 +223,7 @@ Test-Suite spec
                       , servant-server
                       , servant-swagger
                       , servant-swagger-ui
+                      , stm
                       , swagger2
                       , text
                       , time

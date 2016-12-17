@@ -4,7 +4,7 @@
 , hspec, http-client, http-types, lens, lucid, mellon-core, mtl
 , network, optparse-applicative, QuickCheck, quickcheck-instances
 , resourcet, servant, servant-client, servant-docs, servant-lucid
-, servant-server, servant-swagger, servant-swagger-ui, stdenv
+, servant-server, servant-swagger, servant-swagger-ui, stdenv, stm
 , swagger2, text, time, transformers, transformers-base, wai, warp
 }:
 mkDerivation {
@@ -17,20 +17,20 @@ mkDerivation {
     aeson aeson-pretty amazonka amazonka-core amazonka-sns base
     bytestring containers exceptions http-client http-types lens lucid
     mellon-core mtl resourcet servant servant-client servant-docs
-    servant-lucid servant-server servant-swagger servant-swagger-ui
+    servant-lucid servant-server servant-swagger servant-swagger-ui stm
     swagger2 text time transformers transformers-base wai warp
   ];
   executableHaskellDepends = [
     amazonka amazonka-ec2 amazonka-sns base conduit conduit-combinators
-    containers exceptions lens mtl network optparse-applicative text
-    time transformers warp
+    containers exceptions lens mtl network optparse-applicative stm
+    text time transformers warp
   ];
   testHaskellDepends = [
     aeson aeson-pretty amazonka amazonka-core amazonka-sns base
     bytestring containers doctest exceptions hlint hspec http-client
     http-types lens lucid mellon-core mtl QuickCheck
     quickcheck-instances resourcet servant servant-client servant-docs
-    servant-lucid servant-server servant-swagger servant-swagger-ui
+    servant-lucid servant-server servant-swagger servant-swagger-ui stm
     swagger2 text time transformers transformers-base wai warp
   ];
   homepage = "https://github.com/dhess/pinpon/";
