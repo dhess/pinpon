@@ -7,7 +7,7 @@ module Network.PinPon.AWS
 
 import Control.Lens ((^.))
 import Control.Monad.Catch (catch)
-import Control.Monad.State (gets)
+import Control.Monad.Reader (asks)
 import Control.Monad.Trans.AWS (runAWST, send)
 import Data.ByteString.Lazy (fromStrict)
 import qualified Data.ByteString.Lazy as BL (ByteString)
@@ -22,7 +22,7 @@ import Network.PinPon.Types (App(..), Config(..))
 
 runSNS :: (AWSRequest a) => a -> App (Rs a)
 runSNS req =
-  do env <- gets _awsEnv
+  do env <- asks _awsEnv
      catch (runAWST env $ send req) $ throwError . snsErrToServant
 
 snsErrToServant :: Error -> ServantErr

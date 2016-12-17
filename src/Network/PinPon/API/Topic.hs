@@ -14,9 +14,9 @@ module Network.PinPon.API.Topic
          , topicServer
          ) where
 
-import Control.Lens ((&), (^.), (?~), (%=), at, mapped)
+import Control.Lens ((&), (^.), (?~), mapped)
 import Control.Monad (void)
-import Control.Monad.State (gets)
+import Control.Monad.Reader (asks)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), genericParseJSON, genericToEncoding,
         genericToJSON)
@@ -37,8 +37,7 @@ import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
 import Network.PinPon.Types
-       (App(..), Config(..), Service(..), Topic(..), keyToTopic, service,
-        topicName)
+       (App(..), Config(..), Service(..), Topic(..), service, topicName)
 import Network.PinPon.Util
        (recordTypeJSONOptions, recordTypeSwaggerOptions)
 
@@ -89,7 +88,7 @@ topicServer =
   where
     allTopics :: App [(Text, Topic)]
     allTopics =
-      do m <- gets _keyToTopic
+      do m <- asks _keyToTopic
          return $ Map.toList m
 
     newTopic :: Topic -> App Text
@@ -99,9 +98,7 @@ topicServer =
         newTopic' AWS =
           do result <- runSNS $ createTopic $ topic ^. topicName
              case result ^. ctrsTopicARN of
-               Just arn ->
-                 do keyToTopic %= (at (topic ^. topicName) ?~ Topic AWS arn)
-                    return arn
+               Just arn -> return arn
                Nothing ->
                  throwError $
                    err501 { errBody = "AWS returned a success code, but no topic ARN" }
@@ -111,7 +108,7 @@ topicServer =
 
     notify :: Text -> Notification -> App Notification
     notify k n =
-      do m <- gets _keyToTopic
+      do m <- asks _keyToTopic
          case Map.lookup k m of
            Nothing -> throwError $ err404 { errBody = "key not found" }
            Just (Topic AWS arn) ->
