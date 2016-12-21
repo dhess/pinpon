@@ -23,7 +23,7 @@ import Servant
 
 import Network.PinPon.API.Service (ServiceAPI, serviceServer)
 import Network.PinPon.API.Topic (TopicAPI, topicServer)
-import Network.PinPon.Types (App(..), Config(..))
+import Network.PinPon.Config (App(..), Config(..))
 
 -- | Combine all of the various individual service APIs into a single
 -- API type.

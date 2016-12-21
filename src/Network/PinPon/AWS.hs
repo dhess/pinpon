@@ -18,7 +18,7 @@ import Network.AWS.Types (AWSRequest, Error(..), Rs, serializeMessage, serviceMe
 import Network.HTTP.Client (HttpException(..))
 import Servant (ServantErr(..), err502, err504, throwError)
 
-import Network.PinPon.Types (App(..), Config(..))
+import Network.PinPon.Config (App(..), Config(..))
 
 runSNS :: (AWSRequest a) => a -> App (Rs a)
 runSNS req =

@@ -40,8 +40,7 @@ import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
 import Network.PinPon.Model (Service(..), Topic(..), service, topicName, topics)
-import Network.PinPon.Types
-       (App(..), Config(..))
+import Network.PinPon.Config (App(..), Config(..))
 import Network.PinPon.Util
        (recordTypeJSONOptions, recordTypeSwaggerOptions)
 

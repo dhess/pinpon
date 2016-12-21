@@ -14,8 +14,7 @@ import Servant
        ((:>), Get, JSON, ServerT)
 
 import Network.PinPon.Model (Service(..), allServices)
-import Network.PinPon.Types
-       (App(..))
+import Network.PinPon.Config (App(..))
 
 type ServiceAPI =
   "service" :> Get '[JSON] [Service]

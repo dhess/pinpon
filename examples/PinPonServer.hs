@@ -11,7 +11,7 @@ import Network (PortID(..), listenOn)
 import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket, setHost, setPort)
 import Options.Applicative
 import Network.PinPon.Model (AppDb(..))
-import Network.PinPon.Types (Config(..))
+import Network.PinPon.Config (Config(..))
 import Network.PinPon.SwaggerAPI (app)
 
 data Options = Options {_port :: !Int}
