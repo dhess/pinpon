@@ -16,14 +16,14 @@ module Network.PinPon.API.Topic
 
 import Control.Concurrent.STM (atomically)
 import Control.Concurrent.STM.TVar (modifyTVar', readTVar)
-import Control.Lens ((&), (^.), (?~), mapped)
+import Control.Lens ((&), (^.), (?~), at, mapped, over)
 import Control.Monad (void)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Reader (asks)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), genericParseJSON, genericToEncoding,
         genericToJSON)
-import qualified Data.Map.Strict as Map (insert, lookup, toList)
+import qualified Data.Map.Strict as Map (lookup, toList)
 import Data.Swagger
        (ToSchema(..), description, example, genericDeclareNamedSchema,
         schema)
@@ -39,8 +39,9 @@ import Servant
 import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
+import Network.PinPon.Model (Service(..), Topic(..), service, topicName, topics)
 import Network.PinPon.Types
-       (App(..), Config(..), Service(..), Topic(..), service, topicName)
+       (App(..), Config(..))
 import Network.PinPon.Util
        (recordTypeJSONOptions, recordTypeSwaggerOptions)
 
@@ -91,10 +92,10 @@ topicServer =
   where
     allTopics :: App [(Text, Topic)]
     allTopics =
-      do tvar <- asks _keyToTopic
+      do tvar <- asks _appDb
          liftIO $ atomically $
-           do m <- readTVar tvar
-              return $! Map.toList m
+           do db <- readTVar tvar
+              return $! Map.toList (db ^. topics)
 
     newTopic :: Topic -> App Text
     newTopic topic = newTopic' $ topic ^. service
@@ -104,10 +105,11 @@ topicServer =
           do result <- runSNS $ createTopic $ topic ^. topicName
              case result ^. ctrsTopicARN of
                Just arn ->
-                 do tvar <- asks _keyToTopic
+                 do tvar <- asks _appDb
                     liftIO $
                       atomically $
-                        modifyTVar' tvar $ Map.insert (topic ^. topicName) (Topic AWS arn)
+                        modifyTVar' tvar $
+                          over topics $ at (topic ^. topicName) ?~ Topic AWS arn
                     return arn
                Nothing ->
                  throwError $
@@ -118,10 +120,10 @@ topicServer =
 
     notify :: Text -> Notification -> App Notification
     notify k n =
-      do tvar <- asks _keyToTopic
+      do tvar <- asks _appDb
          t <- liftIO $ atomically $
-           do m <- readTVar tvar
-              return $ Map.lookup k m
+           do db <- readTVar tvar
+              return $ Map.lookup k (db ^. topics)
          case t of
            Nothing -> throwError $ err404 { errBody = "key not found" }
            Just (Topic AWS arn) ->

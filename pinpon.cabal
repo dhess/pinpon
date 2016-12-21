@@ -79,6 +79,7 @@ Library
                       , Network.PinPon.API.Service
                       , Network.PinPon.API.Topic
                       , Network.PinPon.AWS
+                      , Network.PinPon.Model
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Types
                       , Network.PinPon.Util
@@ -235,6 +236,7 @@ Test-Suite spec
                       , Network.PinPon.API.Service
                       , Network.PinPon.API.Topic
                       , Network.PinPon.AWS
+                      , Network.PinPon.Model
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Types
                       , Network.PinPon.Util

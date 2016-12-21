@@ -13,8 +13,9 @@ module Network.PinPon.API.Service
 import Servant
        ((:>), Get, JSON, ServerT)
 
+import Network.PinPon.Model (Service(..), allServices)
 import Network.PinPon.Types
-       (App(..), Service(..), allServices)
+       (App(..))
 
 type ServiceAPI =
   "service" :> Get '[JSON] [Service]

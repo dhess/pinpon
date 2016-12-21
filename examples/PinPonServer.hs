@@ -10,6 +10,7 @@ import qualified Data.Map.Strict as Map (empty)
 import Network (PortID(..), listenOn)
 import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket, setHost, setPort)
 import Options.Applicative
+import Network.PinPon.Model (AppDb(..))
 import Network.PinPon.Types (Config(..))
 import Network.PinPon.SwaggerAPI (app)
 
@@ -18,9 +19,9 @@ data Options = Options {_port :: !Int}
 defaultConfig :: IO Config
 defaultConfig =
   do env <- newEnv Oregon Discover
-     m <- atomically $ newTVar Map.empty
+     db <- atomically $ newTVar AppDb {_topics = Map.empty}
      return Config {_awsEnv = env
-                   ,_keyToTopic = m }
+                   ,_appDb = db }
 
 options :: Parser Options
 options =
