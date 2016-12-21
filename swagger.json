@@ -39,21 +39,21 @@
         },
         "Topic": {
             "example": {
-                "service": "AWS",
-                "topicName": "test_topic_1"
+                "topicId": "test_topic_1",
+                "topicService": "AWS"
             },
             "required": [
-                "service",
-                "topicName"
+                "topicService",
+                "topicId"
             ],
             "type": "object",
             "description": "A topic",
             "properties": {
-                "service": {
-                    "$ref": "#/definitions/Service"
-                },
-                "topicName": {
+                "topicId": {
                     "type": "string"
+                },
+                "topicService": {
+                    "$ref": "#/definitions/Service"
                 }
             }
         }

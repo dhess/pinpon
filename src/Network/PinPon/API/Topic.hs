@@ -39,7 +39,9 @@ import Servant
 import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
-import Network.PinPon.Model (Service(..), Topic(..), service, topicName, topics)
+import Network.PinPon.Model
+       (Service(..), Topic(..), TopicId, TopicName, topicService, topicId,
+        topics)
 import Network.PinPon.Config (App(..), Config(..))
 import Network.PinPon.Util
        (recordTypeJSONOptions, recordTypeSwaggerOptions)
@@ -79,9 +81,9 @@ instance ToHtml Notification where
   toHtmlRaw = toHtml
 
 type TopicAPI =
-  "topic" :> Get '[JSON] [(Text, Topic)] :<|>
+  "topic" :> Get '[JSON] [(TopicName, Topic)] :<|>
   "topic" :> ReqBody '[JSON] Topic :> Post '[JSON] Text :<|>
-  "topic" :> Capture "key" Text :> "notification" :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
+  "topic" :> Capture "key" TopicName :> "notification" :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
 
 topicServer :: ServerT TopicAPI App
 topicServer =
@@ -89,26 +91,26 @@ topicServer =
   newTopic :<|>
   notify
   where
-    allTopics :: App [(Text, Topic)]
+    allTopics :: App [(TopicName, Topic)]
     allTopics =
       do tvar <- asks _appDb
          liftIO $ atomically $
            do db <- readTVar tvar
               return $! Map.toList (db ^. topics)
 
-    newTopic :: Topic -> App Text
-    newTopic topic = newTopic' $ topic ^. service
+    newTopic :: Topic -> App TopicId
+    newTopic topic = newTopic' $ topic ^. topicService
       where
-        newTopic' :: Service -> App Text
+        newTopic' :: Service -> App TopicId
         newTopic' AWS =
-          do result <- runSNS $ createTopic $ topic ^. topicName
+          do result <- runSNS $ createTopic $ topic ^. topicId
              case result ^. ctrsTopicARN of
                Just arn ->
                  do tvar <- asks _appDb
                     liftIO $
                       atomically $
                         modifyTVar' tvar $
-                          over topics $ at (topic ^. topicName) ?~ Topic AWS arn
+                          over topics $ at (topic ^. topicId) ?~ Topic AWS arn
                     return arn
                Nothing ->
                  throwError $
@@ -117,7 +119,7 @@ topicServer =
           throwError $
             err501 { errBody = "Firebase Cloud Messaging currently unsupported" }
 
-    notify :: Text -> Notification -> App Notification
+    notify :: TopicName -> Notification -> App Notification
     notify k n =
       do tvar <- asks _appDb
          t <- liftIO $ atomically $

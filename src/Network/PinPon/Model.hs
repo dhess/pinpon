@@ -1,7 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Network.PinPon.Model
   ( -- * Types
@@ -9,23 +11,29 @@ module Network.PinPon.Model
   , Service(..)
   , allServices
   , Topic(..)
+  , TopicId
+  , TopicName
 
     -- * Lenses
-  , service
-  , topicName
+  , topicService
+  , topicId
   , topics
   ) where
 
 import Control.Lens
+import Data.Acid (Query, Update, makeAcidic)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), defaultOptions, genericParseJSON,
         genericToEncoding, genericToJSON)
+import Data.Data (Data, Typeable)
 import Data.Map.Strict (Map)
+import qualified Data.Map.Strict as Map (toList)
+import Data.SafeCopy (base, deriveSafeCopy)
 import Data.Swagger
        (ToSchema(..), description, example, genericDeclareNamedSchema,
         schema)
 import Data.Text (Text)
-import GHC.Generics
+import GHC.Generics (Generic)
 
 import Network.PinPon.Util
        (recordTypeJSONOptions, recordTypeSwaggerOptions)
@@ -38,7 +46,9 @@ import Network.PinPon.Util
 data Service
   = AWS
   | FCM
-  deriving (Show,Generic,Eq,Enum,Bounded,Ord)
+  deriving (Generic,Show,Read,Eq,Enum,Bounded,Ord,Data,Typeable)
+
+$(deriveSafeCopy 0 'base ''Service)
 
 instance ToJSON Service where
   toJSON = genericToJSON defaultOptions
@@ -52,13 +62,18 @@ instance ToSchema Service
 allServices :: [Service]
 allServices = [(minBound :: Service) ..]
 
+type TopicId = Text
+type TopicName = Text
+
 -- | Notification topics.
 data Topic =
-  Topic {_service :: !Service
-        ,_topicName :: !Text}
-  deriving (Show,Generic,Eq)
+  Topic {_topicService :: !Service
+        ,_topicId :: !TopicId}
+  deriving (Generic,Show,Read,Eq,Data,Typeable)
 
 makeClassy ''Topic
+
+$(deriveSafeCopy 0 'base ''Topic)
 
 instance ToJSON Topic where
   toJSON = genericToJSON recordTypeJSONOptions
@@ -77,6 +92,25 @@ instance ToSchema Topic where
     & mapped.schema.example ?~ toJSON (Topic AWS "test_topic_1")
 
 data AppDb =
-  AppDb {_topics :: Map Text Topic}
+  AppDb {_topics :: !(Map TopicName Topic)}
+  deriving (Generic,Show,Read,Eq,Data,Typeable)
 
 makeClassy ''AppDb
+
+$(deriveSafeCopy 0 'base ''AppDb)
+
+
+-- acid-state interface
+
+addTopic :: TopicName -> Topic -> Update AppDb ()
+addTopic n t = modifying topics $ at n ?~ t
+
+getTopic :: TopicName -> Query AppDb (Maybe Topic)
+getTopic n = views topics $ preview (ix n)
+
+allTopics :: Query AppDb [(TopicName, Topic)]
+allTopics = views topics Map.toList
+
+$(makeAcidic ''AppDb ['addTopic
+                     ,'getTopic
+                     ,'allTopics])
