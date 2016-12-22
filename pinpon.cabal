@@ -95,6 +95,7 @@ Library
                       , bytestring     == 0.10.*
                       , containers
                       , exceptions
+                      , http-api-data
                       , http-client    == 0.4.*
                       , http-types     == 0.9.*
                       , lens
@@ -212,6 +213,7 @@ Test-Suite spec
                       , containers
                       , exceptions
                       , hspec
+                      , http-api-data
                       , http-client
                       , http-types
                       , lens

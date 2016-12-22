@@ -3,7 +3,8 @@ module Network.PinPon.SwaggerAPISpec (spec) where
 
 import Network.PinPon.API (api)
 import Network.PinPon.API.Topic (Notification(..))
-import Network.PinPon.Model (Service(..), Topic(..))
+import Network.PinPon.Model
+       (Service(..), Topic(..), TopicId(..), TopicName(..))
 import Network.PinPon.SwaggerAPI (pinPonSwagger)
 
 import Data.Aeson (eitherDecode)
@@ -34,3 +35,8 @@ instance Arbitrary Topic where
 instance Arbitrary Notification where
   arbitrary = Notification <$> arbitrary <*> arbitrary
 
+instance Arbitrary TopicId where
+  arbitrary = TopicId <$> arbitrary
+
+instance Arbitrary TopicName where
+  arbitrary = TopicName <$> arbitrary
