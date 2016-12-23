@@ -156,8 +156,10 @@ Executable pinpon-server
     Build-Depends:      base
                       , acid-state
                       , amazonka
+                      , amazonka-sns
                       , containers
                       , exceptions           >= 0.8.0  && < 1
+                      , lens
                       , mtl
                       , pinpon
                       , network              == 2.6.*
