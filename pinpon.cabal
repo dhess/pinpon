@@ -84,7 +84,6 @@ Library
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        base           >= 4 && < 5
-                      , acid-state
                       , aeson
                       , aeson-pretty
                       , amazonka       == 1.4.3.*
@@ -93,7 +92,6 @@ Library
                       , bytestring     == 0.10.*
                       , containers
                       , exceptions
-                      , http-api-data
                       , http-client    == 0.4.*
                       , http-types     == 0.9.*
                       , lens
@@ -101,7 +99,6 @@ Library
                       , mellon-core    == 0.7.*
                       , mtl
                       , resourcet      >= 1.1
-                      , safecopy
                       , servant        >= 0.7.1 && < 0.10
                       , servant-client >= 0.7.1 && < 0.10
                       , servant-docs   >= 0.7.1 && < 0.10
@@ -109,7 +106,6 @@ Library
                       , servant-server >= 0.7.1 && < 0.10
                       , servant-swagger
                       , servant-swagger-ui
-                      , stm
                       , swagger2
                       , text           == 1.2.*
                       , time           >= 1.5   && < 2
@@ -154,7 +150,6 @@ Executable pinpon-server
     Buildable:         False
   Else
     Build-Depends:      base
-                      , acid-state
                       , amazonka
                       , amazonka-sns
                       , containers
@@ -164,7 +159,6 @@ Executable pinpon-server
                       , pinpon
                       , network              == 2.6.*
                       , optparse-applicative >= 0.11.0 && < 0.13
-                      , stm
                       , text
                       , transformers
                       , warp
@@ -203,7 +197,6 @@ Test-Suite spec
   Ghc-Options:          -w -threaded -rtsopts -with-rtsopts=-N
   Main-Is:              Spec.hs
   Build-Depends:        base
-                      , acid-state
                       , aeson
                       , aeson-pretty
                       , amazonka
@@ -213,7 +206,6 @@ Test-Suite spec
                       , containers
                       , exceptions
                       , hspec
-                      , http-api-data
                       , http-client
                       , http-types
                       , lens
@@ -223,7 +215,6 @@ Test-Suite spec
                       , QuickCheck
                       , quickcheck-instances
                       , resourcet
-                      , safecopy
                       , servant
                       , servant-client
                       , servant-docs
@@ -231,7 +222,6 @@ Test-Suite spec
                       , servant-server
                       , servant-swagger
                       , servant-swagger-ui
-                      , stm
                       , swagger2
                       , text
                       , time
