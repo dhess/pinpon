@@ -22,7 +22,7 @@ import Network.PinPon.Config (App(..), Config(..))
 
 runSNS :: (AWSRequest a) => a -> App (Rs a)
 runSNS req =
-  do env <- asks _awsEnv
+  do env <- asks _env
      catch (runAWST env $ send req) $ throwError . snsErrToServant
 
 snsErrToServant :: Error -> ServantErr

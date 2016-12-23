@@ -29,63 +29,15 @@
                     "type": "string"
                 }
             }
-        },
-        "Service": {
-            "type": "string",
-            "enum": [
-                "AWS",
-                "FCM"
-            ]
-        },
-        "Topic": {
-            "example": {
-                "topicName": "test_topic_1",
-                "topicService": "AWS"
-            },
-            "required": [
-                "topicService",
-                "topicName"
-            ],
-            "type": "object",
-            "description": "A topic",
-            "properties": {
-                "topicName": {
-                    "type": "string"
-                },
-                "topicService": {
-                    "$ref": "#/definitions/Service"
-                }
-            }
         }
     },
     "paths": {
-        "/service": {
-            "get": {
-                "responses": {
-                    "200": {
-                        "schema": {
-                            "items": {
-                                "$ref": "#/definitions/Service"
-                            },
-                            "type": "array"
-                        },
-                        "description": ""
-                    }
-                },
-                "produces": [
-                    "application/json"
-                ]
-            }
-        },
-        "/topic/{key}/notification": {
+        "/topic": {
             "post": {
                 "consumes": [
                     "application/json"
                 ],
                 "responses": {
-                    "404": {
-                        "description": "`key` not found"
-                    },
                     "400": {
                         "description": "Invalid `body`"
                     },
@@ -103,73 +55,12 @@
                 "parameters": [
                     {
                         "required": true,
-                        "in": "path",
-                        "name": "key",
-                        "type": "string"
-                    },
-                    {
-                        "required": true,
                         "schema": {
                             "$ref": "#/definitions/Notification"
                         },
                         "in": "body",
                         "name": "body"
                     }
-                ]
-            }
-        },
-        "/topic": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "responses": {
-                    "400": {
-                        "description": "Invalid `body`"
-                    },
-                    "200": {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": ""
-                    }
-                },
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Topic"
-                        },
-                        "in": "body",
-                        "name": "body"
-                    }
-                ]
-            },
-            "get": {
-                "responses": {
-                    "200": {
-                        "schema": {
-                            "items": {
-                                "items": [
-                                    {
-                                        "type": "string"
-                                    },
-                                    {
-                                        "$ref": "#/definitions/Topic"
-                                    }
-                                ],
-                                "type": "array"
-                            },
-                            "type": "array"
-                        },
-                        "description": ""
-                    }
-                },
-                "produces": [
-                    "application/json"
                 ]
             }
         }

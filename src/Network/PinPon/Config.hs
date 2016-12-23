@@ -9,11 +9,10 @@ module Network.PinPon.Config
   , Config(..)
 
     -- * Lenses
-  , awsEnv
-  , appDb
+  , env
+  , arn
   ) where
 
-import Control.Concurrent.STM.TVar (TVar)
 import Control.Lens
 import Control.Monad.Base (MonadBase(..))
 import Control.Monad.Catch (MonadCatch(..), MonadThrow(..))
@@ -21,19 +20,18 @@ import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Except (ExceptT, MonadError)
 import Control.Monad.Reader (MonadReader(..), ReaderT)
 import Control.Monad.Trans.Resource (MonadResource(..), ResourceT)
+import Data.Text (Text)
 import Network.AWS (Env, HasEnv(..))
 import Servant (ServantErr)
 
-import Network.PinPon.Model (AppDb)
-
 data Config =
-  Config {_awsEnv :: Env
-         ,_appDb :: TVar AppDb}
+  Config {_env :: !Env
+         ,_arn :: !Text}
 
 makeClassy ''Config
 
 instance HasEnv Config where
-  environment = awsEnv
+  environment = env
 
 newtype App a =
   App {runApp :: ReaderT Config (ResourceT (ExceptT ServantErr IO)) a}

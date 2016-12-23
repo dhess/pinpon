@@ -76,11 +76,9 @@ Library
     Build-Depends:      fail == 4.9.*
                       , semigroups == 0.18.*
   Exposed-Modules:      Network.PinPon.API
-                      , Network.PinPon.API.Service
                       , Network.PinPon.API.Topic
                       , Network.PinPon.AWS
                       , Network.PinPon.Config
-                      , Network.PinPon.Model
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Util
   Other-Extensions:     Safe
@@ -240,11 +238,9 @@ Test-Suite spec
                       , wai
                       , warp
   Other-Modules:        Network.PinPon.API
-                      , Network.PinPon.API.Service
                       , Network.PinPon.API.Topic
                       , Network.PinPon.AWS
                       , Network.PinPon.Config
-                      , Network.PinPon.Model
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Util
                       , Spec

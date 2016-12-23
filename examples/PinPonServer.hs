@@ -2,26 +2,25 @@
 
 module Main where
 
-import Control.Concurrent.STM (atomically)
-import Control.Concurrent.STM.TVar (newTVar)
 import Control.Monad.Trans.AWS
        (Region(Oregon), Credentials(Discover), newEnv)
-import qualified Data.Map.Strict as Map (empty)
+import Data.Text (Text)
 import Network (PortID(..), listenOn)
 import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket, setHost, setPort)
 import Options.Applicative
-import Network.PinPon.Model (AppDb(..))
 import Network.PinPon.Config (Config(..))
 import Network.PinPon.SwaggerAPI (app)
 
 data Options = Options {_port :: !Int}
 
+targetARN :: Text
+targetARN = "arn:aws:sns:us-west-2:948017695415:test1"
+
 defaultConfig :: IO Config
 defaultConfig =
   do env <- newEnv Oregon Discover
-     db <- atomically $ newTVar AppDb {_topics = Map.empty}
-     return Config {_awsEnv = env
-                   ,_appDb = db }
+     return Config {_env = env
+                   ,_arn = targetARN }
 
 options :: Parser Options
 options =

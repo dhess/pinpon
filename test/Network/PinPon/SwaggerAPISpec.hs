@@ -3,8 +3,6 @@ module Network.PinPon.SwaggerAPISpec (spec) where
 
 import Network.PinPon.API (api)
 import Network.PinPon.API.Topic (Notification(..))
-import Network.PinPon.Model
-       (Service(..), Topic(..), TopicId(..), TopicName(..))
 import Network.PinPon.SwaggerAPI (pinPonSwagger)
 
 import Data.Aeson (eitherDecode)
@@ -26,17 +24,5 @@ spec =
                  swagger <- eitherDecode <$> C8.readFile path
                  swagger `shouldBe` Right pinPonSwagger
 
-instance Arbitrary Service where
-  arbitrary = oneof [elements [AWS, FCM]]
-
-instance Arbitrary Topic where
-  arbitrary = Topic <$> arbitrary <*> arbitrary
-
 instance Arbitrary Notification where
   arbitrary = Notification <$> arbitrary <*> arbitrary
-
-instance Arbitrary TopicId where
-  arbitrary = TopicId <$> arbitrary
-
-instance Arbitrary TopicName where
-  arbitrary = TopicName <$> arbitrary
