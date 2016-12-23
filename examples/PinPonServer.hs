@@ -8,19 +8,16 @@ import Control.Monad.Trans.AWS
         runAWST, send)
 import Data.Maybe (fromJust)
 import Data.Text (Text)
-import Data.Text.Lens (packed)
 import Network (PortID(..), listenOn)
 import Network.AWS.SNS (createTopic, ctrsTopicARN)
 import Network.PinPon.Config (Config(..))
 import Network.PinPon.SwaggerAPI (app)
 import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket, setHost, setPort)
 import Options.Applicative
+import Options.Applicative.Text (text)
 
 data Options = Options {_port :: !Int
-                       ,_topicName :: !String}
-
-targetARN :: Text
-targetARN = "arn:aws:sns:us-west-2:948017695415:test1"
+                       ,_topicName :: !Text}
 
 defaultConfig :: Text -> IO Config
 defaultConfig topicName =
@@ -38,11 +35,11 @@ options =
                metavar "INT" <>
                value 8000 <>
                help "Listen on port") <*>
-  argument str (metavar "TOPIC_NAME")
+  argument text (metavar "TOPIC_NAME")
 
 run :: Options -> IO ()
 run (Options port topicName) =
-  do config <- defaultConfig $ topicName ^. packed
+  do config <- defaultConfig $ topicName
      sock <- listenOn (PortNumber (fromIntegral port))
      runSettingsSocket (setPort port $ setHost "*" defaultSettings) sock (app config)
 

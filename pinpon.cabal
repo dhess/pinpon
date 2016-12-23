@@ -159,6 +159,7 @@ Executable pinpon-server
                       , pinpon
                       , network              == 2.6.*
                       , optparse-applicative >= 0.11.0 && < 0.13
+                      , optparse-text
                       , text
                       , transformers
                       , warp
