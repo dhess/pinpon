@@ -54,8 +54,13 @@ Flag test-hlint
   Default: True
   Manual: True
 
--- Build the executable
-Flag executable
+-- Build the pinpon executable
+Flag pinpon-executable
+  Default: True
+  Manual: True
+
+-- Build the pinpon-ring executable
+Flag pinpon-ring-executable
   Default: True
   Manual: True
 
@@ -118,7 +123,7 @@ Executable pinpon
   If impl(ghc > 8)
     GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
   Other-Extensions:     OverloadedStrings
-  If !flag(executable)
+  If !flag(pinpon-executable)
     Buildable:         False
   Else
     Build-Depends:      base
@@ -132,6 +137,32 @@ Executable pinpon
                       , network              == 2.6.*
                       , optparse-applicative >= 0.11.0 && < 0.13
                       , optparse-text
+                      , text
+                      , transformers
+                      , warp
+
+Executable pinpon-ring
+  Main-Is:              Main.hs
+  Default-Language:     Haskell2010
+  HS-Source-Dirs:       pinpon-ring
+  GHC-Options:          -Wall -threaded -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  If impl(ghc > 8)
+    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  Other-Extensions:     OverloadedStrings
+  If !flag(pinpon-ring-executable)
+    Buildable:         False
+  Else
+    Build-Depends:      base
+                      , bytestring
+                      , exceptions
+                      , http-client
+                      , http-client-tls
+                      , http-types
+                      , pinpon
+                      , network              == 2.6.*
+                      , optparse-applicative >= 0.11.0 && < 0.13
+                      , optparse-text
+                      , servant-client
                       , text
                       , transformers
                       , warp
