@@ -43,7 +43,6 @@ Description:
 
 Extra-Doc-Files:        README.md
 Extra-Source-Files:     changelog.md
-                      , examples/*.hs
 
 -- Build doctests
 Flag test-doctests
@@ -52,11 +51,6 @@ Flag test-doctests
 
 -- Build hlint test
 Flag test-hlint
-  Default: True
-  Manual: True
-
--- Build the server example
-Flag server-example
   Default: True
   Manual: True
 
@@ -119,34 +113,11 @@ Executable pinpon
   Main-Is:              Main.hs
   Default-Language:     Haskell2010
   HS-Source-Dirs:       pinpon
-  GHC-Options:          -Wall -threaded
-  If impl(ghc > 8)
-    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints -fno-warn-redundant-constraints
-  If !flag(executable)
-    Buildable:          False
-  Else
-    Build-Depends:      amazonka
-                      , amazonka-ec2
-                      , amazonka-sns
-                      , base >= 4 && < 5
-                      , conduit
-                      , conduit-combinators
-                      , exceptions
-                      , lens
-                      , optparse-applicative >= 0.11.0 && < 0.13
-                      , pinpon
-                      , text
-                      , time
-
-Executable pinpon-server
-  Main-Is:              PinPonServer.hs
-  Default-Language:     Haskell2010
-  HS-Source-Dirs:       examples
   GHC-Options:          -Wall -threaded -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
   If impl(ghc > 8)
     GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
   Other-Extensions:     OverloadedStrings
-  If !flag(server-example)
+  If !flag(executable)
     Buildable:         False
   Else
     Build-Depends:      base

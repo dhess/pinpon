@@ -2,27 +2,51 @@
 
 module Main where
 
-import Control.Lens ((&), (?~), (^.), view)
+import Control.Lens ((^.))
 import Control.Monad.Trans.AWS
-       (Region(Oregon), Credentials(Discover), newEnv, paginate,
-        runResourceT, runAWST, send)
-import Data.Conduit (($$), (=$=))
-import qualified Data.Conduit.Combinators as Conduit (concatMap, find, sinkList)
+       (Region(Oregon), Credentials(Discover), newEnv, runResourceT,
+        runAWST, send)
+import Data.Maybe (fromJust)
 import Data.Text (Text)
-import Network.AWS (AWS)
-import Network.AWS.SNS (Topic, createTopic, ctrsTopicARN, tTopicARN)
-import Network.AWS.SNS.Publish (publish, pSubject, pTargetARN)
+import Network (PortID(..), listenOn)
+import Network.AWS.SNS (createTopic, ctrsTopicARN)
+import Network.PinPon.Config (Config(..))
+import Network.PinPon.SwaggerAPI (app)
+import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket, setHost, setPort)
+import Options.Applicative
+import Options.Applicative.Text (text)
 
-targetARN :: Text
-targetARN = "arn:aws:sns:us-west-2:948017695415:test1"
+data Options = Options {_port :: !Int
+                       ,_topicName :: !Text}
+
+defaultConfig :: Text -> IO Config
+defaultConfig topicName =
+  do env <- newEnv Oregon Discover
+     topic <- runResourceT . runAWST env $
+        send $ createTopic topicName
+     return Config {_env = env
+                   ,_arn = fromJust $ topic ^. ctrsTopicARN }
+
+options :: Parser Options
+options =
+  Options <$>
+  option auto (long "port" <>
+               short 'p' <>
+               metavar "INT" <>
+               value 8000 <>
+               help "Listen on port") <*>
+  argument text (metavar "TOPIC_NAME")
+
+run :: Options -> IO ()
+run (Options port topicName) =
+  do config <- defaultConfig $ topicName
+     sock <- listenOn (PortNumber (fromIntegral port))
+     runSettingsSocket (setPort port $ setHost "*" defaultSettings) sock (app config)
 
 main :: IO ()
-main =
-  do env <- newEnv Oregon Discover
-     result <- runResourceT . runAWST env $
-       do topic <- send $ createTopic "test1"
-          r <- send $ publish "Yo"
-                        & pSubject ?~ "Hi from Amazon SNS"
-                        & pTargetARN ?~ targetARN
-          return r
-     print result
+main = execParser opts >>= run
+  where
+    opts = info (helper <*> options)
+                ( fullDesc
+                   <> progDesc "Run a PinPon server"
+                   <> header "pinpon - A PinPon server" )
