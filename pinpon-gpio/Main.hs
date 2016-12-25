@@ -4,17 +4,10 @@
 
 module Main where
 
-import Control.Concurrent (threadDelay)
 import Control.Monad (forever, void)
 import Control.Monad.Catch (MonadMask)
-import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Reader (MonadReader(..), ReaderT(..), asks)
-import Data.Foldable (for_)
-import Data.Monoid ((<>))
-import Options.Applicative
-import System.GPIO.Linux.Sysfs (runSysfsGpioIO)
-import System.GPIO.Monad
 import Control.Monad.Catch.Pure (runCatch)
+import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Except (runExceptT)
 import Data.ByteString.Char8 as C8 (unpack)
 import Data.Text (Text)
@@ -25,7 +18,10 @@ import Network.PinPon.Client (Notification(..), notify)
 import Options.Applicative
 import Options.Applicative.Text (text)
 import Servant.Client (BaseUrl, ServantError(..), parseBaseUrl)
-import System.Exit (ExitCode(..), exitSuccess, exitWith)
+import System.GPIO.Linux.Sysfs (runSysfsGpioIO)
+import System.GPIO.Monad
+       (Pin(..), PinActiveLevel(..), PinInputMode(InputDefault),
+        PinInterruptMode(..), withInterruptPin, pollInterruptPin)
 
 -- Only one for now.
 data Interpreter =
@@ -77,24 +73,16 @@ options =
 
 run :: Options -> IO ()
 run (Options SysfsIO edge activeLevel pin serviceUrl name) =
-  runSysfsGpioIO $
-    withInterruptPin (Pin pin) InputDefault edge (Just activeLevel) $ \h ->
-      forever $
-        do void $ pollInterruptPin h
-           liftIO $ ring serviceUrl name
-
-ring :: BaseUrl -> Text -> IO ()
-ring url name =
   let notification = Notification name "Ring! Ring!"
   in
     do manager <- newManager tlsManagerSettings
-       runExceptT (notify notification manager url) >>= \case
-         Right status ->
-           do print status
-              exitSuccess
-         Left e ->
-           do putStrLn $ "PinPon service error: " ++ prettyServantError e
-              exitWith $ ExitFailure 1
+       runSysfsGpioIO $
+         withInterruptPin (Pin pin) InputDefault edge (Just activeLevel) $ \h ->
+           forever $
+             do void $ pollInterruptPin h
+                liftIO $ runExceptT (notify notification manager serviceUrl) >>= \case
+                  Right status -> print status
+                  Left e -> putStrLn $ "PinPon service error: " ++ prettyServantError e
   where
     prettyServantError :: ServantError -> String
     prettyServantError (FailureResponse status _ _) =
@@ -107,9 +95,6 @@ ring url name =
       "invalid content type header"
     prettyServantError ConnectionError{} =
       "connection refused"
-
-output :: (MonadIO m) => String -> m ()
-output = liftIO . putStrLn
 
 main :: IO ()
 main = execParser opts >>= run
