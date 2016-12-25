@@ -64,6 +64,11 @@ Flag pinpon-ring-executable
   Default: True
   Manual: True
 
+-- Build the pinpon-gpio executable
+Flag pinpon-gpio-executable
+  Default: True
+  Manual: True
+
 Library
   Default-Language:     Haskell2010
   HS-Source-Dirs:       src
@@ -159,6 +164,34 @@ Executable pinpon-ring
                       , http-client-tls
                       , http-types
                       , pinpon
+                      , network              == 2.6.*
+                      , optparse-applicative >= 0.11.0 && < 0.13
+                      , optparse-text
+                      , servant-client
+                      , text
+                      , transformers
+                      , warp
+
+Executable pinpon-gpio
+  Main-Is:              Main.hs
+  Default-Language:     Haskell2010
+  HS-Source-Dirs:       pinpon-gpio
+  GHC-Options:          -Wall -threaded -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  If impl(ghc > 8)
+    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  Other-Extensions:     OverloadedStrings
+  If !flag(pinpon-ring-executable)
+    Buildable:         False
+  Else
+    Build-Depends:      base
+                      , bytestring
+                      , exceptions
+                      , hpio
+                      , http-client
+                      , http-client-tls
+                      , http-types
+                      , pinpon
+                      , mtl
                       , network              == 2.6.*
                       , optparse-applicative >= 0.11.0 && < 0.13
                       , optparse-text
