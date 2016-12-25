@@ -5,7 +5,6 @@
 module Main where
 
 import Control.Monad (forever, void)
-import Control.Monad.Catch (MonadMask)
 import Control.Monad.Catch.Pure (runCatch)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Except (runExceptT)
