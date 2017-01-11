@@ -29,8 +29,8 @@ let
         executableHaskellDepends = [
           amazonka amazonka-sns base bytestring containers exceptions hpio
           http-client http-client-tls http-types lens mtl network
-          optparse-applicative optparse-text servant-client text transformers
-          warp
+          optparse-applicative optparse-text servant-client text time
+          transformers warp
         ];
         testHaskellDepends = [
           aeson aeson-pretty amazonka amazonka-core amazonka-sns base

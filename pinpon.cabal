@@ -197,6 +197,7 @@ Executable pinpon-gpio
                       , optparse-text
                       , servant-client
                       , text
+                      , time
                       , transformers
                       , warp
 
