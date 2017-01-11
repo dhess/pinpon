@@ -34,8 +34,8 @@ data Options =
   Options {_interpreter :: !Interpreter
           ,_edge :: !PinInterruptMode
           ,_activeLow :: !PinActiveLevel
-          ,_pinNumber :: !Int
           ,_debounce :: !Int
+          ,_pinNumber :: !Int
           ,_url :: !BaseUrl
           ,_name :: !Text}
 
@@ -66,12 +66,14 @@ options =
                value ActiveHigh <>
                showDefault <>
                help "Pin active level") <*>
+  option auto (long "debounce" <>
+               short 'D' <>
+               metavar "INT" <>
+               value 5 <>
+               showDefault <>
+               help "Debounce duration in seconds")  <*>
   argument auto (metavar "N" <>
                  help "GPIO pin number")  <*>
-  argument auto (metavar "INT" <>
-                 value 5 <>
-                 showDefault <>
-                 help "Debounce duration in seconds")  <*>
   argument (str >>= parseServiceUrl)
            (metavar "URL" <>
             help "PinPon server base URL") <*>
@@ -105,7 +107,7 @@ prettyServantError ConnectionError{} =
   "connection refused"
 
 run :: Options -> IO ()
-run (Options SysfsIO edge activeLevel pin debounceDelay serviceUrl name) =
+run (Options SysfsIO edge activeLevel debounceDelay pin serviceUrl name) =
   let notification = Notification name "Ring! Ring!"
   in
     do manager <- newManager tlsManagerSettings
