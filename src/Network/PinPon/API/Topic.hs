@@ -57,7 +57,8 @@ instance FromJSON Notification where
 instance ToSchema Notification where
   declareNamedSchema proxy = genericDeclareNamedSchema recordTypeSwaggerOptions proxy
     & mapped.schema.description ?~ "A notification"
-    & mapped.schema.example ?~ toJSON (Notification "Hi from AWS" "Hope you're doing well!")
+    & mapped.schema.example ?~
+        toJSON (Notification "Ring! Ring" "Someone is ringing the doorbell!")
 
 notificationDocument :: Monad m => HtmlT m a -> HtmlT m a -> HtmlT m a
 notificationDocument subj body =
