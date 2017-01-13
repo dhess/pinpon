@@ -1,11 +1,14 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Network.PinPon.Notification
   ( Notification(..)
+  , body
+  , title
   ) where
 
-import Control.Lens ((&), (?~), mapped)
+import Control.Lens ((&), (?~), mapped, makeLenses)
 import Control.Monad (void)
 import Data.Aeson.Types
        (FromJSON(..), ToJSON(..), genericParseJSON, genericToEncoding,
@@ -30,6 +33,8 @@ data Notification = Notification
   , _body :: Text
   } deriving (Show, Generic)
 
+makeLenses ''Notification
+
 instance ToJSON Notification where
   toJSON = genericToJSON recordTypeJSONOptions
   toEncoding = genericToEncoding recordTypeJSONOptions
@@ -48,13 +53,12 @@ instance ToSchema Notification where
 notificationDocument
   :: Monad m
   => HtmlT m a -> HtmlT m a -> HtmlT m a
-
-notificationDocument subj body =
+notificationDocument t b =
   doctypehtml_ $ do
-    void $ head_ $ title_ subj
-    body_ body
+    void $ head_ $ title_ t
+    body_ b
 
 instance ToHtml Notification where
-  toHtml (Notification subj body) =
-    notificationDocument (toHtml subj) (toHtml body)
+  toHtml (Notification t b) =
+    notificationDocument (toHtml t) (toHtml b)
   toHtmlRaw = toHtml

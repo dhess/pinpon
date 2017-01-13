@@ -87,6 +87,8 @@ Library
                       , Network.PinPon.Notification
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Util
+                      , Network.PinPon.WireTypes.APNS
+                      , Network.PinPon.WireTypes.SNS
   Other-Extensions:     Safe
                       , Trustworthy
   Build-Depends:        base           >= 4 && < 5
@@ -276,6 +278,8 @@ Test-Suite spec
                       , Network.PinPon.Notification
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Util
+                      , Network.PinPon.WireTypes.APNS
+                      , Network.PinPon.WireTypes.SNS
                       , Spec
                       , Network.PinPon.SwaggerAPISpec
 
