@@ -84,6 +84,7 @@ Library
                       , Network.PinPon.API.Topic
                       , Network.PinPon.AWS
                       , Network.PinPon.Config
+                      , Network.PinPon.Notification
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Util
   Other-Extensions:     Safe
@@ -272,6 +273,7 @@ Test-Suite spec
                       , Network.PinPon.API.Topic
                       , Network.PinPon.AWS
                       , Network.PinPon.Config
+                      , Network.PinPon.Notification
                       , Network.PinPon.SwaggerAPI
                       , Network.PinPon.Util
                       , Spec
