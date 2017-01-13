@@ -41,7 +41,7 @@ import Network.PinPon.Util
 -- >>> import Data.Swagger.Schema.Validation
 
 data Notification =
-  Notification {_subject :: Text
+  Notification {_title :: Text
                ,_body :: Text}
   deriving (Show,Generic)
 
@@ -82,6 +82,6 @@ topicServer =
     notify n =
       do arn <- asks _arn
          void $ runSNS $ publish (_body n)
-                                  & pSubject ?~ _subject n
+                                  & pSubject ?~ _title n
                                   & pTargetARN ?~ arn
          return n
