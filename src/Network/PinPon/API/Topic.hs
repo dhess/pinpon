@@ -30,6 +30,8 @@ import Network.PinPon.WireTypes.APNS
        (Alert(..), Aps(..), Payload(..))
 import Network.PinPon.Util (encodeText)
 
+-- XXX dhess TODO: let the user specify which APNS payloads are
+-- included.
 toMessage :: Notification -> Message
 toMessage n =
   Message
@@ -43,7 +45,7 @@ toMessage n =
         { _alert =
           Alert
           { _title = n ^. title
-          , _body = "Ring! Ring!"
+          , _body = n ^. body
           }
         , _sound = "default"
         }
