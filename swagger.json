@@ -12,20 +12,20 @@
     "definitions": {
         "Notification": {
             "example": {
-                "body": "Someone is ringing the doorbell!",
-                "title": "Ring! Ring"
+                "headline": "Ring! Ring",
+                "message": "Someone is ringing the doorbell!"
             },
             "required": [
-                "title",
-                "body"
+                "headline",
+                "message"
             ],
             "type": "object",
             "description": "A notification",
             "properties": {
-                "body": {
+                "headline": {
                     "type": "string"
                 },
-                "title": {
+                "message": {
                     "type": "string"
                 }
             }

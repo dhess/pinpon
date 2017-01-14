@@ -4,8 +4,8 @@
 
 module Network.PinPon.Notification
   ( Notification(..)
-  , body
-  , title
+  , message
+  , headline
   ) where
 
 import Control.Lens ((&), (?~), mapped, makeLenses)
@@ -29,8 +29,8 @@ import Network.PinPon.Util
 -- >>> import Data.Swagger.Schema.Validation
 
 data Notification = Notification
-  { _title :: Text
-  , _body :: Text
+  { _headline :: Text
+  , _message :: Text
   } deriving (Show, Generic)
 
 makeLenses ''Notification
@@ -53,10 +53,10 @@ instance ToSchema Notification where
 notificationDocument
   :: Monad m
   => HtmlT m a -> HtmlT m a -> HtmlT m a
-notificationDocument t b =
+notificationDocument title body =
   doctypehtml_ $ do
-    void $ head_ $ title_ t
-    body_ b
+    void $ head_ $ title_ title
+    body_ body
 
 instance ToHtml Notification where
   toHtml (Notification t b) =

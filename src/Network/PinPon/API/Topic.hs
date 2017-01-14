@@ -14,7 +14,7 @@ module Network.PinPon.API.Topic
          , topicServer
          ) where
 
-import Control.Lens ((^.), (&), (?~))
+import Control.Lens ((^.), (&), (.~), (?~))
 import Control.Monad (void)
 import Control.Monad.Reader (asks)
 import Network.AWS.SNS.Publish
@@ -24,33 +24,24 @@ import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
 import Network.PinPon.Config (App(..), Config(..))
-import Network.PinPon.Notification (Notification(..), body, title)
+import Network.PinPon.Notification
+       (Notification(..), headline, message)
 import Network.PinPon.WireTypes.SNS (Message(..))
-import Network.PinPon.WireTypes.APNS
-       (Alert(..), Aps(..), Payload(..))
+import Network.PinPon.WireTypes.APNS (defaultPayload, aps, alert, body, title)
 import Network.PinPon.Util (encodeText)
 
 -- XXX dhess TODO: let the user specify which APNS payloads are
 -- included.
 toMessage :: Notification -> Message
 toMessage n =
-  Message
-  { _defaultMsg = n ^. body
-  , _apnsPayload = Nothing
-  , _apnsSandboxPayload =
-    Just
-      Payload
-      { _aps =
-        Aps
-        { _alert =
-          Alert
-          { _title = n ^. title
-          , _body = n ^. body
-          }
-        , _sound = "default"
-        }
-      }
-  }
+  let payload = defaultPayload
+                  & aps.alert.title .~ n ^. headline
+                  & aps.alert.body .~ n ^. message
+  in Message
+     { _defaultMsg = n ^. message
+     , _apnsPayload = Nothing
+     , _apnsSandboxPayload = Just payload
+     }
 
 type TopicAPI =
   "topic" :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
@@ -63,7 +54,7 @@ topicServer =
     notify n =
       do arn <- asks _arn
          void $ runSNS $ publish (encodeText $ toMessage n)
-                                  & pSubject ?~ n ^. title
+                                  & pSubject ?~ n ^. headline
                                   & pMessageStructure ?~ "json"
                                   & pTargetARN ?~ arn
          return n

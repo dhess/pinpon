@@ -22,13 +22,16 @@ module Network.PinPon.WireTypes.APNS
     Alert(..)
   , title
   , body
+  , defaultAlert
 
   , Aps(..)
   , alert
   , sound
+  , defaultAps
 
   , Payload(..)
   , aps
+  , defaultPayload
   ) where
 
 import Control.Lens (makeLenses)
@@ -42,12 +45,20 @@ import Network.PinPon.Util (recordTypeJSONOptions)
 -- | A partial representation of the APNS @alert@ dictionary. See
 -- <https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/PayloadKeyReference.html#//apple_ref/doc/uid/TP40008194-CH17-SW4
 -- here> for details.
+--
+-- Note that while the APNS wire protocol permits an @alert@ to be
+-- represented as a single JSON string, rather than a dictionary, we
+-- only support the dictionary representation.
 data Alert = Alert
   { _title :: !Text
   , _body :: !Text
   } deriving (Show, Generic)
 
 makeLenses ''Alert
+
+-- | A @pinpon@-specific default value for 'Alert'.
+defaultAlert :: Alert
+defaultAlert = Alert "Ring! Ring!" "Someone is ringing the doorbell!"
 
 instance ToJSON Alert where
   toJSON = genericToJSON recordTypeJSONOptions
@@ -62,6 +73,10 @@ data Aps = Aps
   } deriving (Show, Generic)
 
 makeLenses ''Aps
+
+-- | A @pinpon@-specific default value for 'Aps'.
+defaultAps :: Aps
+defaultAps = Aps defaultAlert "default"
 
 instance ToJSON Aps where
   toJSON = genericToJSON recordTypeJSONOptions
@@ -79,6 +94,10 @@ data Payload = Payload
   } deriving (Show, Generic)
 
 makeLenses ''Payload
+
+-- | A @pinpon@-specific default value for an APNS 'Payload'.
+defaultPayload :: Payload
+defaultPayload = Payload defaultAps
 
 instance ToJSON Payload where
   toJSON = genericToJSON recordTypeJSONOptions
