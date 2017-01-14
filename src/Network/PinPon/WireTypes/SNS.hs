@@ -5,9 +5,10 @@
 module Network.PinPon.WireTypes.SNS
   ( -- * Amazon Simple Notification Service on-the-wire types
     Message(..)
-  , defaultMsg
+  , defaultText
   , apnsPayload
   , apnsSandboxPayload
+  , defaultMessage
   ) where
 
 import Control.Lens (makeLenses)
@@ -25,12 +26,16 @@ import qualified Network.PinPon.WireTypes.APNS as APNS (Payload(..))
 
 -- | A multi-platform SNS message.
 data Message = Message
-  { _defaultMsg         :: !Text              -- ^ The default message (required by SNS)
+  { _defaultText        :: !Text              -- ^ The default message contents (required by SNS)
   , _apnsPayload        :: Maybe APNS.Payload -- ^ Optional production APNS payload
   , _apnsSandboxPayload :: Maybe APNS.Payload -- ^ Optional sandbox APNS payload
   } deriving (Show, Generic)
 
 makeLenses ''Message
+
+-- | A @pinpon@-specific default value for 'Message'.
+defaultMessage :: Message
+defaultMessage = Message "Someone is ringing the doorbell!" Nothing Nothing
 
 instance ToJSON Message where
   toJSON (Message d p s) = object $! ["default" .= d] <> apns p <> apnsSandbox s

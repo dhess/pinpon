@@ -26,8 +26,10 @@ import Network.PinPon.AWS (runSNS)
 import Network.PinPon.Config (App(..), Config(..))
 import Network.PinPon.Notification
        (Notification(..), headline, message)
-import Network.PinPon.WireTypes.SNS (Message(..))
-import Network.PinPon.WireTypes.APNS (defaultPayload, aps, alert, body, title)
+import Network.PinPon.WireTypes.SNS
+       (Message, defaultMessage, defaultText, apnsSandboxPayload)
+import Network.PinPon.WireTypes.APNS
+       (defaultPayload, aps, alert, body, title)
 import Network.PinPon.Util (encodeText)
 
 -- XXX dhess TODO: let the user specify which APNS payloads are
@@ -37,11 +39,10 @@ toMessage n =
   let payload = defaultPayload
                   & aps.alert.title .~ n ^. headline
                   & aps.alert.body .~ n ^. message
-  in Message
-     { _defaultMsg = n ^. message
-     , _apnsPayload = Nothing
-     , _apnsSandboxPayload = Just payload
-     }
+  in
+    defaultMessage
+      & defaultText .~ n ^. message
+      & apnsSandboxPayload ?~ payload
 
 type TopicAPI =
   "topic" :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
