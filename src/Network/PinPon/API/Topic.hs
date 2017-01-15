@@ -17,32 +17,35 @@ module Network.PinPon.API.Topic
 import Control.Lens ((^.), (&), (.~), (?~))
 import Control.Monad (void)
 import Control.Monad.Reader (asks)
+import qualified Data.Set as Set (member)
 import Network.AWS.SNS.Publish
        (publish, pMessageStructure, pSubject, pTargetARN)
 import Servant ((:>), JSON, Post, ReqBody, ServerT)
 import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
-import Network.PinPon.Config (App(..), Config(..))
+import Network.PinPon.Config
+       (App(..), Config(..), Platform(..))
 import Network.PinPon.Notification
-       (Notification(..), headline, message)
+       (Notification(..), headline)
 import Network.PinPon.WireTypes.SNS
-       (Message, defaultMessage, defaultText, apnsSandboxPayload)
+       (Message(..), apnsPayload, apnsSandboxPayload, defaultMessage,
+        defaultText)
 import Network.PinPon.WireTypes.APNS
        (defaultPayload, aps, alert, body, title)
 import Network.PinPon.Util (encodeText)
 
--- XXX dhess TODO: let the user specify which APNS payloads are
--- included.
-toMessage :: Notification -> Message
-toMessage n =
-  let payload = defaultPayload
-                  & aps.alert.title .~ n ^. headline
-                  & aps.alert.body .~ n ^. message
-  in
-    defaultMessage
-      & defaultText .~ n ^. message
-      & apnsSandboxPayload ?~ payload
+toMessage ::  Notification -> App Message
+toMessage (Notification h m) =
+  let payload =
+        defaultPayload & aps.alert.title .~ h & aps.alert.body .~ m
+  in do
+    platforms <- asks _platforms
+    return $
+      defaultMessage
+        & defaultText .~ m
+        & apnsPayload .~ (if Set.member APNS platforms then Just payload else Nothing)
+        & apnsSandboxPayload .~ (if Set.member APNSSandbox platforms then Just payload else Nothing)
 
 type TopicAPI =
   "topic" :> ReqBody '[JSON] Notification :> Post '[JSON, HTML] Notification
@@ -54,7 +57,8 @@ topicServer =
     notify :: Notification -> App Notification
     notify n =
       do arn <- asks _arn
-         void $ runSNS $ publish (encodeText $ toMessage n)
+         msg <- toMessage n
+         void $ runSNS $ publish (encodeText msg)
                                   & pSubject ?~ n ^. headline
                                   & pMessageStructure ?~ "json"
                                   & pTargetARN ?~ arn
