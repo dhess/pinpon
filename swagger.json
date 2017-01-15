@@ -7,7 +7,7 @@
             "url": "https://opensource.org/licenses/BSD-3-Clause",
             "name": "BSD3"
         },
-        "description": "Send notifications to various cloud services"
+        "description": "A simple Internet-enabled doorbell notificaion service"
     },
     "definitions": {
         "Notification": {

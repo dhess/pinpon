@@ -58,7 +58,7 @@ pinPonSwagger :: Swagger
 pinPonSwagger = toSwagger PinPon.api
   & info.title .~ "PinPon API"
   & info.version .~ "0.1"
-  & info.description ?~ "Send notifications to various cloud services"
+  & info.description ?~ "A simple Internet-enabled doorbell notificaion service"
   & info.license ?~ ("BSD3" & url ?~ URL "https://opensource.org/licenses/BSD-3-Clause")
 
 writeSwaggerJSON :: IO ()
