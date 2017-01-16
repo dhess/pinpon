@@ -5,6 +5,7 @@
 module Main where
 
 import Control.Concurrent (threadDelay)
+import Control.Lens ((^.))
 import Control.Monad (forever, void)
 import Control.Monad.Catch.Pure (runCatch)
 import Control.Monad.IO.Class (MonadIO, liftIO)
@@ -16,7 +17,8 @@ import Data.Time.Clock
 import Network.HTTP.Client (newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 import Network.HTTP.Types (Status(..))
-import Network.PinPon.Client (Notification(..), notify)
+import Network.PinPon.Client
+       (Notification(..), defaultNotification, headline, message, notify)
 import Options.Applicative hiding (action)
 import Options.Applicative.Text (text)
 import Servant.Client (BaseUrl, ServantError(..), parseBaseUrl)
@@ -30,14 +32,16 @@ data Interpreter =
   SysfsIO
   deriving (Eq,Show,Read)
 
-data Options =
-  Options {_interpreter :: !Interpreter
-          ,_edge :: !PinInterruptMode
-          ,_activeLow :: !PinActiveLevel
-          ,_debounce :: !Int
-          ,_pinNumber :: !Int
-          ,_url :: !BaseUrl
-          ,_name :: !Text}
+data Options = Options
+  { _interpreter :: !Interpreter
+  , _edge :: !PinInterruptMode
+  , _activeLow :: !PinActiveLevel
+  , _debounce :: !Int
+  , _headline :: !Text
+  , _message :: !Text
+  , _pinNumber :: !Int
+  , _url :: !BaseUrl
+  }
 
 parseServiceUrl :: String -> ReadM BaseUrl
 parseServiceUrl s =
@@ -72,13 +76,21 @@ options =
                value 5 <>
                showDefault <>
                help "Debounce duration in seconds")  <*>
+  option text (long "headline" <>
+               short 'H' <>
+               metavar "TEXT" <>
+               value (defaultNotification ^. headline) <>
+               help "Override the default notification headline") <*>
+  option text (long "message" <>
+               short 'M' <>
+               metavar "TEXT" <>
+               value (defaultNotification ^. message) <>
+               help "Override the default notification message") <*>
   argument auto (metavar "N" <>
                  help "GPIO pin number")  <*>
   argument (str >>= parseServiceUrl)
            (metavar "URL" <>
-            help "PinPon server base URL") <*>
-  argument text (metavar "NAME" <>
-                 help "Doorbell name (used to identify notification source)")
+            help "PinPon server base URL")
 
 -- Note: debounce delay here is in /microseconds/.
 debounce :: (MonadIO m) => Int -> m a -> m a
@@ -107,8 +119,8 @@ prettyServantError ConnectionError{} =
   "connection refused"
 
 run :: Options -> IO ()
-run (Options SysfsIO edge activeLevel debounceDelay pin serviceUrl name) =
-  let notification = Notification name "Ring! Ring!"
+run (Options SysfsIO edge activeLevel debounceDelay hl msg pin serviceUrl) =
+  let notification = Notification hl msg
   in
     do manager <- newManager tlsManagerSettings
        runSysfsGpioIO $
