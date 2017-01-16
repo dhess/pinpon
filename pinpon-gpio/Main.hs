@@ -1,20 +1,21 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main where
 
 import Control.Concurrent (threadDelay)
 import Control.Lens ((^.))
-import Control.Monad (forever, void)
+import Control.Monad (forever, unless, void)
 import Control.Monad.Catch.Pure (runCatch)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Trans.Except (runExceptT)
 import Data.ByteString.Char8 as C8 (unpack)
-import Data.Text (Text)
+import Data.Text (Text, pack)
+import qualified Data.Text as T (unwords)
+import qualified Data.Text.IO as T (putStrLn, hPutStrLn)
 import Data.Time.Clock
        (NominalDiffTime, diffUTCTime, getCurrentTime)
-import Network.HTTP.Client (newManager)
+import Network.HTTP.Client (Manager, newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 import Network.HTTP.Types (Status(..))
 import Network.PinPon.Client
@@ -22,10 +23,11 @@ import Network.PinPon.Client
 import Options.Applicative hiding (action)
 import Options.Applicative.Text (text)
 import Servant.Client (BaseUrl, ServantError(..), parseBaseUrl)
-import System.GPIO.Linux.Sysfs (runSysfsGpioIO)
+import System.GPIO.Linux.Sysfs (SysfsGpioIO, runSysfsGpioIO)
 import System.GPIO.Monad
        (Pin(..), PinActiveLevel(..), PinInputMode(InputDefault),
         PinInterruptMode(..), withInterruptPin, pollInterruptPin)
+import System.IO (stderr)
 
 -- Only one for now.
 data Interpreter =
@@ -33,7 +35,8 @@ data Interpreter =
   deriving (Eq,Show,Read)
 
 data Options = Options
-  { _interpreter :: !Interpreter
+  { _quiet :: !Bool
+  , _interpreter :: !Interpreter
   , _edge :: !PinInterruptMode
   , _activeLow :: !PinActiveLevel
   , _debounce :: !Int
@@ -52,6 +55,10 @@ parseServiceUrl s =
 options :: Parser Options
 options =
   Options <$>
+  switch (long "quiet" <>
+              short 'q' <>
+              showDefault <>
+              help "Only show errors") <*>
   option auto (long "interpreter" <>
                short 'i' <>
                metavar "SysfsIO" <>
@@ -106,9 +113,10 @@ debounce delay action =
     toUsec d = truncate $ d * 1000000
 
 -- Not really that pretty.
-prettyServantError :: ServantError -> String
+prettyServantError :: ServantError -> Text
 prettyServantError (FailureResponse status _ _) =
-  show (statusCode status) ++ " " ++ C8.unpack (statusMessage status)
+  T.unwords
+    [pack (show $ statusCode status), pack (C8.unpack $ statusMessage status)]
 prettyServantError DecodeFailure{} =
   "decode failure"
 prettyServantError UnsupportedContentType{} =
@@ -119,17 +127,27 @@ prettyServantError ConnectionError{} =
   "connection refused"
 
 run :: Options -> IO ()
-run (Options SysfsIO edge activeLevel debounceDelay hl msg pin serviceUrl) =
+run (Options quiet SysfsIO edge activeLevel debounceDelay hl msg pin serviceUrl) =
   let notification = Notification hl msg
-  in
-    do manager <- newManager tlsManagerSettings
-       runSysfsGpioIO $
-         withInterruptPin (Pin pin) InputDefault edge (Just activeLevel) $ \h ->
-           forever $ debounce (debounceDelay * 1000000) $
-             do void $ pollInterruptPin h
-                liftIO $ runExceptT (notify notification manager serviceUrl) >>= \case
-                  Right status -> print status
-                  Left e -> putStrLn $ "PinPon service error: " ++ prettyServantError e
+  in do manager <- newManager tlsManagerSettings
+        runSysfsGpioIO $
+          withInterruptPin (Pin pin) InputDefault edge (Just activeLevel) $ \h ->
+          forever $ debounce (debounceDelay * 1000000) $ do
+            void $ pollInterruptPin h
+            output "Ring! Ring!"
+            result <- sendNotification notification manager
+            case result of
+              Right _ -> output "Notification sent"
+              Left e -> outputErr $ T.unwords ["PinPon service error:", prettyServantError e]
+  where
+    sendNotification :: Notification -> Manager -> SysfsGpioIO (Either ServantError Notification)
+    sendNotification n mgr = liftIO $ runExceptT $ notify n mgr serviceUrl
+
+    output :: Text -> SysfsGpioIO ()
+    output t = unless quiet $ liftIO (T.putStrLn t)
+
+    outputErr :: Text -> SysfsGpioIO ()
+    outputErr = liftIO . T.hPutStrLn stderr
 
 main :: IO ()
 main = execParser opts >>= run
