@@ -166,10 +166,11 @@ Executable pinpon-ring
                       , http-client
                       , http-client-tls
                       , http-types
-                      , pinpon
+                      , lens
                       , network              == 2.6.*
                       , optparse-applicative >= 0.11.0 && < 0.13
                       , optparse-text
+                      , pinpon
                       , servant-client
                       , text
                       , transformers
@@ -193,11 +194,12 @@ Executable pinpon-gpio
                       , http-client
                       , http-client-tls
                       , http-types
-                      , pinpon
+                      , lens
                       , mtl
                       , network              == 2.6.*
                       , optparse-applicative >= 0.11.0 && < 0.13
                       , optparse-text
+                      , pinpon
                       , servant-client
                       , text
                       , time

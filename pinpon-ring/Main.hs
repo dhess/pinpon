@@ -3,6 +3,7 @@
 
 module Main where
 
+import Control.Lens ((^.))
 import Control.Monad.Catch.Pure (runCatch)
 import Control.Monad.Trans.Except (runExceptT)
 import Data.ByteString.Char8 as C8 (unpack)
@@ -10,16 +11,18 @@ import Data.Text (Text)
 import Network.HTTP.Client (newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 import Network.HTTP.Types (Status(..))
-import Network.PinPon.Client (Notification(..), notify)
+import Network.PinPon.Client
+       (Notification(..), defaultNotification, headline, message, notify)
 import Options.Applicative
 import Options.Applicative.Text (text)
 import Servant.Client (BaseUrl, ServantError(..), parseBaseUrl)
 import System.Exit (ExitCode(..), exitSuccess, exitWith)
 
-data Options =
-  Options {_url :: !BaseUrl
-          ,_subject :: !Text
-          ,_body :: !Text}
+data Options = Options
+  { _headline :: !Text
+  , _message :: !Text
+  , _url :: !BaseUrl
+  }
 
 parseServiceUrl :: String -> ReadM BaseUrl
 parseServiceUrl s =
@@ -30,15 +33,23 @@ parseServiceUrl s =
 options :: Parser Options
 options =
   Options <$>
+  option text (long "headline" <>
+               short 'H' <>
+               metavar "TEXT" <>
+               value (defaultNotification ^. headline) <>
+               help "Override the default notification headline") <*>
+  option text (long "message" <>
+               short 'M' <>
+               metavar "TEXT" <>
+               value (defaultNotification ^. message) <>
+               help "Override the default notification message") <*>
   argument (str >>= parseServiceUrl)
            (metavar "URL" <>
-            help "PinPon server base URL") <*>
-  argument text (metavar "SUBJECT") <*>
-  argument text (metavar "BODY")
+            help "PinPon server base URL")
 
 run :: Options -> IO ()
-run (Options baseUrl subject body) =
-  let notification = Notification subject body
+run (Options hl msg baseUrl) =
+  let notification = Notification hl msg
   in
     do manager <- newManager tlsManagerSettings
        runExceptT (notify notification manager baseUrl) >>= \case
@@ -66,5 +77,5 @@ main = execParser opts >>= run
   where
     opts = info (helper <*> options)
                 (fullDesc <>
-                 progDesc "'Ring' a PinPon doorbell" <>
+                 progDesc "Ring a PinPon doorbell" <>
                  header "pinpon-ring")
