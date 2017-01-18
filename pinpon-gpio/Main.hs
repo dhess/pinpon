@@ -19,7 +19,8 @@ import Network.HTTP.Client (Manager, newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 import Network.HTTP.Types (Status(..))
 import Network.PinPon.Client
-       (Notification(..), defaultNotification, headline, message, notify)
+       (Notification(..), defaultNotification, headline, message, notify,
+        sound)
 import Options.Applicative hiding (action)
 import Options.Applicative.Text (text)
 import Servant.Client (BaseUrl, ServantError(..), parseBaseUrl)
@@ -42,6 +43,7 @@ data Options = Options
   , _debounce :: !Int
   , _headline :: !Text
   , _message :: !Text
+  , _sound :: !Text
   , _pinNumber :: !Int
   , _url :: !BaseUrl
   }
@@ -93,6 +95,11 @@ options =
                metavar "TEXT" <>
                value (defaultNotification ^. message) <>
                help "Override the default notification message") <*>
+  option text (long "sound" <>
+               short 'S' <>
+               metavar "TEXT" <>
+               value (defaultNotification ^. sound) <>
+               help "Override the default notification sound") <*>
   argument auto (metavar "N" <>
                  help "GPIO pin number")  <*>
   argument (str >>= parseServiceUrl)
@@ -127,8 +134,8 @@ prettyServantError ConnectionError{} =
   "connection refused"
 
 run :: Options -> IO ()
-run (Options quiet SysfsIO edge activeLevel debounceDelay hl msg pin serviceUrl) =
-  let notification = Notification hl msg
+run (Options quiet SysfsIO edge activeLevel debounceDelay hl msg s pin serviceUrl) =
+  let notification = Notification hl msg s
   in do manager <- newManager tlsManagerSettings
         runSysfsGpioIO $
           withInterruptPin (Pin pin) InputDefault edge (Just activeLevel) $ \h ->

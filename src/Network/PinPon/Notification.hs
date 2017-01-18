@@ -7,6 +7,7 @@ module Network.PinPon.Notification
     Notification(..)
   , headline
   , message
+  , sound
   , defaultNotification
   ) where
 
@@ -35,16 +36,21 @@ import Network.PinPon.Util
 -- @pinpon@ doorbell notifications are sent by @pinpon@ API clients to
 -- the server. The server translates these notifications to the
 -- format(s) required by the doorbell's subscribers.
+--
+-- Note that some notification formats don't support sound (e.g.,
+-- email and SMS). This field will be ignored on platforms that do not
+-- support it.
 data Notification = Notification
   { _headline :: !Text -- ^ A summary of the notification, preferably a single line
   , _message :: !Text  -- ^ A more detailed message (can be multiple lines)
+  , _sound :: !Text    -- ^ A client-specific string denoting the sound to play
   } deriving (Show, Generic)
 
 makeLenses ''Notification
 
 -- | A default value for 'Notification'.
 defaultNotification :: Notification
-defaultNotification = Notification "Ring! Ring!" "Someone is ringing the doorbell!"
+defaultNotification = Notification "Ring! Ring!" "Someone is ringing the doorbell!" "default"
 
 instance ToJSON Notification where
   toJSON = genericToJSON recordTypeJSONOptions
@@ -53,7 +59,7 @@ instance FromJSON Notification where
   parseJSON = genericParseJSON recordTypeJSONOptions
 
 -- $
--- >>> validateToJSON $ Notification "Hi" "Test"
+-- >>> validateToJSON $ Notification "Hi" "Test" "soundfile.caf"
 -- []
 instance ToSchema Notification where
   declareNamedSchema proxy =
@@ -68,5 +74,5 @@ notificationResultDocument hl msg =
     body_ msg
 
 instance ToHtml Notification where
-  toHtml (Notification hl msg) = notificationResultDocument (toHtml hl) (toHtml msg)
+  toHtml (Notification hl msg _) = notificationResultDocument (toHtml hl) (toHtml msg)
   toHtmlRaw = toHtml

@@ -32,13 +32,13 @@ import Network.PinPon.WireTypes.SNS
        (Message(..), apnsPayload, apnsSandboxPayload, defaultMessage,
         defaultText)
 import Network.PinPon.WireTypes.APNS
-       (defaultPayload, aps, alert, body, title)
+       (defaultPayload, aps, alert, body, sound, title)
 import Network.PinPon.Util (encodeText)
 
 toMessage ::  Notification -> App Message
-toMessage (Notification h m) =
+toMessage (Notification h m s) =
   let payload =
-        defaultPayload & aps.alert.title .~ h & aps.alert.body .~ m
+        defaultPayload & aps.alert.title .~ h & aps.alert.body .~ m & aps.sound .~ s
   in do
     platforms <- asks _platforms
     return $

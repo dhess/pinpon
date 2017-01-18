@@ -12,16 +12,21 @@
     "definitions": {
         "Notification": {
             "example": {
+                "sound": "default",
                 "headline": "Ring! Ring!",
                 "message": "Someone is ringing the doorbell!"
             },
             "required": [
                 "headline",
-                "message"
+                "message",
+                "sound"
             ],
             "type": "object",
             "description": "A doorbell notification",
             "properties": {
+                "sound": {
+                    "type": "string"
+                },
                 "headline": {
                     "type": "string"
                 },

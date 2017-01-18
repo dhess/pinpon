@@ -25,4 +25,4 @@ spec =
                  swagger `shouldBe` Right pinPonSwagger
 
 instance Arbitrary Notification where
-  arbitrary = Notification <$> arbitrary <*> arbitrary
+  arbitrary = Notification <$> arbitrary <*> arbitrary <*> arbitrary

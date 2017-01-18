@@ -10,6 +10,7 @@ module Network.PinPon.Client
   , defaultNotification
   , headline
   , message
+  , sound
   ) where
 
 import Control.Monad.Trans.Except (ExceptT)
@@ -19,7 +20,7 @@ import Servant.Client (BaseUrl, ServantError, client)
 
 import Network.PinPon.API (API)
 import Network.PinPon.Notification
-       (Notification(..), defaultNotification, headline, message)
+       (Notification(..), defaultNotification, headline, message, sound)
 
 -- | The client API.
 clientAPI :: Proxy API

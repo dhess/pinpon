@@ -12,7 +12,8 @@ import Network.HTTP.Client (newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 import Network.HTTP.Types (Status(..))
 import Network.PinPon.Client
-       (Notification(..), defaultNotification, headline, message, notify)
+       (Notification(..), defaultNotification, headline, message, notify,
+        sound)
 import Options.Applicative
 import Options.Applicative.Text (text)
 import Servant.Client (BaseUrl, ServantError(..), parseBaseUrl)
@@ -21,6 +22,7 @@ import System.Exit (ExitCode(..), exitSuccess, exitWith)
 data Options = Options
   { _headline :: !Text
   , _message :: !Text
+  , _sound :: !Text
   , _url :: !BaseUrl
   }
 
@@ -43,13 +45,18 @@ options =
                metavar "TEXT" <>
                value (defaultNotification ^. message) <>
                help "Override the default notification message") <*>
+  option text (long "sound" <>
+               short 'S' <>
+               metavar "TEXT" <>
+               value (defaultNotification ^. sound) <>
+               help "Override the default notification sound") <*>
   argument (str >>= parseServiceUrl)
            (metavar "URL" <>
             help "PinPon server base URL")
 
 run :: Options -> IO ()
-run (Options hl msg baseUrl) =
-  let notification = Notification hl msg
+run (Options hl msg s baseUrl) =
+  let notification = Notification hl msg s
   in
     do manager <- newManager tlsManagerSettings
        runExceptT (notify notification manager baseUrl) >>= \case
