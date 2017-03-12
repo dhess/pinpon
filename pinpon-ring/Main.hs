@@ -5,8 +5,8 @@ module Main where
 
 import Control.Lens ((^.))
 import Control.Monad.Catch.Pure (runCatch)
-import Control.Monad.Trans.Except (runExceptT)
 import Data.ByteString.Char8 as C8 (unpack)
+import Data.Monoid ((<>))
 import Data.Text (Text)
 import Network.HTTP.Client (newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
@@ -16,7 +16,9 @@ import Network.PinPon.Client
         sound)
 import Options.Applicative
 import Options.Applicative.Text (text)
-import Servant.Client (BaseUrl, ServantError(..), parseBaseUrl)
+import Servant.Client
+       (BaseUrl, ClientEnv(..), ServantError(..), parseBaseUrl,
+        runClientM)
 import System.Exit (ExitCode(..), exitSuccess, exitWith)
 
 data Options = Options
@@ -59,7 +61,7 @@ run (Options hl msg s baseUrl) =
   let notification = Notification hl msg s
   in
     do manager <- newManager tlsManagerSettings
-       runExceptT (notify notification manager baseUrl) >>= \case
+       runClientM (notify notification) (ClientEnv manager baseUrl) >>= \case
          Right status ->
            do print status
               exitSuccess

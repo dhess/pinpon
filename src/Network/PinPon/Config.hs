@@ -75,7 +75,8 @@ instance HasEnv Config where
 -- and region, then this operation is idempotent.
 createConfig :: Region -> Credentials -> Text -> IO Config
 createConfig region credentials topicName =
-  do enviro <- newEnv region credentials
+  do e <- newEnv credentials
+     let enviro = e & envRegion .~ region
      topic <- runResourceT . runAWST enviro $
         send $ createTopic topicName
      return Config { _env = enviro

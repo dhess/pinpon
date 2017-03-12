@@ -13,10 +13,8 @@ module Network.PinPon.Client
   , sound
   ) where
 
-import Control.Monad.Trans.Except (ExceptT)
 import Data.Proxy (Proxy(..))
-import Network.HTTP.Client (Manager)
-import Servant.Client (BaseUrl, ServantError, client)
+import Servant.Client (ClientM, client)
 
 import Network.PinPon.API (API)
 import Network.PinPon.Notification
@@ -27,5 +25,5 @@ clientAPI :: Proxy API
 clientAPI = Proxy
 
 -- | Post a notification.
-notify :: Notification -> Manager -> BaseUrl -> ExceptT ServantError IO Notification
+notify :: Notification -> ClientM Notification
 notify = client clientAPI

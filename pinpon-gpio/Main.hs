@@ -8,14 +8,14 @@ import Control.Lens ((^.))
 import Control.Monad (forever, unless, void)
 import Control.Monad.Catch.Pure (runCatch)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Trans.Except (runExceptT)
 import Data.ByteString.Char8 as C8 (unpack)
+import Data.Monoid ((<>))
 import Data.Text (Text, pack)
 import qualified Data.Text as T (unwords)
 import qualified Data.Text.IO as T (putStrLn, hPutStrLn)
 import Data.Time.Clock
        (NominalDiffTime, diffUTCTime, getCurrentTime)
-import Network.HTTP.Client (Manager, newManager)
+import Network.HTTP.Client (newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 import Network.HTTP.Types (Status(..))
 import Network.PinPon.Client
@@ -23,7 +23,9 @@ import Network.PinPon.Client
         sound)
 import Options.Applicative hiding (action)
 import Options.Applicative.Text (text)
-import Servant.Client (BaseUrl, ServantError(..), parseBaseUrl)
+import Servant.Client
+       (BaseUrl, ClientEnv(..), ServantError(..), parseBaseUrl,
+        runClientM)
 import System.GPIO.Linux.Sysfs (SysfsGpioIO, runSysfsGpioIO)
 import System.GPIO.Monad
        (Pin(..), PinActiveLevel(..), PinInputMode(InputDefault),
@@ -137,18 +139,19 @@ run :: Options -> IO ()
 run (Options quiet SysfsIO edge activeLevel debounceDelay hl msg s pin serviceUrl) =
   let notification = Notification hl msg s
   in do manager <- newManager tlsManagerSettings
+        let clientEnv = ClientEnv manager serviceUrl
         runSysfsGpioIO $
           withInterruptPin (Pin pin) InputDefault edge (Just activeLevel) $ \h ->
           forever $ debounce (debounceDelay * 1000000) $ do
             void $ pollInterruptPin h
             output "Ring! Ring!"
-            result <- sendNotification notification manager
+            result <- sendNotification notification clientEnv
             case result of
               Right _ -> output "Notification sent"
               Left e -> outputErr $ T.unwords ["PinPon service error:", prettyServantError e]
   where
-    sendNotification :: Notification -> Manager -> SysfsGpioIO (Either ServantError Notification)
-    sendNotification n mgr = liftIO $ runExceptT $ notify n mgr serviceUrl
+    sendNotification :: Notification -> ClientEnv -> SysfsGpioIO (Either ServantError Notification)
+    sendNotification n env = liftIO $ runClientM (notify n) env
 
     output :: Text -> SysfsGpioIO ()
     output t = unless quiet $ liftIO (T.putStrLn t)

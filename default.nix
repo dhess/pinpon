@@ -1,11 +1,11 @@
 { mkDerivation, aeson, aeson-pretty, amazonka, amazonka-core
 , amazonka-sns, base, bytestring, containers, doctest, exceptions
 , hlint, hpio, hspec, http-client, http-client-tls, http-types
-, lens, lucid, mellon-core, mtl, network, optparse-applicative
-, optparse-text, QuickCheck, quickcheck-instances, resourcet
-, servant, servant-client, servant-docs, servant-lucid
-, servant-server, servant-swagger, servant-swagger-ui, stdenv
-, swagger2, text, time, transformers, transformers-base, wai, warp
+, lens, lucid, mtl, network, optparse-applicative, optparse-text
+, QuickCheck, quickcheck-instances, resourcet, servant
+, servant-client, servant-docs, servant-lucid, servant-server
+, servant-swagger, servant-swagger-ui, stdenv, swagger2, text, time
+, transformers, transformers-base, wai, warp
 }:
 mkDerivation {
   pname = "pinpon";
@@ -16,9 +16,9 @@ mkDerivation {
   libraryHaskellDepends = [
     aeson aeson-pretty amazonka amazonka-core amazonka-sns base
     bytestring containers exceptions http-client http-types lens lucid
-    mellon-core mtl resourcet servant servant-client servant-docs
-    servant-lucid servant-server servant-swagger servant-swagger-ui
-    swagger2 text time transformers transformers-base wai warp
+    mtl resourcet servant servant-client servant-docs servant-lucid
+    servant-server servant-swagger servant-swagger-ui swagger2 text
+    time transformers transformers-base wai warp
   ];
   executableHaskellDepends = [
     amazonka amazonka-sns base bytestring containers exceptions hpio
@@ -29,10 +29,10 @@ mkDerivation {
   testHaskellDepends = [
     aeson aeson-pretty amazonka amazonka-core amazonka-sns base
     bytestring containers doctest exceptions hlint hspec http-client
-    http-types lens lucid mellon-core mtl QuickCheck
-    quickcheck-instances resourcet servant servant-client servant-docs
-    servant-lucid servant-server servant-swagger servant-swagger-ui
-    swagger2 text time transformers transformers-base wai warp
+    http-types lens lucid mtl QuickCheck quickcheck-instances resourcet
+    servant servant-client servant-docs servant-lucid servant-server
+    servant-swagger servant-swagger-ui swagger2 text time transformers
+    transformers-base wai warp
   ];
   homepage = "https://github.com/dhess/pinpon/";
   description = "A gateway for various cloud notification services";

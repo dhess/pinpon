@@ -15,7 +15,7 @@ import Data.ByteString.Lens (packedChars)
 import Network.AWS.Data.ByteString (ToByteString(..))
 import Network.AWS.Data.Text (ToText(..))
 import Network.AWS.Types (AWSRequest, Error(..), Rs, serializeMessage, serviceMessage)
-import Network.HTTP.Client (HttpException(..))
+import Network.HTTP.Client (HttpException(..), HttpExceptionContent(..))
 import Servant (ServantErr(..), err502, err504, throwError)
 
 import Network.PinPon.Config (App(..), Config(..))
@@ -29,8 +29,8 @@ snsErrToServant :: Error -> ServantErr
 snsErrToServant e = (errCode e) { errBody = mconcat ["Upstream AWS SNS error: ", errMsg e ] }
 
 errCode :: Error -> ServantErr
-errCode (TransportError ResponseTimeout) = err504
-errCode (TransportError (FailedConnectionException _ _)) = err504 -- See http-client docs.
+errCode (TransportError (HttpExceptionRequest _ ResponseTimeout)) = err504
+errCode (TransportError (HttpExceptionRequest _ ConnectionTimeout)) = err504
 errCode _ = err502
 
 errMsg :: Error -> BL.ByteString

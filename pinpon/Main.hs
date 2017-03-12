@@ -6,6 +6,7 @@ module Main where
 import Control.Lens ((&), (.~))
 import Control.Monad.Trans.AWS
        (Region(..), Credentials(..))
+import Data.Monoid ((<>))
 import qualified Data.Set as Set (fromList)
 import Data.Text (Text)
 import Network (PortID(..), listenOn)

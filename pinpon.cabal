@@ -94,33 +94,32 @@ Library
   Build-Depends:        base           >= 4 && < 5
                       , aeson
                       , aeson-pretty
-                      , amazonka       == 1.4.3.*
-                      , amazonka-core  == 1.4.3.*
-                      , amazonka-sns   == 1.4.3.*
-                      , bytestring     == 0.10.*
+                      , amazonka
+                      , amazonka-core
+                      , amazonka-sns
+                      , bytestring
                       , containers
                       , exceptions
-                      , http-client    == 0.4.*
-                      , http-types     == 0.9.*
+                      , http-client
+                      , http-types
                       , lens
-                      , lucid          == 2.9.*
-                      , mellon-core    == 0.7.*
+                      , lucid
                       , mtl
-                      , resourcet      >= 1.1
-                      , servant        >= 0.7.1 && < 0.10
-                      , servant-client >= 0.7.1 && < 0.10
-                      , servant-docs   >= 0.7.1 && < 0.10
-                      , servant-lucid  >= 0.7.1 && < 0.10
-                      , servant-server >= 0.7.1 && < 0.10
+                      , resourcet
+                      , servant
+                      , servant-client
+                      , servant-docs
+                      , servant-lucid
+                      , servant-server
                       , servant-swagger
                       , servant-swagger-ui
                       , swagger2
-                      , text           == 1.2.*
-                      , time           >= 1.5   && < 2
-                      , transformers   >= 0.4.2 && < 0.6
+                      , text
+                      , time
+                      , transformers
                       , transformers-base
-                      , wai            == 3.2.*
-                      , warp           == 3.2.*
+                      , wai
+                      , warp
 
 
 Executable pinpon
@@ -138,12 +137,12 @@ Executable pinpon
                       , amazonka
                       , amazonka-sns
                       , containers
-                      , exceptions           >= 0.8.0  && < 1
+                      , exceptions
                       , lens
                       , mtl
                       , pinpon
-                      , network              == 2.6.*
-                      , optparse-applicative >= 0.11.0 && < 0.13
+                      , network
+                      , optparse-applicative
                       , optparse-text
                       , text
                       , transformers
@@ -167,8 +166,8 @@ Executable pinpon-ring
                       , http-client-tls
                       , http-types
                       , lens
-                      , network              == 2.6.*
-                      , optparse-applicative >= 0.11.0 && < 0.13
+                      , network
+                      , optparse-applicative
                       , optparse-text
                       , pinpon
                       , servant-client
@@ -196,8 +195,8 @@ Executable pinpon-gpio
                       , http-types
                       , lens
                       , mtl
-                      , network              == 2.6.*
-                      , optparse-applicative >= 0.11.0 && < 0.13
+                      , network
+                      , optparse-applicative
                       , optparse-text
                       , pinpon
                       , servant-client
@@ -253,7 +252,6 @@ Test-Suite spec
                       , http-types
                       , lens
                       , lucid
-                      , mellon-core
                       , mtl
                       , QuickCheck
                       , quickcheck-instances
