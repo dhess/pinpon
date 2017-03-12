@@ -89,7 +89,7 @@ instance ToJSON Aps where
 -- Note that objects other than the @aps@ dictionary may be included
 -- in APNS payloads, but as @pinpon@ doesn't use them, that
 -- functionality is not implemented.
-data Payload = Payload
+newtype Payload = Payload
   { _aps :: Aps
   } deriving (Show, Generic)
 
