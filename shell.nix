@@ -15,7 +15,7 @@ let
       }:
       mkDerivation {
         pname = "pinpon";
-        version = "0.0.0.0";
+        version = "0.1.0.0";
         src = ./.;
         isLibrary = true;
         isExecutable = true;
@@ -40,7 +40,7 @@ let
           servant-swagger servant-swagger-ui swagger2 text time transformers
           transformers-base wai warp
         ];
-        homepage = "https://github.com/dhess/pinpon/";
+        homepage = "https://github.com/quixoftic/pinpon/";
         description = "A gateway for various cloud notification services";
         license = stdenv.lib.licenses.bsd3;
       };

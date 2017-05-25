@@ -1,16 +1,16 @@
 Name:                   pinpon
-Version:                0.0.0.0
+Version:                0.1.0.0
 Cabal-Version:          >= 1.10
 Build-Type:             Simple
 Author:                 Drew Hess <dhess-src@quixoftic.com>
 Maintainer:             Drew Hess <dhess-src@quixoftic.com>
-Homepage:               https://github.com/dhess/pinpon/
-Bug-Reports:            https://github.com/dhess/pinpon/issues/
+Homepage:               https://github.com/quixoftic/pinpon/
+Bug-Reports:            https://github.com/quixoftic/pinpon/issues/
 Stability:              experimental
 License:                BSD3
 License-File:           LICENSE
 Copyright:              Copyright (c) 2017, Quixoftic, LLC
-Tested-With:            GHC == 8.0.1
+Tested-With:            GHC == 8.0.1, GHC == 8.0.2
 Category:               Network
 Synopsis:               A gateway for various cloud notification services
 Description:
@@ -285,9 +285,9 @@ Test-Suite spec
 
 Source-Repository head
   Type:                 git
-  Location:             git://github.com/dhess/pinpon.git
+  Location:             git://github.com/quixoftic/pinpon.git
 
 Source-Repository this
   Type:                 git
-  Location:             git://github.com/dhess/pinpon.git
-  -- Tag:               v0.0.0.0
+  Location:             git://github.com/quixoftic/pinpon.git
+  -- Tag:               v0.1.0.0
