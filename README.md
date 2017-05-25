@@ -29,9 +29,3 @@ directly with the public Internet. By proxying the AWS access via a
 more physically secure host running the `pinpon` server on my internal
 network, I can better protect my AWS credentials and limit network
 access on the GPIO device to just the `pinpon` service.
-
-# Caveats
-
-`pinpon` is far from ready for prime-time, production use. At this
-time, it's basically a quick little hack. I do not recommend that you
-use it in its current state.
