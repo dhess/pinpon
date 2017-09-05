@@ -123,7 +123,7 @@ debounce delay action =
 
 -- Not really that pretty.
 prettyServantError :: ServantError -> Text
-prettyServantError (FailureResponse status _ _) =
+prettyServantError (FailureResponse _ status _ _) =
   T.unwords
     [pack (show $ statusCode status), pack (C8.unpack $ statusMessage status)]
 prettyServantError DecodeFailure{} =

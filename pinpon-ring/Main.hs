@@ -70,7 +70,7 @@ run (Options hl msg s baseUrl) =
               exitWith $ ExitFailure 1
   where
     prettyServantError :: ServantError -> String
-    prettyServantError (FailureResponse status _ _) =
+    prettyServantError (FailureResponse _ status _ _) =
       show (statusCode status) ++ " " ++ C8.unpack (statusMessage status)
     prettyServantError DecodeFailure{} =
       "decode failure"
