@@ -40,7 +40,7 @@
         "/topic": {
             "post": {
                 "consumes": [
-                    "application/json"
+                    "application/json;charset=utf-8"
                 ],
                 "responses": {
                     "400": {
@@ -54,7 +54,7 @@
                     }
                 },
                 "produces": [
-                    "application/json",
+                    "application/json;charset=utf-8",
                     "text/html;charset=utf-8"
                 ],
                 "parameters": [
