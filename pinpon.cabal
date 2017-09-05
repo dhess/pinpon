@@ -280,7 +280,6 @@ Test-Suite spec
                       , Network.PinPon.Util
                       , Network.PinPon.WireTypes.APNS
                       , Network.PinPon.WireTypes.SNS
-                      , Spec
                       , Network.PinPon.SwaggerAPISpec
 
 Source-Repository head
