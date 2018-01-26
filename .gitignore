@@ -1,6 +1,6 @@
 *~
 dist
-dist-newstyle
+dist-newstyle/
 cabal-dev
 *.o
 *_o
@@ -13,3 +13,5 @@ cabal-dev
 .cabal-sandbox/
 cabal.sandbox.config
 .stack-work/*
+result*
+.dir-locals.el
