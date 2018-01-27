@@ -3,10 +3,12 @@
 
 module Main where
 
+import Protolude hiding (option)
 import Control.Lens ((^.))
 import Control.Monad.Catch.Pure (runCatch)
 import Data.ByteString.Char8 as C8 (unpack)
 import Data.Monoid ((<>))
+import Data.String (String)
 import Data.Text (Text)
 import Network.HTTP.Client (newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)

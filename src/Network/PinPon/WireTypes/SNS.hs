@@ -11,12 +11,12 @@ module Network.PinPon.WireTypes.SNS
   , defaultMessage
   ) where
 
+import Protolude
 import Control.Lens (makeLenses)
 import Data.Aeson.Types
        ((.=), Pair, Series, ToJSON(..), object, pairs)
 import Data.Monoid ((<>))
 import Data.Text (Text)
-import GHC.Generics
 
 import Network.PinPon.Util (encodeText)
 import qualified Network.PinPon.WireTypes.APNS as APNS (Payload(..))

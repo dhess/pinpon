@@ -16,6 +16,7 @@ module Network.PinPon.Config
   , platforms
   ) where
 
+import Protolude
 import Control.Lens
 import Control.Monad.Base (MonadBase(..))
 import Control.Monad.Catch (MonadCatch(..), MonadThrow(..))

@@ -34,11 +34,11 @@ module Network.PinPon.WireTypes.APNS
   , defaultPayload
   ) where
 
+import Protolude
 import Control.Lens (makeLenses)
 import Data.Aeson.Types
        (ToJSON(..), genericToEncoding, genericToJSON)
 import Data.Text (Text)
-import GHC.Generics
 
 import Network.PinPon.Util (recordTypeJSONOptions)
 

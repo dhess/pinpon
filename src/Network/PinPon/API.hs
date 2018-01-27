@@ -12,6 +12,7 @@ module Network.PinPon.API
   )
   where
 
+import Protolude
 import Control.Monad.Reader (runReaderT)
 import Control.Monad.Trans.Resource (runResourceT)
 import Network.Wai (Application)

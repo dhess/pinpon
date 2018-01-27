@@ -5,14 +5,13 @@ module Network.PinPon.AWS
   ( runSNS
   ) where
 
+import Protolude hiding (catch)
 import Control.Lens ((^.))
 import Control.Monad.Catch (catch)
 import Control.Monad.Reader (asks)
 import Control.Monad.Trans.AWS (runAWST, send)
-import Data.ByteString.Lazy (fromStrict)
 import qualified Data.ByteString.Lazy as BL (ByteString)
 import Data.ByteString.Lens (packedChars)
-import Network.AWS.Data.ByteString (ToByteString(..))
 import Network.AWS.Data.Text (ToText(..))
 import Network.AWS.Types (AWSRequest, Error(..), Rs, serializeMessage, serviceMessage)
 import Network.HTTP.Client (HttpException(..), HttpExceptionContent(..))
@@ -34,6 +33,6 @@ errCode (TransportError (HttpExceptionRequest _ ConnectionTimeout)) = err504
 errCode _ = err502
 
 errMsg :: Error -> BL.ByteString
-errMsg (ServiceError e) = maybe "Unspecified error" (fromStrict . toBS . toText) $ e ^. serviceMessage
+errMsg (ServiceError e) = maybe "Unspecified error" (toSL . toText) $ e ^. serviceMessage
 errMsg (SerializeError e) = e ^. serializeMessage ^. packedChars
 errMsg (TransportError e) = show e ^. packedChars

@@ -4,6 +4,7 @@ module Network.PinPon.Util
   , encodeText
   ) where
 
+import Protolude
 import Control.Lens ((^.), strict)
 import Data.Aeson (ToJSON, encode)
 import Data.Aeson.Types (Options(..), camelTo2, defaultOptions)

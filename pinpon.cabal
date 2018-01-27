@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: dc71cc93cf6a445315d8e3ff8a7791dd29bad2ee746f86852688e9a8e0463a6b
+-- hash: 714498cd35c23e6820043a61fcd14fde4e96b352cc96acbb70a2127460efc343
 
 name:                   pinpon
 version:                0.2.0.0
@@ -47,6 +47,7 @@ build-type:             Simple
 cabal-version:          >= 1.10
 
 extra-source-files:
+    .travis.yml
     changelog.md
     default.nix
     nix/fetch-nixpkgs.nix
@@ -109,6 +110,7 @@ library
       Paths_pinpon
   hs-source-dirs:
       src
+  default-extensions: NoImplicitPrelude
   other-extensions: DataKinds DeriveGeneric DuplicateRecordFields MultiParamTypeClasses OverloadedStrings Safe TemplateHaskell Trustworthy TypeOperators
   build-depends:
       aeson
@@ -125,6 +127,7 @@ library
     , lens
     , lucid
     , mtl
+    , protolude ==0.2.*
     , resourcet
     , servant ==0.11.*
     , servant-client ==0.11.*
@@ -158,6 +161,7 @@ executable pinpon
       Paths_pinpon
   hs-source-dirs:
       pinpon
+  default-extensions: NoImplicitPrelude
   other-extensions: LambdaCase OverloadedStrings
   ghc-options: -threaded
   if impl(ghc >= 8.0)
@@ -181,6 +185,7 @@ executable pinpon
       , optparse-applicative
       , optparse-text
       , pinpon
+      , protolude
       , text
       , transformers
       , warp
@@ -192,6 +197,7 @@ executable pinpon-gpio
       Paths_pinpon
   hs-source-dirs:
       pinpon-gpio
+  default-extensions: NoImplicitPrelude
   other-extensions: FlexibleContexts OverloadedStrings
   ghc-options: -threaded
   if impl(ghc >= 8.0)
@@ -217,6 +223,7 @@ executable pinpon-gpio
       , optparse-applicative
       , optparse-text
       , pinpon
+      , protolude
       , servant-client
       , text
       , time
@@ -230,6 +237,7 @@ executable pinpon-ring
       Paths_pinpon
   hs-source-dirs:
       pinpon-ring
+  default-extensions: NoImplicitPrelude
   other-extensions: LambdaCase OverloadedStrings
   ghc-options: -threaded
   if impl(ghc >= 8.0)
@@ -253,6 +261,7 @@ executable pinpon-ring
       , optparse-applicative
       , optparse-text
       , pinpon
+      , protolude
       , servant-client
       , text
       , transformers
@@ -264,6 +273,7 @@ test-suite doctest
   main-is: doctest.hs
   hs-source-dirs:
       test
+  default-extensions: NoImplicitPrelude
   ghc-options: -threaded
   if impl(ghc >= 8.0)
     ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
@@ -275,6 +285,7 @@ test-suite doctest
     build-depends:
         base
       , doctest >=0.10.1 && <1
+      , protolude
   default-language: Haskell2010
 
 test-suite hlint
@@ -282,6 +293,7 @@ test-suite hlint
   main-is: hlint.hs
   hs-source-dirs:
       test
+  default-extensions: NoImplicitPrelude
   ghc-options: -w -threaded
   if impl(ghc >= 8.0)
     ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
@@ -293,6 +305,7 @@ test-suite hlint
     build-depends:
         base
       , hlint ==2.0.*
+      , protolude
   default-language: Haskell2010
 
 test-suite spec
@@ -300,6 +313,7 @@ test-suite spec
   main-is: Spec.hs
   hs-source-dirs:
       test
+  default-extensions: NoImplicitPrelude
   ghc-options: -w -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck
@@ -309,6 +323,7 @@ test-suite spec
     , exceptions
     , hspec
     , pinpon
+    , protolude
     , quickcheck-instances
     , servant-swagger
   if impl(ghc >= 8.0)

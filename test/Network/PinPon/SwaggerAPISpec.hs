@@ -1,6 +1,8 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Network.PinPon.SwaggerAPISpec (spec) where
 
+import Protolude
+
 import Network.PinPon.API (api)
 import Network.PinPon.API.Topic (Notification(..))
 import Network.PinPon.SwaggerAPI (pinPonSwagger)
@@ -10,7 +12,7 @@ import qualified Data.ByteString.Lazy.Char8 as C8 (readFile)
 import Paths_pinpon
 import Servant.Swagger.Test
 import Test.Hspec
-import Test.QuickCheck (Arbitrary(..), elements, oneof, property)
+import Test.QuickCheck (Arbitrary(..))
 import Test.QuickCheck.Instances ()
 
 spec :: Spec

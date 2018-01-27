@@ -13,6 +13,7 @@ module Network.PinPon.API.Topic
          , topicServer
          ) where
 
+import Protolude
 import Control.Lens ((^.), (&), (.~), (?~))
 import Control.Monad (void)
 import Control.Monad.Reader (asks)

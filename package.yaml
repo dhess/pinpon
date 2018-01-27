@@ -91,6 +91,8 @@ when:
         - -fwarn-incomplete-uni-patterns
         - -fwarn-incomplete-record-updates
 
+default-extensions:
+  - NoImplicitPrelude
 
 library:
   when:
@@ -131,6 +133,7 @@ library:
   - lens
   - lucid
   - mtl
+  - protolude          == 0.2.*
   - resourcet
   - servant ==0.11.*
   - servant-client ==0.11.*
@@ -176,6 +179,7 @@ executables:
         - lens
         - mtl
         - pinpon
+        - protolude
         - network
         - optparse-applicative
         - optparse-text
@@ -208,6 +212,7 @@ executables:
         - optparse-applicative
         - optparse-text
         - pinpon
+        - protolude
         - servant-client
         - text
         - transformers
@@ -243,6 +248,7 @@ executables:
         - optparse-applicative
         - optparse-text
         - pinpon
+        - protolude
         - servant-client
         - text
         - time
@@ -265,6 +271,7 @@ tests:
         dependencies:
         - base
         - hlint ==2.0.*
+        - protolude
   doctest:
     main: doctest.hs
     source-dirs: test
@@ -279,6 +286,7 @@ tests:
         dependencies:
         - base
         - doctest >=0.10.1 && <1
+        - protolude
   spec:
     main: Spec.hs
     source-dirs: test
@@ -295,6 +303,7 @@ tests:
     - exceptions
     - hspec
     - pinpon
+    - protolude
     - QuickCheck
     - quickcheck-instances
     - servant-swagger

@@ -1,6 +1,7 @@
 module Main where
 
+import Protolude
 import Test.DocTest
 
 main :: IO ()
-main = doctest ["src"]
+main = doctest ["src", "-XNoImplicitPrelude"]

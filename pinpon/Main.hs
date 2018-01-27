@@ -3,6 +3,7 @@
 
 module Main where
 
+import Protolude hiding (option)
 import Control.Lens ((&), (.~))
 import Control.Monad.Trans.AWS
        (Region(..), Credentials(..))

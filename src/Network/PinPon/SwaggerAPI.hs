@@ -19,6 +19,7 @@ module Network.PinPon.SwaggerAPI
   )
   where
 
+import Protolude
 import Control.Lens ((&), (.~), (?~))
 import Data.Aeson.Encode.Pretty (encodePretty)
 import qualified Data.ByteString.Lazy.Char8 as C8

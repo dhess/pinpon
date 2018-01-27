@@ -3,6 +3,7 @@
 
 module Main where
 
+import Protolude hiding (option)
 import Control.Concurrent (threadDelay)
 import Control.Lens ((^.))
 import Control.Monad (forever, unless, void)
@@ -10,6 +11,7 @@ import Control.Monad.Catch.Pure (runCatch)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Data.ByteString.Char8 as C8 (unpack)
 import Data.Monoid ((<>))
+import Data.String (String)
 import Data.Text (Text, pack)
 import qualified Data.Text as T (unwords)
 import qualified Data.Text.IO as T (putStrLn, hPutStrLn)

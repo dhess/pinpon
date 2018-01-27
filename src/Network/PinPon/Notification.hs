@@ -11,6 +11,7 @@ module Network.PinPon.Notification
   , defaultNotification
   ) where
 
+import Protolude
 import Control.Lens ((&), (?~), mapped, makeLenses)
 import Control.Monad (void)
 import Data.Aeson.Types
@@ -20,7 +21,6 @@ import Data.Text (Text)
 import Data.Swagger
        (ToSchema(..), description, example, genericDeclareNamedSchema,
         schema)
-import GHC.Generics
 import Lucid
        (ToHtml(..), HtmlT, doctypehtml_, head_, title_, body_)
 
