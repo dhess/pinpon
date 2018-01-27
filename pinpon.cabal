@@ -1,292 +1,339 @@
-Name:                   pinpon
-Version:                0.2.0.0
-Cabal-Version:          >= 1.10
-Build-Type:             Simple
-Author:                 Drew Hess <dhess-src@quixoftic.com>
-Maintainer:             Drew Hess <dhess-src@quixoftic.com>
-Homepage:               https://github.com/quixoftic/pinpon/
-Bug-Reports:            https://github.com/quixoftic/pinpon/issues/
-Stability:              experimental
-License:                BSD3
-License-File:           LICENSE
-Copyright:              Copyright (c) 2017, Quixoftic, LLC
-Tested-With:            GHC == 8.0.1, GHC == 8.0.2
-Category:               Network
-Synopsis:               A gateway for various cloud notification services
-Description:
-  @pinpon@ is a gateway for various cloud notification services, such
-  as the Amazon AWS SNS service.
-  .
-  Think of @pinpon@ as a hub for dispatching notifications originating
-  from multiple notification sources. Clients of the @pinpon@ service
-  create topics and send notifications via the REST-ish @pinpon@
-  service, and the @pinpon@ server takes care of the per-service
-  details and communicating with the upstream cloud services.
-  .
-  Advantages of this approach, compared to programming directly to the
-  individual notification services' interfaces, are:
-  .
-  * A common API for all supported notification services.
-  .
-  * The secret credentials required to communicate with each cloud
-    notification service can be kept in a central location (namely,
-    the @pinpon@ server), rather than being distributed to each
-    notification source host, therefore reducing the attack surface.
-  .
-  * Hosts which send notifications via the @pinpon@ gateway can be
-    firewalled from the public Internet. This is especially useful in
-    IoT applications.
-  .
-  Currently-supported notification services:
-  .
-  * Amazon AWS SNS
+-- This file has been generated from package.yaml by hpack version 0.21.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 84e66e8cf688842cef71bf70f9816956b1506469dadafca823333a68d417dc80
 
-Extra-Doc-Files:        README.md
-Extra-Source-Files:     changelog.md
+name:                   pinpon
+version:                0.2.0.0
+synopsis:               A gateway for various cloud notification services
+description:            @pinpon@ is a gateway for various cloud notification services, such
+                        as the Amazon AWS SNS service.
+                        .
+                        Think of @pinpon@ as a hub for dispatching notifications originating
+                        from multiple notification sources. Clients of the @pinpon@ service
+                        create topics and send notifications via the REST-ish @pinpon@
+                        service, and the @pinpon@ server takes care of the per-service
+                        details and communicating with the upstream cloud services.
+                        .
+                        Advantages of this approach, compared to programming directly to the
+                        individual notification services' interfaces, are:
+                        .
+                        * A common API for all supported notification services.
+                        .
+                        * The secret credentials required to communicate with each cloud
+                        notification service can be kept in a central location (namely,
+                        the @pinpon@ server), rather than being distributed to each
+                        notification source host, therefore reducing the attack surface.
+                        .
+                        * Hosts which send notifications via the @pinpon@ gateway can be
+                        firewalled from the public Internet. This is especially useful in
+                        IoT applications.
+                        .
+                        Currently-supported notification services:
+                        .
+                        * Amazon AWS SNS
+category:               Network
+stability:              experimental
+homepage:               https://github.com/quixoftic/pinpon#readme
+bug-reports:            https://github.com/quixoftic/pinpon/issues
+author:                 Drew Hess <dhess-src@quixoftic.com>
+maintainer:             Drew Hess <dhess-src@quixoftic.com>
+copyright:              Copyright (c) 2017, Quixoftic, LLC
+license:                BSD3
+license-file:           LICENSE
+tested-with:            GHC==8.0.2 GHC==8.2.1 GHC==8.2.2
+build-type:             Simple
+cabal-version:          >= 1.10
 
--- Build doctests
-Flag test-doctests
-  Default: True
-  Manual: True
+extra-source-files:
+    changelog.md
+    default.nix
+    nix/fetch-nixpkgs.nix
+    nix/lib.nix
+    nix/nixpkgs-src.json
+    nix/overlays/haskell-overrides.nix
+    nix/pkgs/pinpon.nix
+    package.yaml
+    README.md
+    shell.nix
+    stack.yaml
+    swagger.json
 
--- Build hlint test
-Flag test-hlint
-  Default: True
-  Manual: True
+source-repository head
+  type: git
+  location: https://github.com/quixoftic/pinpon
 
--- Build the pinpon executable
-Flag pinpon-executable
-  Default: True
-  Manual: True
+flag pinpon-executable
+  description: Build pinpon program
+  manual: True
+  default: True
 
--- Build the pinpon-ring executable
-Flag pinpon-ring-executable
-  Default: True
-  Manual: True
+flag pinpon-gpio-executable
+  description: Build pinpon-gpio program
+  manual: True
+  default: True
 
--- Build the pinpon-gpio executable
-Flag pinpon-gpio-executable
-  Default: True
-  Manual: True
+flag pinpon-ring-executable
+  description: Build pinpon-ring program
+  manual: True
+  default: True
 
-Library
-  Default-Language:     Haskell2010
-  HS-Source-Dirs:       src
-  GHC-Options:          -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
-  If impl(ghc > 8)
-    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
-  Else
-    -- provide/emulate `Control.Monad.Fail` and `Data.Semigroups` API for pre-GHC8
-    Build-Depends:      fail == 4.9.*
-                      , semigroups == 0.18.*
-  Exposed-Modules:      Network.PinPon.Client
-                      , Network.PinPon.API
-                      , Network.PinPon.API.Topic
-                      , Network.PinPon.AWS
-                      , Network.PinPon.Config
-                      , Network.PinPon.Notification
-                      , Network.PinPon.SwaggerAPI
-                      , Network.PinPon.Util
-                      , Network.PinPon.WireTypes.APNS
-                      , Network.PinPon.WireTypes.SNS
-  Other-Extensions:     Safe
-                      , Trustworthy
-  Build-Depends:        base           >= 4 && < 5
-                      , aeson
-                      , aeson-pretty
-                      , amazonka
-                      , amazonka-core
-                      , amazonka-sns
-                      , bytestring
-                      , containers
-                      , exceptions
-                      , http-client
-                      , http-types
-                      , lens
-                      , lucid
-                      , mtl
-                      , resourcet
-                      , servant            == 0.11.*
-                      , servant-client     == 0.11.*
-                      , servant-docs
-                      , servant-lucid
-                      , servant-server     == 0.11.*
-                      , servant-swagger
-                      , servant-swagger-ui
-                      , swagger2
-                      , text
-                      , time
-                      , transformers
-                      , transformers-base
-                      , wai
-                      , warp
+flag test-doctests
+  description: Build doctests
+  manual: True
+  default: True
 
+flag test-hlint
+  description: Build hlint test
+  manual: True
+  default: True
 
-Executable pinpon
-  Main-Is:              Main.hs
-  Default-Language:     Haskell2010
-  HS-Source-Dirs:       pinpon
-  GHC-Options:          -Wall -threaded -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
-  If impl(ghc > 8)
-    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
-  Other-Extensions:     OverloadedStrings
-  If !flag(pinpon-executable)
-    Buildable:         False
-  Else
-    Build-Depends:      base
-                      , amazonka
-                      , amazonka-sns
-                      , containers
-                      , exceptions
-                      , lens
-                      , mtl
-                      , pinpon
-                      , network
-                      , optparse-applicative
-                      , optparse-text
-                      , text
-                      , transformers
-                      , warp
+library
+  exposed-modules:
+      Network.PinPon
+      Network.PinPon.API
+      Network.PinPon.API.Topic
+      Network.PinPon.AWS
+      Network.PinPon.Client
+      Network.PinPon.Config
+      Network.PinPon.Notification
+      Network.PinPon.SwaggerAPI
+      Network.PinPon.Util
+      Network.PinPon.WireTypes.APNS
+      Network.PinPon.WireTypes.SNS
+  other-modules:
+      Paths_pinpon
+  hs-source-dirs:
+      src
+  other-extensions: DataKinds DeriveGeneric DuplicateRecordFields MultiParamTypeClasses OverloadedStrings Safe TemplateHaskell Trustworthy TypeOperators
+  build-depends:
+      aeson
+    , aeson-pretty
+    , amazonka
+    , amazonka-core
+    , amazonka-sns
+    , base >=4 && <5
+    , bytestring
+    , containers
+    , exceptions
+    , http-client
+    , http-types
+    , lens
+    , lucid
+    , mtl
+    , resourcet
+    , servant ==0.11.*
+    , servant-client ==0.11.*
+    , servant-docs
+    , servant-lucid
+    , servant-server ==0.11.*
+    , servant-swagger
+    , servant-swagger-ui
+    , swagger2
+    , text
+    , time
+    , transformers
+    , transformers-base
+    , wai
+    , warp
+  if impl(ghc >= 8.0)
+    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+  else
+    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  if impl(ghc >= 8.0)
+    ghc-options: -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances
+  else
+    build-depends:
+        fail ==4.9.*
+      , semigroups ==0.18.*
+  default-language: Haskell2010
 
-Executable pinpon-ring
-  Main-Is:              Main.hs
-  Default-Language:     Haskell2010
-  HS-Source-Dirs:       pinpon-ring
-  GHC-Options:          -Wall -threaded -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
-  If impl(ghc > 8)
-    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
-  Other-Extensions:     OverloadedStrings
-  If !flag(pinpon-ring-executable)
-    Buildable:         False
-  Else
-    Build-Depends:      base
-                      , bytestring
-                      , exceptions
-                      , http-client
-                      , http-client-tls
-                      , http-types
-                      , lens
-                      , network
-                      , optparse-applicative
-                      , optparse-text
-                      , pinpon
-                      , servant-client
-                      , text
-                      , transformers
-                      , warp
+executable pinpon
+  main-is: Main.hs
+  other-modules:
+      Paths_pinpon
+  hs-source-dirs:
+      pinpon
+  other-extensions: LambdaCase OverloadedStrings
+  ghc-options: -threaded
+  if impl(ghc >= 8.0)
+    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+  else
+    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  if impl(ghc >8)
+    ghc-options: -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  if !(flag(pinpon-executable))
+    buildable: False
+  else
+    build-depends:
+        amazonka
+      , amazonka-sns
+      , base
+      , containers
+      , exceptions
+      , lens
+      , mtl
+      , network
+      , optparse-applicative
+      , optparse-text
+      , pinpon
+      , text
+      , transformers
+      , warp
+  default-language: Haskell2010
 
-Executable pinpon-gpio
-  Main-Is:              Main.hs
-  Default-Language:     Haskell2010
-  HS-Source-Dirs:       pinpon-gpio
-  GHC-Options:          -Wall -threaded -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
-  If impl(ghc > 8)
-    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
-  Other-Extensions:     OverloadedStrings
-  If !flag(pinpon-ring-executable)
-    Buildable:         False
-  Else
-    Build-Depends:      base
-                      , bytestring
-                      , exceptions
-                      , hpio
-                      , http-client
-                      , http-client-tls
-                      , http-types
-                      , lens
-                      , mtl
-                      , network
-                      , optparse-applicative
-                      , optparse-text
-                      , pinpon
-                      , servant-client
-                      , text
-                      , time
-                      , transformers
-                      , warp
+executable pinpon-gpio
+  main-is: Main.hs
+  other-modules:
+      Paths_pinpon
+  hs-source-dirs:
+      pinpon-gpio
+  other-extensions: FlexibleContexts OverloadedStrings
+  ghc-options: -threaded
+  if impl(ghc >= 8.0)
+    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+  else
+    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  if impl(ghc >8)
+    ghc-options: -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  if !(flag(pinpon-gpio-executable))
+    buildable: False
+  else
+    build-depends:
+        base
+      , bytestring
+      , exceptions
+      , hpio
+      , http-client
+      , http-client-tls
+      , http-types
+      , lens
+      , mtl
+      , network
+      , optparse-applicative
+      , optparse-text
+      , pinpon
+      , servant-client
+      , text
+      , time
+      , transformers
+      , warp
+  default-language: Haskell2010
 
-Test-Suite hlint
-  Type:                 exitcode-stdio-1.0
-  Default-Language:     Haskell2010
-  Hs-Source-Dirs:       test
-  Ghc-Options:          -w -threaded -rtsopts -with-rtsopts=-N
-  Main-Is:              hlint.hs
-  If !flag(test-hlint)
-    Buildable: False
-  Else
-    Build-Depends:      base
-                      , hlint
+executable pinpon-ring
+  main-is: Main.hs
+  other-modules:
+      Paths_pinpon
+  hs-source-dirs:
+      pinpon-ring
+  other-extensions: LambdaCase OverloadedStrings
+  ghc-options: -threaded
+  if impl(ghc >= 8.0)
+    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+  else
+    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  if impl(ghc >8)
+    ghc-options: -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  if !(flag(pinpon-ring-executable))
+    buildable: False
+  else
+    build-depends:
+        base
+      , bytestring
+      , exceptions
+      , http-client
+      , http-client-tls
+      , http-types
+      , lens
+      , network
+      , optparse-applicative
+      , optparse-text
+      , pinpon
+      , servant-client
+      , text
+      , transformers
+      , warp
+  default-language: Haskell2010
 
-Test-Suite doctest
-  Type:                 exitcode-stdio-1.0
-  Default-Language:     Haskell2010
-  Hs-Source-Dirs:       test
-  Ghc-Options:          -Wall -threaded
-  If impl(ghc > 8)
-    GHC-Options:        -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints -fno-warn-redundant-constraints
-  Main-Is:              doctest.hs
-  If !flag(test-doctests)
-    Buildable: False
-  Else
-    Build-Depends:      base
-                      , doctest >= 0.10.1 && < 1
+test-suite doctest
+  type: exitcode-stdio-1.0
+  main-is: doctest.hs
+  hs-source-dirs:
+      test
+  ghc-options: -threaded
+  if impl(ghc >= 8.0)
+    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+  else
+    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  if !(flag(test-doctests))
+    buildable: False
+  else
+    build-depends:
+        base
+      , doctest >=0.10.1 && <1
+  default-language: Haskell2010
 
-Test-Suite spec
-  Type:                 exitcode-stdio-1.0
-  Default-Language:     Haskell2010
-  Hs-Source-Dirs:       src
-                      , test
-  Ghc-Options:          -w -threaded -rtsopts -with-rtsopts=-N
-  Main-Is:              Spec.hs
-  Build-Depends:        base
-                      , aeson
-                      , aeson-pretty
-                      , amazonka
-                      , amazonka-core
-                      , amazonka-sns
-                      , bytestring
-                      , containers
-                      , exceptions
-                      , hspec
-                      , http-client
-                      , http-types
-                      , lens
-                      , lucid
-                      , mtl
-                      , QuickCheck
-                      , quickcheck-instances
-                      , resourcet
-                      , servant
-                      , servant-client
-                      , servant-docs
-                      , servant-lucid
-                      , servant-server
-                      , servant-swagger
-                      , servant-swagger-ui
-                      , swagger2
-                      , text
-                      , time
-                      , transformers
-                      , transformers-base
-                      , wai
-                      , warp
-  Other-Modules:        Network.PinPon.Client
-                      , Network.PinPon.API
-                      , Network.PinPon.API.Topic
-                      , Network.PinPon.AWS
-                      , Network.PinPon.Config
-                      , Network.PinPon.Notification
-                      , Network.PinPon.SwaggerAPI
-                      , Network.PinPon.Util
-                      , Network.PinPon.WireTypes.APNS
-                      , Network.PinPon.WireTypes.SNS
-                      , Network.PinPon.SwaggerAPISpec
+test-suite hlint
+  type: exitcode-stdio-1.0
+  main-is: hlint.hs
+  hs-source-dirs:
+      test
+  ghc-options: -w -threaded
+  if impl(ghc >= 8.0)
+    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+  else
+    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  if !(flag(test-hlint))
+    buildable: False
+  else
+    build-depends:
+        base
+      , hlint ==2.0.*
+  default-language: Haskell2010
 
-Source-Repository head
-  Type:                 git
-  Location:             git://github.com/quixoftic/pinpon.git
-
-Source-Repository this
-  Type:                 git
-  Location:             git://github.com/quixoftic/pinpon.git
-  -- Tag:               v0.2.0.0
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  ghc-options: -w -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      QuickCheck
+    , aeson
+    , aeson-pretty
+    , amazonka
+    , amazonka-core
+    , amazonka-sns
+    , base
+    , bytestring
+    , containers
+    , exceptions
+    , hspec
+    , http-client
+    , http-types
+    , lens
+    , lucid
+    , mtl
+    , pinpon
+    , quickcheck-instances
+    , resourcet
+    , servant
+    , servant-client
+    , servant-docs
+    , servant-lucid
+    , servant-server
+    , servant-swagger
+    , servant-swagger-ui
+    , swagger2
+    , text
+    , time
+    , transformers
+    , transformers-base
+    , wai
+    , warp
+  if impl(ghc >= 8.0)
+    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+  else
+    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  default-language: Haskell2010

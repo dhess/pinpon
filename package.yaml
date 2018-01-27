@@ -1,0 +1,335 @@
+name:       pinpon
+version:    0.2.0.0
+synopsis:   A gateway for various cloud notification services
+category:   Network
+stability:  experimental
+author:     Drew Hess <dhess-src@quixoftic.com>
+maintainer: Drew Hess <dhess-src@quixoftic.com>
+copyright:  Copyright (c) 2017, Quixoftic, LLC
+license:    BSD3
+github:     quixoftic/pinpon
+
+description: ! '@pinpon@ is a gateway for various cloud notification services, such
+
+  as the Amazon AWS SNS service.
+
+
+  Think of @pinpon@ as a hub for dispatching notifications originating
+
+  from multiple notification sources. Clients of the @pinpon@ service
+
+  create topics and send notifications via the REST-ish @pinpon@
+
+  service, and the @pinpon@ server takes care of the per-service
+
+  details and communicating with the upstream cloud services.
+
+
+  Advantages of this approach, compared to programming directly to the
+
+  individual notification services'' interfaces, are:
+
+
+  * A common API for all supported notification services.
+
+
+  * The secret credentials required to communicate with each cloud
+
+  notification service can be kept in a central location (namely,
+
+  the @pinpon@ server), rather than being distributed to each
+
+  notification source host, therefore reducing the attack surface.
+
+
+  * Hosts which send notifications via the @pinpon@ gateway can be
+
+  firewalled from the public Internet. This is especially useful in
+
+  IoT applications.
+
+
+  Currently-supported notification services:
+
+
+  * Amazon AWS SNS'
+
+tested-with: GHC==8.0.2 GHC==8.2.1 GHC==8.2.2
+
+flags:
+  test-hlint:
+    description: Build hlint test
+    manual: true
+    default: true
+  test-doctests:
+    description: Build doctests
+    manual: true
+    default: true
+  pinpon-ring-executable:
+    description: Build pinpon-ring program
+    manual: true
+    default: true
+  pinpon-gpio-executable:
+    description: Build pinpon-gpio program
+    manual: true
+    default: true
+  pinpon-executable:
+    description: Build pinpon program
+    manual: true
+    default: true
+
+when:
+  - condition: impl(ghc >= 8.0)
+    then:
+      ghc-options:
+        - -Wall
+        - -Wincomplete-uni-patterns
+        - -Wincomplete-record-updates
+    else:
+      ghc-options:
+        - -Wall
+        - -fwarn-incomplete-uni-patterns
+        - -fwarn-incomplete-record-updates
+
+
+library:
+  when:
+    - condition: impl(ghc >= 8.0)
+      then:
+        ghc-options:
+          - -Wcompat
+          - -Wnoncanonical-monad-instances
+          - -Wnoncanonical-monadfail-instances
+      else:
+        # provide/emulate `Control.Monad.Fail` and `Data.Semigroups` API for pre-GHC8
+        dependencies:
+          - fail       == 4.9.*
+          - semigroups == 0.18.*
+  source-dirs: src
+  other-extensions:
+  - DataKinds
+  - DeriveGeneric
+  - DuplicateRecordFields
+  - MultiParamTypeClasses
+  - OverloadedStrings
+  - Safe
+  - TemplateHaskell
+  - Trustworthy
+  - TypeOperators
+  dependencies:
+  - base >=4 && <5
+  - aeson
+  - aeson-pretty
+  - amazonka
+  - amazonka-core
+  - amazonka-sns
+  - bytestring
+  - containers
+  - exceptions
+  - http-client
+  - http-types
+  - lens
+  - lucid
+  - mtl
+  - resourcet
+  - servant ==0.11.*
+  - servant-client ==0.11.*
+  - servant-docs
+  - servant-lucid
+  - servant-server ==0.11.*
+  - servant-swagger
+  - servant-swagger-ui
+  - swagger2
+  - text
+  - time
+  - transformers
+  - transformers-base
+  - wai
+  - warp
+
+executables:
+  pinpon: &executable
+    main: Main.hs
+    source-dirs: pinpon
+    other-extensions:
+    - LambdaCase
+    - OverloadedStrings
+    ghc-options:
+    - -threaded
+    when:
+    - condition: impl(ghc >8)
+      ghc-options:
+      - -Wcompat
+      - -Wnoncanonical-monad-instances
+      - -Wnoncanonical-monadfail-instances
+      - -fno-warn-redundant-constraints
+    - condition: "!(flag(pinpon-executable))"
+      then:
+        buildable: false
+      else:
+        dependencies:
+        - base
+        - amazonka
+        - amazonka-sns
+        - containers
+        - exceptions
+        - lens
+        - mtl
+        - pinpon
+        - network
+        - optparse-applicative
+        - optparse-text
+        - text
+        - transformers
+        - warp
+  pinpon-ring:
+    <<: *executable
+    source-dirs: pinpon-ring
+    when:
+    - condition: impl(ghc >8)
+      ghc-options:
+      - -Wcompat
+      - -Wnoncanonical-monad-instances
+      - -Wnoncanonical-monadfail-instances
+      - -fno-warn-redundant-constraints
+    - condition: "!(flag(pinpon-ring-executable))"
+      then:
+        buildable: false
+      else:
+        dependencies:
+        - base
+        - bytestring
+        - exceptions
+        - http-client
+        - http-client-tls
+        - http-types
+        - lens
+        - network
+        - optparse-applicative
+        - optparse-text
+        - pinpon
+        - servant-client
+        - text
+        - transformers
+        - warp
+  pinpon-gpio:
+    <<: *executable
+    source-dirs: pinpon-gpio
+    other-extensions:
+    - FlexibleContexts
+    - OverloadedStrings
+    when:
+    - condition: impl(ghc >8)
+      ghc-options:
+      - -Wcompat
+      - -Wnoncanonical-monad-instances
+      - -Wnoncanonical-monadfail-instances
+      - -fno-warn-redundant-constraints
+    - condition: "!(flag(pinpon-gpio-executable))"
+      then:
+        buildable: false
+      else:
+        dependencies:
+        - base
+        - bytestring
+        - exceptions
+        - hpio
+        - http-client
+        - http-client-tls
+        - http-types
+        - lens
+        - mtl
+        - network
+        - optparse-applicative
+        - optparse-text
+        - pinpon
+        - servant-client
+        - text
+        - time
+        - transformers
+        - warp
+
+tests:
+  hlint:
+    main: hlint.hs
+    source-dirs: test
+    other-modules: []
+    ghc-options:
+    - -w
+    - -threaded
+    when:
+    - condition: "!(flag(test-hlint))"
+      then:
+        buildable: false
+      else:
+        dependencies:
+        - base
+        - hlint ==2.0.*
+  doctest:
+    main: doctest.hs
+    source-dirs: test
+    other-modules: []
+    ghc-options:
+    - -threaded
+    when:
+    - condition: "!(flag(test-doctests))"
+      then:
+        buildable: false
+      else:
+        dependencies:
+        - base
+        - doctest >=0.10.1 && <1
+  spec:
+    main: Spec.hs
+    source-dirs: test
+    other-modules: []
+    ghc-options:
+    - -w
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - base
+    - aeson
+    - aeson-pretty
+    - amazonka
+    - amazonka-core
+    - amazonka-sns
+    - bytestring
+    - containers
+    - exceptions
+    - hspec
+    - http-client
+    - http-types
+    - lens
+    - lucid
+    - mtl
+    - pinpon
+    - QuickCheck
+    - quickcheck-instances
+    - resourcet
+    - servant
+    - servant-client
+    - servant-docs
+    - servant-lucid
+    - servant-server
+    - servant-swagger
+    - servant-swagger-ui
+    - swagger2
+    - text
+    - time
+    - transformers
+    - transformers-base
+    - wai
+    - warp
+
+extra-source-files:
+- README.md
+- changelog.md
+- default.nix
+- nix/*
+- nix/*/*
+- package.yaml
+- shell.nix
+- stack.yaml
+- swagger.json
