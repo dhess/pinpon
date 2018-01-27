@@ -4,6 +4,9 @@
 # It might work for you, but don't expect much.
 
 
+nix-build: nix
+	nix-build nix/jobsets/release.nix -A pinpon
+
 doc:	test
 	@echo "*** Generating docs"
 	cabal haddock --hyperlink-source
@@ -17,9 +20,12 @@ help:
 	@echo
 	@echo "Cabal/Nix:"
 	@echo
+	@echo "(Default is 'nix-build')"
+	@echo
 	@echo "The following targets assume that you are running Nix with some version"
 	@echo "of cabal and GHC in your environment."
 	@echo
+	@echo "    nix-build - Run nix-build on all release.nix targets"
 	@echo "    test      - configure and build the package, then run the tests"
 	@echo "    build     - configure and build the package"
 	@echo "    configure - configure the package"
