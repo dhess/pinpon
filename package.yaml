@@ -307,6 +307,9 @@ tests:
     - quickcheck-instances
     - servant-swagger
 
+data-files:
+- swagger.json
+
 extra-source-files:
 - .travis.yml
 - README.md
@@ -317,4 +320,3 @@ extra-source-files:
 - package.yaml
 - shell.nix
 - stack.yaml
-- swagger.json

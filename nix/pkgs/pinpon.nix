@@ -13,6 +13,7 @@ mkDerivation {
   src = ../../.;
   isLibrary = true;
   isExecutable = true;
+  enableSeparateDataOutput = true;
   libraryHaskellDepends = [
     aeson aeson-pretty amazonka amazonka-core amazonka-sns base
     bytestring containers exceptions http-client http-types lens lucid
