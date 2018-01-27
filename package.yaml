@@ -300,6 +300,7 @@ tests:
     - servant-swagger
 
 extra-source-files:
+- .travis.yml
 - README.md
 - changelog.md
 - default.nix
