@@ -290,7 +290,6 @@ tests:
   spec:
     main: Spec.hs
     source-dirs: test
-    other-modules: []
     ghc-options:
     - -w
     - -threaded

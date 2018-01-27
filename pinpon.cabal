@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 714498cd35c23e6820043a61fcd14fde4e96b352cc96acbb70a2127460efc343
+-- hash: 36b43324e975af21a770c72e044b67b386769fe6394f900d965389addf0264ec
 
 name:                   pinpon
 version:                0.2.0.0
@@ -311,6 +311,9 @@ test-suite hlint
 test-suite spec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
+  other-modules:
+      Network.PinPon.SwaggerAPISpec
+      Paths_pinpon
   hs-source-dirs:
       test
   default-extensions: NoImplicitPrelude
