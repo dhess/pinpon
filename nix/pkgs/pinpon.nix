@@ -27,12 +27,8 @@ mkDerivation {
     transformers warp
   ];
   testHaskellDepends = [
-    aeson aeson-pretty amazonka amazonka-core amazonka-sns base
-    bytestring containers doctest exceptions hlint hspec http-client
-    http-types lens lucid mtl QuickCheck quickcheck-instances resourcet
-    servant servant-client servant-docs servant-lucid servant-server
-    servant-swagger servant-swagger-ui swagger2 text time transformers
-    transformers-base wai warp
+    aeson base bytestring doctest exceptions hlint hspec QuickCheck
+    quickcheck-instances servant-swagger
   ];
   homepage = "https://github.com/quixoftic/pinpon#readme";
   description = "A gateway for various cloud notification services";

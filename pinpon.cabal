@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8f298f9f0c00de2f6a4fa60028b09c2ae6e1e3036e2d8bc7f3f83ade36baef68
+-- hash: dc71cc93cf6a445315d8e3ff8a7791dd29bad2ee746f86852688e9a8e0463a6b
 
 name:                   pinpon
 version:                0.2.0.0
@@ -50,6 +50,9 @@ extra-source-files:
     changelog.md
     default.nix
     nix/fetch-nixpkgs.nix
+    nix/jobsets/default.nix
+    nix/jobsets/release.nix
+    nix/jobsets/spec.json
     nix/lib.nix
     nix/nixpkgs-src.json
     nix/overlays/haskell-overrides.nix
@@ -301,37 +304,13 @@ test-suite spec
   build-depends:
       QuickCheck
     , aeson
-    , aeson-pretty
-    , amazonka
-    , amazonka-core
-    , amazonka-sns
     , base
     , bytestring
-    , containers
     , exceptions
     , hspec
-    , http-client
-    , http-types
-    , lens
-    , lucid
-    , mtl
     , pinpon
     , quickcheck-instances
-    , resourcet
-    , servant
-    , servant-client
-    , servant-docs
-    , servant-lucid
-    , servant-server
     , servant-swagger
-    , servant-swagger-ui
-    , swagger2
-    , text
-    , time
-    , transformers
-    , transformers-base
-    , wai
-    , warp
   if impl(ghc >= 8.0)
     ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   else

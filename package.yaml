@@ -291,37 +291,13 @@ tests:
     dependencies:
     - base
     - aeson
-    - aeson-pretty
-    - amazonka
-    - amazonka-core
-    - amazonka-sns
     - bytestring
-    - containers
     - exceptions
     - hspec
-    - http-client
-    - http-types
-    - lens
-    - lucid
-    - mtl
     - pinpon
     - QuickCheck
     - quickcheck-instances
-    - resourcet
-    - servant
-    - servant-client
-    - servant-docs
-    - servant-lucid
-    - servant-server
     - servant-swagger
-    - servant-swagger-ui
-    - swagger2
-    - text
-    - time
-    - transformers
-    - transformers-base
-    - wai
-    - warp
 
 extra-source-files:
 - README.md
