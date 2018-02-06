@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ca21a2672255c419b79af98be4c584253d71d9911389577fb1769d6b9f6f3abf
+-- hash: b453558b8768c877d822c90c2af7c29db2897d181439e12e26c572df6510027b
 
 name:                   pinpon
 version:                0.2.0.0
@@ -47,22 +47,9 @@ build-type:             Simple
 cabal-version:          >= 1.10
 
 extra-source-files:
-    .travis.yml
     changelog.md
-    default.nix
-    nix/fetch-github.nix
-    nix/jobsets/default.nix
-    nix/jobsets/release.nix
-    nix/jobsets/spec.json
-    nix/lib.nix
-    nix/nixpkgs-lib-quixoftic-src.json
-    nix/nixpkgs-src.json
-    nix/overlays/haskell-overrides.nix
-    nix/overlays/lib.nix
-    nix/pkgs/pinpon.nix
     package.yaml
     README.md
-    shell.nix
     stack.yaml
 
 data-files:

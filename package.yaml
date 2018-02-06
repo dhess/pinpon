@@ -311,12 +311,7 @@ data-files:
 - swagger.json
 
 extra-source-files:
-- .travis.yml
 - README.md
 - changelog.md
-- default.nix
-- nix/*
-- nix/*/*
 - package.yaml
-- shell.nix
 - stack.yaml
