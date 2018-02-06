@@ -1,7 +1,7 @@
 { mkDerivation, aeson, aeson-pretty, amazonka, amazonka-core
 , amazonka-sns, base, bytestring, containers, doctest, exceptions
-, hlint, hpio, hspec, http-client, http-client-tls, http-types
-, lens, lucid, mtl, network, optparse-applicative, optparse-text
+, hpio, hspec, http-client, http-client-tls, http-types, lens
+, lucid, mtl, network, optparse-applicative, optparse-text
 , protolude, QuickCheck, quickcheck-instances, resourcet, servant
 , servant-client, servant-docs, servant-lucid, servant-server
 , servant-swagger, servant-swagger-ui, stdenv, swagger2, text, time
@@ -28,8 +28,8 @@ mkDerivation {
     time transformers warp
   ];
   testHaskellDepends = [
-    aeson base bytestring doctest exceptions hlint hspec protolude
-    QuickCheck quickcheck-instances servant-swagger
+    aeson base bytestring doctest exceptions hspec protolude QuickCheck
+    quickcheck-instances servant-swagger
   ];
   homepage = "https://github.com/quixoftic/pinpon#readme";
   description = "A gateway for various cloud notification services";

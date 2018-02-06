@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b453558b8768c877d822c90c2af7c29db2897d181439e12e26c572df6510027b
+-- hash: 83351ec332f471deecab132978efebb70d9ca96b369185dc47e9f2b045e00c26
 
 name:                   pinpon
 version:                0.2.0.0
@@ -82,7 +82,7 @@ flag test-doctests
 flag test-hlint
   description: Build hlint test
   manual: True
-  default: True
+  default: False
 
 library
   exposed-modules:
