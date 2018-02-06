@@ -5,7 +5,7 @@
 
 
 nix-build: nix
-	nix-build nix/jobsets/release.nix -A pinpon
+	nix-build nix/jobsets/release.nix
 
 doc:	test
 	@echo "*** Generating docs"
@@ -39,7 +39,7 @@ build:	configure
 	@echo "*** Building the package"
 	cabal build
 
-sdist:	check
+sdist:	check doc
 	@echo "*** Creating a source distribution"
 	cabal sdist
 
@@ -47,13 +47,14 @@ check:
 	@echo "*** Checking the package for errors"
 	cabal check
 
-configure: pinpon.cabal nix/pkgs/pinpon.nix
+configure: nix pinpon.cabal
 	@echo "*** Configuring the package"
-	cabal configure
+	cabal configure -f test-hlint
 
-nix nix/pkgs/pinpon.nix: pinpon.cabal
+nix: 	pinpon.cabal
 	@echo "*** Generating pkgs/pinpon.nix"
 	cd nix/pkgs && cabal2nix ../../. > pinpon.nix
+	cd nix/pkgs && cabal2nix --flag test-hlint ../../. > pinpon-hlint.nix
 
 pinpon.cabal: package.yaml
 	@echo "*** Running hpack"

@@ -18,11 +18,23 @@ with import (fixedNixPkgs + "/pkgs/top-level/release-lib.nix") {
 
 let
 
-  jobs = (mapTestOn ({
+  jobs = {
+
+    nixpkgs = pkgs.releaseTools.aggregate {
+      name = "nixpkgs";
+      meta.description = "pinpon built against nixpkgs haskellPackages";
+      meta.maintainer = lib.maintainers.dhess;
+      constituents = with jobs; [
+        haskellPackages.pinpon.x86_64-darwin
+        haskellPackages.pinpon.x86_64-linux
+      ];
+    };
+
+  } // (mapTestOn ({
     haskellPackages = packagePlatforms pkgs.haskellPackages;
   }));
 
 in
 {
-  inherit (jobs.haskellPackages) pinpon;
+  inherit (jobs) nixpkgs;
 }
