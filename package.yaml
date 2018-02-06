@@ -54,7 +54,7 @@ description: ! '@pinpon@ is a gateway for various cloud notification services, s
 
   * Amazon AWS SNS'
 
-tested-with: GHC==8.0.2 GHC==8.2.1 GHC==8.2.2
+tested-with: GHC==8.0.2 GHC==8.2.2
 
 flags:
   test-hlint:
@@ -315,3 +315,5 @@ extra-source-files:
 - changelog.md
 - package.yaml
 - stack.yaml
+- stack-lts-9.yaml
+- stack-lts-10.yaml

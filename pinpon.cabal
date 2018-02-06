@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 83351ec332f471deecab132978efebb70d9ca96b369185dc47e9f2b045e00c26
+-- hash: c34370f47528151115249b70251b142332108ebb84b2df8c65956404cbd6824d
 
 name:                   pinpon
 version:                0.2.0.0
@@ -42,7 +42,7 @@ maintainer:             Drew Hess <dhess-src@quixoftic.com>
 copyright:              Copyright (c) 2018, Quixoftic, LLC
 license:                BSD3
 license-file:           LICENSE
-tested-with:            GHC==8.0.2 GHC==8.2.1 GHC==8.2.2
+tested-with:            GHC==8.0.2 GHC==8.2.2
 build-type:             Simple
 cabal-version:          >= 1.10
 
@@ -50,6 +50,8 @@ extra-source-files:
     changelog.md
     package.yaml
     README.md
+    stack-lts-10.yaml
+    stack-lts-9.yaml
     stack.yaml
 
 data-files:
