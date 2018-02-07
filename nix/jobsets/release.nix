@@ -4,7 +4,7 @@ let
 
 in
 
-{ supportedSystems ? [ "x86_64-darwin" "x86_64-linux" ]
+{ supportedSystems ? [ "x86_64-darwin" "x86_64-linux" "armv7l-linux" ]
 , scrubJobs ? true
 , nixpkgsArgs ? {
     config = { allowUnfree = true; allowBroken = true; inHydra = true; };
@@ -27,6 +27,7 @@ let
       constituents = with jobs; [
         haskellPackages.pinpon.x86_64-darwin
         haskellPackages.pinpon.x86_64-linux
+        haskellPackagesArmv7l.pinpon.armv7l-linux
       ];
     };
 
@@ -53,6 +54,7 @@ let
   } // (mapTestOn ({
 
     haskellPackages = packagePlatforms pkgs.haskellPackages;
+    haskellPackagesArmv7l = packagePlatforms pkgs.haskellPackagesArmv7l;
     lts10Packages = packagePlatforms pkgs.lts10Packages;
     lts9Packages = packagePlatforms pkgs.lts9Packages;
 

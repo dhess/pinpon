@@ -30,6 +30,16 @@ in
       }
   ));
 
+  # Currently, armv7l-linux on Nixpkgs must use ghc802.
+
+  haskellPackagesArmv7l =
+    withLocalPinPon pinPonPath (self.haskell.packages.ghc802.extend (self: super:
+      {
+        # Doesn't currently check.
+        hpio = dontCheck super.hpio;
+      }
+    ));
+
 
   ## Package sets equivalent to the latest(-ish) Stackage LTS sets.
   ## Only supported LTS versions are defined here.
