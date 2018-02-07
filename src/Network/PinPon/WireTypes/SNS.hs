@@ -57,24 +57,22 @@ instance ToJSON Message where
 
 -- $
 -- >>> import Network.PinPon.WireTypes.APNS (Alert(..), Aps(..), Payload(..))
+-- >>> import Data.Aeson (encode)
 -- >>> let alert1 = Alert "This is a production alert title" "This is a production alert body"
 -- >>> let aps1 = Aps alert1 "production default"
 -- >>> let payload1 = Payload aps1
 -- >>> let msg1 = Message "This is the default message" (Just payload1) Nothing
--- >>> toJSON msg1
--- Object (fromList [("default",String "This is the default message"),("APNS",String "{\"aps\":{\"alert\":{\"title\":\"This is a production alert title\",\"body\":\"This is a production alert body\"},\"sound\":\"production default\"}}")])
--- >>> toEncoding msg1
--- "{\"default\":\"This is the default message\",\"APNS\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a production alert title\\\",\\\"body\\\":\\\"This is a production alert body\\\"},\\\"sound\\\":\\\"production default\\\"}}\"}"
+-- >>> let encodedMsg1 = encode $ toJSON msg1
+-- >>> encodedMsg1 == "{\"default\":\"This is the default message\",\"APNS\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a production alert title\\\",\\\"body\\\":\\\"This is a production alert body\\\"},\\\"sound\\\":\\\"production default\\\"}}\"}" || encodedMsg1 == "{\"APNS\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a production alert title\\\",\\\"body\\\":\\\"This is a production alert body\\\"},\\\"sound\\\":\\\"production default\\\"}}\",\"default\":\"This is the default message\"}"
+-- True
 -- >>> let alert2 = Alert "This is a sandbox alert title" "This is a sandbox alert body"
 -- >>> let aps2 = Aps alert2 "sandbox default"
 -- >>> let payload2 = Payload aps2
 -- >>> let msg2 = Message "This is the default message" Nothing (Just payload2)
--- >>> toJSON msg2
--- Object (fromList [("default",String "This is the default message"),("APNS_SANDBOX",String "{\"aps\":{\"alert\":{\"title\":\"This is a sandbox alert title\",\"body\":\"This is a sandbox alert body\"},\"sound\":\"sandbox default\"}}")])
--- >>> toEncoding msg2
--- "{\"default\":\"This is the default message\",\"APNS_SANDBOX\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a sandbox alert title\\\",\\\"body\\\":\\\"This is a sandbox alert body\\\"},\\\"sound\\\":\\\"sandbox default\\\"}}\"}"
+-- >>> let encodedMsg2 = encode $ toJSON msg2
+-- >>> encodedMsg2 == "{\"default\":\"This is the default message\",\"APNS_SANDBOX\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a sandbox alert title\\\",\\\"body\\\":\\\"This is a sandbox alert body\\\"},\\\"sound\\\":\\\"sandbox default\\\"}}\"}" || encodedMsg2 == "{\"default\":\"This is the default message\",\"APNS_SANDBOX\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a sandbox alert title\\\",\\\"body\\\":\\\"This is a sandbox alert body\\\"},\\\"sound\\\":\\\"sandbox default\\\"}}\"}"
+-- True
 -- >>> let msg3 = Message "This is the default message" (Just payload1) (Just payload2)
--- >>> toJSON msg3
--- Object (fromList [("default",String "This is the default message"),("APNS_SANDBOX",String "{\"aps\":{\"alert\":{\"title\":\"This is a sandbox alert title\",\"body\":\"This is a sandbox alert body\"},\"sound\":\"sandbox default\"}}"),("APNS",String "{\"aps\":{\"alert\":{\"title\":\"This is a production alert title\",\"body\":\"This is a production alert body\"},\"sound\":\"production default\"}}")])
--- >>> toEncoding msg3
--- "{\"default\":\"This is the default message\",\"APNS\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a production alert title\\\",\\\"body\\\":\\\"This is a production alert body\\\"},\\\"sound\\\":\\\"production default\\\"}}\",\"APNS_SANDBOX\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a sandbox alert title\\\",\\\"body\\\":\\\"This is a sandbox alert body\\\"},\\\"sound\\\":\\\"sandbox default\\\"}}\"}"
+-- >>> let encodedMsg3 = encode $ toJSON msg3
+-- >>> encodedMsg3 == "{\"default\":\"This is the default message\",\"APNS_SANDBOX\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a sandbox alert title\\\",\\\"body\\\":\\\"This is a sandbox alert body\\\"},\\\"sound\\\":\\\"sandbox default\\\"}}\",\"APNS\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a production alert title\\\",\\\"body\\\":\\\"This is a production alert body\\\"},\\\"sound\\\":\\\"production default\\\"}}\"}" || encodedMsg3 == "{\"default\":\"This is the default message\",\"APNS_SANDBOX\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a sandbox alert title\\\",\\\"body\\\":\\\"This is a sandbox alert body\\\"},\\\"sound\\\":\\\"sandbox default\\\"}}\",\"APNS\":\"{\\\"aps\\\":{\\\"alert\\\":{\\\"title\\\":\\\"This is a production alert title\\\",\\\"body\\\":\\\"This is a production alert body\\\"},\\\"sound\\\":\\\"production default\\\"}}\"}"
+-- True
