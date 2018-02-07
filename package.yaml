@@ -119,36 +119,36 @@ library:
   - Trustworthy
   - TypeOperators
   dependencies:
-  - base >=4 && <5
-  - aeson
-  - aeson-pretty
-  - amazonka
-  - amazonka-core
-  - amazonka-sns
-  - bytestring
-  - containers
-  - exceptions
-  - http-client
-  - http-types
-  - lens
-  - lucid
-  - mtl
-  - protolude          == 0.2.*
-  - resourcet
-  - servant ==0.11.*
-  - servant-client ==0.11.*
-  - servant-docs
-  - servant-lucid
-  - servant-server ==0.11.*
-  - servant-swagger
-  - servant-swagger-ui
-  - swagger2
-  - text
-  - time
-  - transformers
-  - transformers-base
-  - wai
-  - warp
+  - base                >=4      && <5
+  - aeson               ==1.2.*
+  - aeson-pretty        ==0.8.*
+  - amazonka            >=1.4.5  && <1.6
+  - amazonka-core       >=1.4.5  && <1.6
+  - amazonka-sns        >=1.4.5  && <1.6
+  - bytestring          >=0.10.8 && <0.11
+  - containers          >=0.5.7  && <0.6
+  - exceptions          >=0.8.3  && <0.9
+  - http-client         >=0.5.7  && <0.6
+  - http-types          >=0.9.1  && <0.10
+  - lens                ==4.15.*
+  - lucid               >=2.9.9  && <3
+  - mtl                 ==2.2.1  && <2.3
+  - protolude           ==0.2.*
+  - resourcet           >=1.1.9  && <1.2
+  - servant             ==0.11.*
+  - servant-client      ==0.11.*
+  - servant-docs        ==0.11.*
+  - servant-lucid       >=0.7.1  && <0.8
+  - servant-server      ==0.11.*
+  - servant-swagger     >=1.1.4  && <1.2
+  - servant-swagger-ui  >=0.2.4  && <0.3
+  - swagger2            >=2.1.6  && <2.3
+  - text                >=1.2.2  && <1.3
+  - time                >=1.6    && <1.9
+  - transformers        >=0.5.2  && <0.6
+  - transformers-base   >=0.4.4  && <0.5
+  - wai                 ==3.2.*
+  - warp                ==3.2.*
 
 executables:
   pinpon: &executable
@@ -180,9 +180,9 @@ executables:
         - mtl
         - pinpon
         - protolude
-        - network
-        - optparse-applicative
-        - optparse-text
+        - network              >=2.6.3  && <2.7
+        - optparse-applicative >=0.13.2 && <0.15
+        - optparse-text        ==0.1.*
         - text
         - transformers
         - warp
@@ -205,7 +205,7 @@ executables:
         - bytestring
         - exceptions
         - http-client
-        - http-client-tls
+        - http-client-tls      >=0.3.5 && <0.4
         - http-types
         - lens
         - network
@@ -213,7 +213,7 @@ executables:
         - optparse-text
         - pinpon
         - protolude
-        - servant-client
+        - servant-client       ==0.11.*
         - text
         - transformers
         - warp
@@ -270,7 +270,7 @@ tests:
       else:
         dependencies:
         - base
-        - hlint ==2.0.*
+        - hlint     ==2.0.*
         - protolude
   doctest:
     main: doctest.hs
@@ -285,7 +285,7 @@ tests:
       else:
         dependencies:
         - base
-        - doctest >=0.10.1 && <1
+        - doctest   >=0.10.1 && <1
         - protolude
   spec:
     main: Spec.hs
@@ -300,11 +300,11 @@ tests:
     - aeson
     - bytestring
     - exceptions
-    - hspec
+    - hspec                ==2.4.*
     - pinpon
     - protolude
-    - QuickCheck
-    - quickcheck-instances
+    - QuickCheck           >=2.9   && <2.11
+    - quickcheck-instances ==0.3.*
     - servant-swagger
 
 data-files:

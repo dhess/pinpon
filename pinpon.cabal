@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c34370f47528151115249b70251b142332108ebb84b2df8c65956404cbd6824d
+-- hash: 90fc747545858c0f534926915ca9a4b07f5857ddf48b3da1e61db46fe047f9fa
 
 name:                   pinpon
 version:                0.2.0.0
@@ -106,36 +106,36 @@ library
   default-extensions: NoImplicitPrelude
   other-extensions: DataKinds DeriveGeneric DuplicateRecordFields MultiParamTypeClasses OverloadedStrings Safe TemplateHaskell Trustworthy TypeOperators
   build-depends:
-      aeson
-    , aeson-pretty
-    , amazonka
-    , amazonka-core
-    , amazonka-sns
+      aeson ==1.2.*
+    , aeson-pretty ==0.8.*
+    , amazonka >=1.4.5 && <1.6
+    , amazonka-core >=1.4.5 && <1.6
+    , amazonka-sns >=1.4.5 && <1.6
     , base >=4 && <5
-    , bytestring
-    , containers
-    , exceptions
-    , http-client
-    , http-types
-    , lens
-    , lucid
-    , mtl
+    , bytestring >=0.10.8 && <0.11
+    , containers >=0.5.7 && <0.6
+    , exceptions >=0.8.3 && <0.9
+    , http-client >=0.5.7 && <0.6
+    , http-types >=0.9.1 && <0.10
+    , lens ==4.15.*
+    , lucid >=2.9.9 && <3
+    , mtl ==2.2.1 && <2.3
     , protolude ==0.2.*
-    , resourcet
+    , resourcet >=1.1.9 && <1.2
     , servant ==0.11.*
     , servant-client ==0.11.*
-    , servant-docs
-    , servant-lucid
+    , servant-docs ==0.11.*
+    , servant-lucid >=0.7.1 && <0.8
     , servant-server ==0.11.*
-    , servant-swagger
-    , servant-swagger-ui
-    , swagger2
-    , text
-    , time
-    , transformers
-    , transformers-base
-    , wai
-    , warp
+    , servant-swagger >=1.1.4 && <1.2
+    , servant-swagger-ui >=0.2.4 && <0.3
+    , swagger2 >=2.1.6 && <2.3
+    , text >=1.2.2 && <1.3
+    , time >=1.6 && <1.9
+    , transformers >=0.5.2 && <0.6
+    , transformers-base >=0.4.4 && <0.5
+    , wai ==3.2.*
+    , warp ==3.2.*
   if impl(ghc >= 8.0)
     ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
   else
@@ -174,9 +174,9 @@ executable pinpon
       , exceptions
       , lens
       , mtl
-      , network
-      , optparse-applicative
-      , optparse-text
+      , network >=2.6.3 && <2.7
+      , optparse-applicative >=0.13.2 && <0.15
+      , optparse-text ==0.1.*
       , pinpon
       , protolude
       , text
@@ -247,7 +247,7 @@ executable pinpon-ring
       , bytestring
       , exceptions
       , http-client
-      , http-client-tls
+      , http-client-tls >=0.3.5 && <0.4
       , http-types
       , lens
       , network
@@ -255,7 +255,7 @@ executable pinpon-ring
       , optparse-text
       , pinpon
       , protolude
-      , servant-client
+      , servant-client ==0.11.*
       , text
       , transformers
       , warp
@@ -312,15 +312,15 @@ test-suite spec
   default-extensions: NoImplicitPrelude
   ghc-options: -w -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      QuickCheck
+      QuickCheck >=2.9 && <2.11
     , aeson
     , base
     , bytestring
     , exceptions
-    , hspec
+    , hspec ==2.4.*
     , pinpon
     , protolude
-    , quickcheck-instances
+    , quickcheck-instances ==0.3.*
     , servant-swagger
   if impl(ghc >= 8.0)
     ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
