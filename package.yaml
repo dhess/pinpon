@@ -1,5 +1,5 @@
 name:       pinpon
-version:    0.2.0.0
+version:    0.2.0.1
 synopsis:   A gateway for various cloud notification services
 category:   Network
 stability:  experimental
