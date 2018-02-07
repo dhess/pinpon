@@ -30,6 +30,15 @@ help:
 	@echo "    build     - configure and build the package"
 	@echo "    configure - configure the package"
 	@echo
+	@echo "Stack/Nix:"
+	@echo
+	@echo "The following targets build and test the package with Stack, using the"
+	@echo "given version of Stackage LTS as configured by the file stack-<target>.yaml."
+	@echo
+	@echo "    stack-lts    [build all supported LTS targets]"
+	@echo "    stack-lts-10"
+	@echo "    stack-lts-9"
+	@echo
 	@echo "General:"
 	@echo
 	@echo "    clean - remove all targets"
@@ -62,5 +71,12 @@ pinpon.cabal: package.yaml
 
 clean:
 	cabal clean
+
+nix-stack = nix-shell -p stack-env zlib libiconv ncurses --run 'stack test --stack-yaml $(1)'
+
+stack-lts:      stack-lts-10 stack-lts-9
+
+stack-lts-%:    nix
+		$(call nix-stack, stack-lts-$*.yaml)
 
 .PHONY: clean nix
