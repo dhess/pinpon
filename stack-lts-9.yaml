@@ -4,5 +4,4 @@ resolver: lts-9.21
 packages:
 - .
 extra-deps:
-- mellon-core-0.8.0.6
 - protolude-0.2

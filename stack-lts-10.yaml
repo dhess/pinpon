@@ -3,5 +3,3 @@ pvp-bounds: both
 resolver: lts-10.4
 packages:
 - .
-extra-deps:
-- mellon-core-0.8.0.6
