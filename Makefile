@@ -4,8 +4,20 @@
 # It might work for you, but don't expect much.
 
 
-nix-build: nix
-	nix-build nix/jobsets/release.nix
+NIXPKGS := $(shell nix-build -Q --no-out-link ./nix/fetch-nixpkgs.nix 2>/dev/null)
+
+nix-build-attr = nix-build --no-out-link nix/jobsets/release.nix -I nixpkgs=$(NIXPKGS) -A $(1)
+
+nix-build = nix-build --no-out-link nix/jobsets/release.nix -I nixpkgs=$(NIXPKGS)
+
+nixpkgs:	nix
+		$(call nix-build-attr,nixpkgs)
+
+lts-%:	nix
+	$(call nix-build-attr,lts-$*)
+
+release: nix
+	 $(call nix-build)
 
 doc:	test
 	@echo "*** Generating docs"

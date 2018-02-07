@@ -12,6 +12,7 @@ with super.lib;
 
 (foldl' (flip extends) (_: super) [
 
+  (import localLib.fetchNixPkgsStackage)
   (import localLib.fetchNixPkgsLibQuixoftic)
 
   (import ./nix/overlays/lib.nix)

@@ -23,18 +23,42 @@ let
     nixpkgs = pkgs.releaseTools.aggregate {
       name = "nixpkgs";
       meta.description = "pinpon built against nixpkgs haskellPackages";
-      meta.maintainer = lib.maintainers.dhess;
+      meta.maintainer = lib.maintainers.dhess-qx;
       constituents = with jobs; [
         haskellPackages.pinpon.x86_64-darwin
         haskellPackages.pinpon.x86_64-linux
       ];
     };
 
+    lts-10 = pkgs.releaseTools.aggregate {
+      name = "lts-10";
+      meta.description = "pinpon built against Stackage LTS 10 package set";
+      meta.maintainers = pkgs.lib.maintainers.dhess-qx;
+      constituents = with jobs; [
+        lts10Packages.pinpon.x86_64-darwin
+        lts10Packages.pinpon.x86_64-linux
+      ];
+    };
+
+    lts-9 = pkgs.releaseTools.aggregate {
+      name = "lts-9";
+      meta.description = "mellon packages built against Stackage LTS 9 package set";
+      meta.maintainers = pkgs.lib.maintainers.dhess-qx;
+      constituents = with jobs; [
+        lts9Packages.pinpon.x86_64-darwin
+        lts9Packages.pinpon.x86_64-linux
+      ];
+    };
+
   } // (mapTestOn ({
+
     haskellPackages = packagePlatforms pkgs.haskellPackages;
+    lts10Packages = packagePlatforms pkgs.lts10Packages;
+    lts9Packages = packagePlatforms pkgs.lts9Packages;
+
   }));
 
 in
 {
-  inherit (jobs) nixpkgs;
+  inherit (jobs) nixpkgs lts-10 lts-9;
 }
