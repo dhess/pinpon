@@ -78,35 +78,19 @@ flags:
     manual: true
     default: true
 
-when:
-  - condition: impl(ghc >= 8.0)
-    then:
-      ghc-options:
-        - -Wall
-        - -Wincomplete-uni-patterns
-        - -Wincomplete-record-updates
-    else:
-      ghc-options:
-        - -Wall
-        - -fwarn-incomplete-uni-patterns
-        - -fwarn-incomplete-record-updates
+ghc-options:
+- -Wall
+- -Wincomplete-uni-patterns
+- -Wincomplete-record-updates
 
 default-extensions:
   - NoImplicitPrelude
 
 library:
-  when:
-    - condition: impl(ghc >= 8.0)
-      then:
-        ghc-options:
-          - -Wcompat
-          - -Wnoncanonical-monad-instances
-          - -Wnoncanonical-monadfail-instances
-      else:
-        # provide/emulate `Control.Monad.Fail` and `Data.Semigroups` API for pre-GHC8
-        dependencies:
-          - fail       == 4.9.*
-          - semigroups == 0.18.*
+  ghc-options:
+  - -Wcompat
+  - -Wnoncanonical-monad-instances
+  - -Wnoncanonical-monadfail-instances
   source-dirs: src
   other-extensions:
   - DataKinds
@@ -159,13 +143,11 @@ executables:
     - OverloadedStrings
     ghc-options:
     - -threaded
+    - -Wcompat
+    - -Wnoncanonical-monad-instances
+    - -Wnoncanonical-monadfail-instances
+    - -fno-warn-redundant-constraints
     when:
-    - condition: impl(ghc >8)
-      ghc-options:
-      - -Wcompat
-      - -Wnoncanonical-monad-instances
-      - -Wnoncanonical-monadfail-instances
-      - -fno-warn-redundant-constraints
     - condition: "!(flag(pinpon-executable))"
       then:
         buildable: false
@@ -190,12 +172,6 @@ executables:
     <<: *executable
     source-dirs: pinpon-ring
     when:
-    - condition: impl(ghc >8)
-      ghc-options:
-      - -Wcompat
-      - -Wnoncanonical-monad-instances
-      - -Wnoncanonical-monadfail-instances
-      - -fno-warn-redundant-constraints
     - condition: "!(flag(pinpon-ring-executable))"
       then:
         buildable: false
@@ -224,12 +200,6 @@ executables:
     - FlexibleContexts
     - OverloadedStrings
     when:
-    - condition: impl(ghc >8)
-      ghc-options:
-      - -Wcompat
-      - -Wnoncanonical-monad-instances
-      - -Wnoncanonical-monadfail-instances
-      - -fno-warn-redundant-constraints
     - condition: "!(flag(pinpon-gpio-executable))"
       then:
         buildable: false
@@ -256,7 +226,7 @@ executables:
         - warp
 
 tests:
-  hlint:
+  hlint: &test
     main: hlint.hs
     source-dirs: test
     other-modules: []
@@ -273,9 +243,8 @@ tests:
         - hlint     ==2.0.*
         - protolude
   doctest:
+    <<: *test
     main: doctest.hs
-    source-dirs: test
-    other-modules: []
     ghc-options:
     - -threaded
     when:
@@ -288,8 +257,8 @@ tests:
         - doctest   >=0.10.1 && <1
         - protolude
   spec:
+    <<: *test
     main: Spec.hs
-    source-dirs: test
     ghc-options:
     - -w
     - -threaded

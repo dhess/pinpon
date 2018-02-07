@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 90fc747545858c0f534926915ca9a4b07f5857ddf48b3da1e61db46fe047f9fa
+-- hash: 4398d4df456ad9b98b39cc80326275f3a9fa3676e6ab7320d7a7531eefe5a7a8
 
 name:                   pinpon
 version:                0.2.0.0
@@ -105,6 +105,7 @@ library
       src
   default-extensions: NoImplicitPrelude
   other-extensions: DataKinds DeriveGeneric DuplicateRecordFields MultiParamTypeClasses OverloadedStrings Safe TemplateHaskell Trustworthy TypeOperators
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances
   build-depends:
       aeson ==1.2.*
     , aeson-pretty ==0.8.*
@@ -136,16 +137,6 @@ library
     , transformers-base >=0.4.4 && <0.5
     , wai ==3.2.*
     , warp ==3.2.*
-  if impl(ghc >= 8.0)
-    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
-  else
-    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
-  if impl(ghc >= 8.0)
-    ghc-options: -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances
-  else
-    build-depends:
-        fail ==4.9.*
-      , semigroups ==0.18.*
   default-language: Haskell2010
 
 executable pinpon
@@ -156,13 +147,7 @@ executable pinpon
       pinpon
   default-extensions: NoImplicitPrelude
   other-extensions: LambdaCase OverloadedStrings
-  ghc-options: -threaded
-  if impl(ghc >= 8.0)
-    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
-  else
-    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
-  if impl(ghc >8)
-    ghc-options: -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -threaded -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
   if !(flag(pinpon-executable))
     buildable: False
   else
@@ -192,13 +177,7 @@ executable pinpon-gpio
       pinpon-gpio
   default-extensions: NoImplicitPrelude
   other-extensions: FlexibleContexts OverloadedStrings
-  ghc-options: -threaded
-  if impl(ghc >= 8.0)
-    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
-  else
-    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
-  if impl(ghc >8)
-    ghc-options: -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -threaded -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
   if !(flag(pinpon-gpio-executable))
     buildable: False
   else
@@ -232,13 +211,7 @@ executable pinpon-ring
       pinpon-ring
   default-extensions: NoImplicitPrelude
   other-extensions: LambdaCase OverloadedStrings
-  ghc-options: -threaded
-  if impl(ghc >= 8.0)
-    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
-  else
-    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
-  if impl(ghc >8)
-    ghc-options: -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -threaded -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances -fno-warn-redundant-constraints
   if !(flag(pinpon-ring-executable))
     buildable: False
   else
@@ -267,11 +240,7 @@ test-suite doctest
   hs-source-dirs:
       test
   default-extensions: NoImplicitPrelude
-  ghc-options: -threaded
-  if impl(ghc >= 8.0)
-    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
-  else
-    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -threaded
   if !(flag(test-doctests))
     buildable: False
   else
@@ -287,11 +256,7 @@ test-suite hlint
   hs-source-dirs:
       test
   default-extensions: NoImplicitPrelude
-  ghc-options: -w -threaded
-  if impl(ghc >= 8.0)
-    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
-  else
-    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -w -threaded
   if !(flag(test-hlint))
     buildable: False
   else
@@ -304,13 +269,10 @@ test-suite hlint
 test-suite spec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
-  other-modules:
-      Network.PinPon.SwaggerAPISpec
-      Paths_pinpon
   hs-source-dirs:
       test
   default-extensions: NoImplicitPrelude
-  ghc-options: -w -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -w -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck >=2.9 && <2.11
     , aeson
@@ -322,8 +284,11 @@ test-suite spec
     , protolude
     , quickcheck-instances ==0.3.*
     , servant-swagger
-  if impl(ghc >= 8.0)
-    ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates
+  if !(flag(test-hlint))
+    buildable: False
   else
-    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
+    build-depends:
+        base
+      , hlint ==2.0.*
+      , protolude
   default-language: Haskell2010
