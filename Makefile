@@ -10,6 +10,9 @@ nix-build-attr = nix-build --no-out-link nix/jobsets/release.nix -I nixpkgs=$(NI
 
 nix-build = nix-build --no-out-link nix/jobsets/release.nix -I nixpkgs=$(NIXPKGS)
 
+pinpon:	nix
+	nix-build --no-out-link nix/jobsets/testing.nix -I nixpkgs=$(NIXPKGS) -A pinpon
+
 nixpkgs:	nix
 		$(call nix-build-attr,nixpkgs)
 
