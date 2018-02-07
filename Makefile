@@ -35,12 +35,17 @@ help:
 	@echo
 	@echo "Cabal/Nix:"
 	@echo
-	@echo "(Default is 'nix-build')"
+	@echo "(Default is 'pinpon')"
 	@echo
 	@echo "The following targets assume that you are running Nix with some version"
 	@echo "of cabal and GHC in your environment."
 	@echo
-	@echo "    nix-build - Run nix-build on all release.nix targets"
+	@echo "    pinpon    - build pinpon against nixpkgs using nix-build (quick)"
+	@echo "    nixpkgs   - build pinpon against nixpkgs using nix-build"
+	@echo "    lts-10    - build pinpon against LTS 10 package set using nix-build"
+	@echo "    lts-9     - build pinpon against LTS 9 package set using nix-build"
+	@echo "    release   - Run nix-build on all release.nix targets"
+	@echo
 	@echo "    test      - configure and build the package, then run the tests"
 	@echo "    build     - configure and build the package"
 	@echo "    configure - configure the package"
