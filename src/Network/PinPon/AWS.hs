@@ -34,5 +34,5 @@ errCode _ = err502
 
 errMsg :: Error -> BL.ByteString
 errMsg (ServiceError e) = maybe "Unspecified error" (toSL . toText) $ e ^. serviceMessage
-errMsg (SerializeError e) = e ^. serializeMessage ^. packedChars
+errMsg (SerializeError e) = e ^. (serializeMessage . packedChars)
 errMsg (TransportError e) = show e ^. packedChars
