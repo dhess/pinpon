@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ed2620ae2820a31b4c16cfcc7335a51248afdd96daffda59da6dee3be41fb25a
+-- hash: fc9d923a06e34e7ba77cf7ecb9946c2880d09e86148f315a8f6d95f79f0aa53c
 
 name:                   pinpon
 version:                0.2.0.1
@@ -262,7 +262,7 @@ test-suite hlint
   else
     build-depends:
         base
-      , hlint ==2.0.*
+      , hlint >=2.0 && <2.2
       , protolude
   default-language: Haskell2010
 
@@ -289,6 +289,6 @@ test-suite spec
   else
     build-depends:
         base
-      , hlint ==2.0.*
+      , hlint >=2.0 && <2.2
       , protolude
   default-language: Haskell2010

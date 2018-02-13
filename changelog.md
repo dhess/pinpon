@@ -1,5 +1,9 @@
 # pinpon changelog
 
+Changes:
+
+  - Bump hlint upper bound.
+
 ## 0.2.0.1
 
 Changes:
