@@ -4,7 +4,7 @@ let
 
   inherit (self) haskell;
   inherit (self.lib) withLocalPinPon;
-  inherit (haskell.lib) dontCheck noHaddocks;
+  inherit (haskell.lib) dontCheck doJailbreak noHaddocks;
 
   pinPonHlintPath = ../pkgs/pinpon-hlint.nix;
   pinPonPath = ../pkgs/pinpon.nix;
@@ -37,6 +37,10 @@ in
       {
         # Doesn't currently check.
         hpio = dontCheck super.hpio;
+
+        # Fix issues on more recent nixpkgs.
+        concurrent-output = doJailbreak super.concurrent-output;
+        hedgehog = dontCheck super.hedgehog;
       }
     ));
 
