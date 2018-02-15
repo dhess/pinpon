@@ -64,6 +64,3 @@ in
 {
   inherit (jobs) nixpkgs lts-10 lts-9;
 }
-// pkgs.lib.testing.enumerateConstituents jobs.nixpkgs
-// pkgs.lib.testing.enumerateConstituents jobs.lts-10
-// pkgs.lib.testing.enumerateConstituents jobs.lts-9
