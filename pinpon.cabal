@@ -2,10 +2,10 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 62b2c071a1f512a567207b9518277415566189768bf9b72b3e9d2bb568c7a5d6
+-- hash: ae6d5ceb311afb4ad42b828e2776e55db2c1a23aaa3d83a1c1be1f795294d7e7
 
 name:                   pinpon
-version:                0.2.0.1
+version:                0.2.0.2
 synopsis:               A gateway for various cloud notification services
 description:            @pinpon@ is a gateway for various cloud notification services, such
                         as the Amazon AWS SNS service.
