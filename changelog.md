@@ -1,5 +1,13 @@
 # pinpon changelog
 
+## 0.2.0.2
+
+Fixes:
+
+  - Fix hlint 2.1 issue.
+
+  - Fix a bounds typo in package.yaml.
+
 Changes:
 
   - Bump hlint upper bound.
