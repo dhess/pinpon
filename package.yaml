@@ -116,7 +116,7 @@ library:
   - http-types          >=0.9.1  && <0.10
   - lens                ==4.15.*
   - lucid               >=2.9.9  && <3
-  - mtl                 ==2.2.1  && <2.3
+  - mtl                 >=2.2.1  && <2.3
   - protolude           ==0.2.*
   - resourcet           >=1.1.9  && <1.2
   - servant             ==0.11.*

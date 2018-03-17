@@ -1,8 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.21.2.
+-- This file has been generated from package.yaml by hpack version 0.27.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fc9d923a06e34e7ba77cf7ecb9946c2880d09e86148f315a8f6d95f79f0aa53c
+-- hash: 62b2c071a1f512a567207b9518277415566189768bf9b72b3e9d2bb568c7a5d6
 
 name:                   pinpon
 version:                0.2.0.1
@@ -120,7 +120,7 @@ library
     , http-types >=0.9.1 && <0.10
     , lens ==4.15.*
     , lucid >=2.9.9 && <3
-    , mtl ==2.2.1 && <2.3
+    , mtl >=2.2.1 && <2.3
     , protolude ==0.2.*
     , resourcet >=1.1.9 && <1.2
     , servant ==0.11.*
