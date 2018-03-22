@@ -25,19 +25,32 @@ in
   haskellPackages =
     withLocalPinPon pinPonHlintPath (super.haskellPackages.extend (self: super:
       rec {
-        # Doesn't currently check.
-        hpio = dontCheck super.hpio;
       }
   ));
+
+
+  ## Nixpkgs with GHC 8.4.1. Note that we use hlint tests here.
+
+  haskellPackages841 =
+    withLocalPinPon pinPonHlintPath (self.haskell.packages.ghc841.extend (self: super:
+      with haskell.lib;
+      rec {
+        http-media = doJailbreak super.http-media;
+        servant = doJailbreak super.servant;
+        servant-client = doJailbreak super.servant-client;
+        servant-server = doJailbreak super.servant-server;
+        servant-swagger = doJailbreak super.servant-swagger;
+        servant-swagger-ui = doJailbreak super.servant-swagger-ui;
+        swagger2 = super.callPackage ../pkgs/swagger2-2.2.1.nix {};
+      }
+    ));
+
 
   # Currently, armv7l-linux on Nixpkgs must use ghc802.
 
   haskellPackagesArmv7l =
     withLocalPinPon pinPonPath (self.haskell.packages.ghc802.extend (self: super:
       {
-        # Doesn't currently check.
-        hpio = dontCheck super.hpio;
-
         # Fix issues on more recent nixpkgs.
         concurrent-output = doJailbreak super.concurrent-output;
         hedgehog = dontCheck super.hedgehog;

@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ae6d5ceb311afb4ad42b828e2776e55db2c1a23aaa3d83a1c1be1f795294d7e7
+-- hash: 4720d842c0631edbd9ce9f76282e1c42cf2c29a425320cf3f60da9cfc428d057
 
 name:                   pinpon
 version:                0.2.0.2
@@ -42,7 +42,7 @@ maintainer:             Drew Hess <dhess-src@quixoftic.com>
 copyright:              Copyright (c) 2018, Quixoftic, LLC
 license:                BSD3
 license-file:           LICENSE
-tested-with:            GHC==8.0.2 GHC==8.2.2
+tested-with:            GHC==8.0.2 GHC==8.2.2 GHC==8.4.1
 build-type:             Simple
 cabal-version:          >= 1.10
 

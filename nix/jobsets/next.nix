@@ -24,23 +24,12 @@ let
 
   jobs = {
 
-    ghc841 = pkgs.releaseTools.aggregate {
-      name = "ghc841";
-      meta.description = "pinpon built against nixpkgs haskellPackages using GHC 8.4.1";
-      constituents = with jobs; [
-        haskellPackages841.pinpon.x86_64-darwin
-        haskellPackages841.pinpon.x86_64-linux
-      ];
-    };
+    # None currently.
 
   } // (mapTestOn ({
-
-    haskellPackages841 = packagePlatforms pkgs.haskellPackages841;
 
   }));
 
 in
 {
-  inherit (jobs) ghc841;
 }
-// pkgs.lib.testing.enumerateConstituents jobs.ghc841
