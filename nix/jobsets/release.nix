@@ -40,37 +40,15 @@ let
       ];
     };
 
-    lts-10 = pkgs.releaseTools.aggregate {
-      name = "lts-10";
-      meta.description = "pinpon built against Stackage LTS 10 package set";
-      meta.maintainers = pkgs.lib.maintainers.dhess-qx;
-      constituents = with jobs; [
-        lts10Packages.pinpon.x86_64-darwin
-        lts10Packages.pinpon.x86_64-linux
-      ];
-    };
-
-    lts-9 = pkgs.releaseTools.aggregate {
-      name = "lts-9";
-      meta.description = "mellon packages built against Stackage LTS 9 package set";
-      meta.maintainers = pkgs.lib.maintainers.dhess-qx;
-      constituents = with jobs; [
-        lts9Packages.pinpon.x86_64-darwin
-        lts9Packages.pinpon.x86_64-linux
-      ];
-    };
-
   } // (mapTestOn ({
 
     haskellPackages = packagePlatforms pkgs.haskellPackages;
     haskellPackages841 = packagePlatforms pkgs.haskellPackages841;
     haskellPackagesArmv7l = packagePlatforms pkgs.haskellPackagesArmv7l;
-    lts10Packages = packagePlatforms pkgs.lts10Packages;
-    lts9Packages = packagePlatforms pkgs.lts9Packages;
 
   }));
 
 in
 {
-  inherit (jobs) nixpkgs ghc841 lts-10 lts-9;
+  inherit (jobs) nixpkgs ghc841;
 }

@@ -6,21 +6,26 @@ module Main where
 import Protolude hiding (option)
 import Control.Lens ((^.))
 import Control.Monad.Catch.Pure (runCatch)
-import Data.ByteString.Char8 as C8 (unpack)
 import Data.Monoid ((<>))
 import Data.String (String)
-import Data.Text (Text)
+import Data.Text (Text, pack)
+import qualified Data.Text as T (unwords)
+import qualified Data.Text.IO as T (hPutStrLn)
 import Network.HTTP.Client (newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
-import Network.HTTP.Types (Status(..))
 import Network.PinPon.Client
        (Notification(..), defaultNotification, headline, message, notify,
         sound)
 import Options.Applicative
 import Options.Applicative.Text (text)
 import Servant.Client
-       (BaseUrl, ClientEnv(..), ServantError(..), parseBaseUrl,
-        runClientM)
+  ( BaseUrl
+  , ServantError(..)
+  , mkClientEnv
+  , parseBaseUrl
+  , runClientM
+  )
+import Servant.Client.Core (GenResponse(responseBody, responseStatusCode))
 import System.Exit (ExitCode(..), exitSuccess, exitWith)
 
 data Options = Options
@@ -58,30 +63,35 @@ options =
            (metavar "URL" <>
             help "PinPon server base URL")
 
+-- Not really that pretty.
+prettyServantError :: ServantError -> Text
+prettyServantError (FailureResponse response) =
+  T.unwords
+    [pack (show $ responseStatusCode response), toS $ responseBody response]
+prettyServantError DecodeFailure{} =
+  "decode failure"
+prettyServantError UnsupportedContentType{} =
+  "unsupported content type"
+prettyServantError InvalidContentTypeHeader{} =
+  "invalid content type header"
+prettyServantError ConnectionError{} =
+  "connection error"
+
 run :: Options -> IO ()
 run (Options hl msg s baseUrl) =
   let notification = Notification hl msg s
   in
     do manager <- newManager tlsManagerSettings
-       runClientM (notify notification) (ClientEnv manager baseUrl) >>= \case
+       runClientM (notify notification) (mkClientEnv manager baseUrl) >>= \case
          Right status ->
            do print status
               exitSuccess
          Left e ->
-           do putStrLn $ "PinPon service error: " ++ prettyServantError e
+           do outputErr $ T.unwords ["PinPon service error:", prettyServantError e]
               exitWith $ ExitFailure 1
   where
-    prettyServantError :: ServantError -> String
-    prettyServantError (FailureResponse _ status _ _) =
-      show (statusCode status) ++ " " ++ C8.unpack (statusMessage status)
-    prettyServantError DecodeFailure{} =
-      "decode failure"
-    prettyServantError UnsupportedContentType{} =
-      "unsupported content type"
-    prettyServantError InvalidContentTypeHeader{} =
-      "invalid content type header"
-    prettyServantError ConnectionError{} =
-      "connection refused"
+    outputErr :: Text -> IO ()
+    outputErr = T.hPutStrLn stderr
 
 main :: IO ()
 main = execParser opts >>= run

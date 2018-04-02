@@ -1,5 +1,21 @@
 # pinpon changelog
 
+Fixes:
+
+  - Bump some package upper bounds.
+  
+  - Pin some packages in Nix for compatibility with recent nixpkgs.
+  
+Changes:
+
+  - Now requires `servant` 0.13.
+  
+  - Drop Stack support until
+    `conduit-1.3`/`resourcet-1.2`/`servant`/`amazonka` issues are
+    resolved.
+  
+  - Disable Travis builds until Stack is supported again.
+
 ## 0.2.0.2
 
 Fixes:

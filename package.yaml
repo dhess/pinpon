@@ -113,17 +113,18 @@ library:
   - containers          >=0.5.7  && <0.6
   - exceptions          >=0.8.3  && <0.9
   - http-client         >=0.5.7  && <0.6
-  - http-types          >=0.9.1  && <0.10
-  - lens                ==4.15.*
+  - http-types          >=0.9.1  && <0.13
+  - lens                >=4      && <5
   - lucid               >=2.9.9  && <3
   - mtl                 >=2.2.1  && <2.3
   - protolude           ==0.2.*
   - resourcet           >=1.1.9  && <1.2
-  - servant             ==0.11.*
-  - servant-client      ==0.11.*
-  - servant-docs        ==0.11.*
-  - servant-lucid       >=0.7.1  && <0.8
-  - servant-server      ==0.11.*
+  - servant             ==0.13.*
+  - servant-client      ==0.13.*
+  - servant-client-core ==0.13.*
+  - servant-docs        >=0.10   && <0.12
+  - servant-lucid       >=0.7.1  && <0.9
+  - servant-server      ==0.13.*
   - servant-swagger     >=1.1.4  && <1.2
   - servant-swagger-ui  >=0.2.4  && <0.3
   - swagger2            >=2.1.6  && <2.3
@@ -189,7 +190,8 @@ executables:
         - optparse-text
         - pinpon
         - protolude
-        - servant-client       ==0.11.*
+        - servant-client
+        - servant-client-core
         - text
         - transformers
         - warp
@@ -220,6 +222,7 @@ executables:
         - pinpon
         - protolude
         - servant-client
+        - servant-client-core
         - text
         - time
         - transformers
@@ -269,7 +272,7 @@ tests:
     - aeson
     - bytestring
     - exceptions
-    - hspec                ==2.4.*
+    - hspec                >=2.4   && <2.6
     - pinpon
     - protolude
     - QuickCheck           >=2.9   && <2.11
@@ -283,6 +286,3 @@ extra-source-files:
 - README.md
 - changelog.md
 - package.yaml
-- stack.yaml
-- stack-lts-9.yaml
-- stack-lts-10.yaml

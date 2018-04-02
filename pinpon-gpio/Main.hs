@@ -9,7 +9,6 @@ import Control.Lens ((^.))
 import Control.Monad (forever, unless, void)
 import Control.Monad.Catch.Pure (runCatch)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Data.ByteString.Char8 as C8 (unpack)
 import Data.Monoid ((<>))
 import Data.String (String)
 import Data.Text (Text, pack)
@@ -19,15 +18,20 @@ import Data.Time.Clock
        (NominalDiffTime, diffUTCTime, getCurrentTime)
 import Network.HTTP.Client (newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
-import Network.HTTP.Types (Status(..))
 import Network.PinPon.Client
        (Notification(..), defaultNotification, headline, message, notify,
         sound)
 import Options.Applicative hiding (action)
 import Options.Applicative.Text (text)
 import Servant.Client
-       (BaseUrl, ClientEnv(..), ServantError(..), parseBaseUrl,
-        runClientM)
+  ( BaseUrl
+  , ClientEnv
+  , ServantError(..)
+  , mkClientEnv
+  , parseBaseUrl
+  , runClientM
+  )
+import Servant.Client.Core (GenResponse(responseBody, responseStatusCode))
 import System.GPIO.Linux.Sysfs (SysfsGpioIO, runSysfsGpioIO)
 import System.GPIO.Monad
        (Pin(..), PinActiveLevel(..), PinInputMode(InputDefault),
@@ -125,9 +129,9 @@ debounce delay action =
 
 -- Not really that pretty.
 prettyServantError :: ServantError -> Text
-prettyServantError (FailureResponse _ status _ _) =
+prettyServantError (FailureResponse response) =
   T.unwords
-    [pack (show $ statusCode status), pack (C8.unpack $ statusMessage status)]
+    [pack (show $ responseStatusCode response), toS $ responseBody response]
 prettyServantError DecodeFailure{} =
   "decode failure"
 prettyServantError UnsupportedContentType{} =
@@ -135,13 +139,13 @@ prettyServantError UnsupportedContentType{} =
 prettyServantError InvalidContentTypeHeader{} =
   "invalid content type header"
 prettyServantError ConnectionError{} =
-  "connection refused"
+  "connection error"
 
 run :: Options -> IO ()
 run (Options quiet SysfsIO edge activeLevel debounceDelay hl msg s pin serviceUrl) =
   let notification = Notification hl msg s
   in do manager <- newManager tlsManagerSettings
-        let clientEnv = ClientEnv manager serviceUrl
+        let clientEnv = mkClientEnv manager serviceUrl
         runSysfsGpioIO $
           withInterruptPin (Pin pin) InputDefault edge (Just activeLevel) $ \h ->
           forever $ debounce (debounceDelay * 1000000) $ do
