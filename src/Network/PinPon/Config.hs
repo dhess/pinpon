@@ -11,9 +11,7 @@ module Network.PinPon.Config
   , Platform(..)
 
     -- * Lenses
-  , env
-  , arn
-  , platforms
+  , HasConfig(..)
   ) where
 
 import Protolude

@@ -1,27 +1,34 @@
+{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Network.PinPon.AWS
-  ( runSNS
+  ( -- * Types
+    ServantSNSMonad
+
+    -- * Functions
+  , runSNS
   ) where
 
 import Protolude hiding (catch)
 import Control.Lens ((^.))
-import Control.Monad.Catch (catch)
-import Control.Monad.Reader (asks)
+import Control.Monad.Catch (MonadCatch, catch)
+import Control.Monad.Except (MonadError)
+import Control.Monad.Trans.Resource (MonadResource)
 import Control.Monad.Trans.AWS (runAWST, send)
 import qualified Data.ByteString.Lazy as BL (ByteString)
 import Data.ByteString.Lens (packedChars)
+import Network.AWS (HasEnv(..))
 import Network.AWS.Data.Text (ToText(..))
 import Network.AWS.Types (AWSRequest, Error(..), Rs, serializeMessage, serviceMessage)
 import Network.HTTP.Client (HttpException(..), HttpExceptionContent(..))
 import Servant (ServantErr(..), err502, err504, throwError)
 
-import Network.PinPon.Config (App(..), Config(..))
+type ServantSNSMonad m r a = (AWSRequest a, HasEnv r, MonadReader r m, MonadCatch m, MonadResource m, MonadError ServantErr m)
 
-runSNS :: (AWSRequest a) => a -> App (Rs a)
+runSNS :: (ServantSNSMonad m r a) => a -> m (Rs a)
 runSNS req =
-  do env <- asks _env
+  do env <- ask
      catch (runAWST env $ send req) $ throwError . snsErrToServant
 
 snsErrToServant :: Error -> ServantErr
