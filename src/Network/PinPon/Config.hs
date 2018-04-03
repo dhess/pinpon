@@ -16,10 +16,8 @@ module Network.PinPon.Config
 
 import Protolude
 import Control.Lens
-import Control.Monad.Base (MonadBase(..))
 import Control.Monad.Catch (MonadCatch(..), MonadThrow(..))
 import Control.Monad.IO.Class (MonadIO)
-import Control.Monad.Except (MonadError)
 import Control.Monad.Reader (MonadReader(..), ReaderT)
 import Control.Monad.Trans.AWS
        (Region, Credentials, newEnv, runResourceT, runAWST, send)
@@ -30,7 +28,6 @@ import qualified Data.Set as Set (empty)
 import Data.Text (Text)
 import Network.AWS (Env, HasEnv(..))
 import Network.AWS.SNS (createTopic, ctrsTopicARN)
-import Servant (Handler, ServantErr)
 
 -- | @pinpon@ can deliver platform-specific messages via Amazon SNS
 -- for the following platforms.
@@ -83,5 +80,5 @@ createConfig region credentials topicName =
                    , _platforms = Set.empty
                    }
 newtype App a =
-  App {runApp :: ReaderT Config (ResourceT Handler) a}
-  deriving (Functor,Applicative,Monad,MonadBase IO,MonadError ServantErr,MonadCatch,MonadThrow,MonadReader Config,MonadIO,MonadResource)
+  App {runApp :: ReaderT Config (ResourceT IO) a}
+  deriving (Functor,Applicative,Monad,MonadCatch,MonadThrow,MonadReader Config,MonadIO,MonadResource)

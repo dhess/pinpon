@@ -16,7 +16,7 @@ import Protolude
 import Control.Monad.Reader (runReaderT)
 import Control.Monad.Trans.Resource (runResourceT)
 import Network.Wai (Application)
-import Servant (Proxy(..), Server, serve)
+import Servant (Handler(..), Proxy(..), Server, serve)
 import Servant.Server (hoistServer)
 
 import Network.PinPon.API.Topic (TopicAPI, topicServer)
@@ -29,13 +29,16 @@ type API = TopicAPI
 api :: Proxy API
 api = Proxy
 
+convert :: IO a -> Handler a
+convert = Handler . ExceptT . try
+
 -- | A Servant 'Server' which serves the 'PinPonAPI' on the given
 -- 'Config'.
 --
 -- Normally you will just use 'app', but this function is exported so
 -- that you can extend/wrap 'API'.
 server :: Config -> Server API
-server config = hoistServer api (\a -> runResourceT (runReaderT (runApp a) config)) topicServer
+server config = hoistServer api (\a -> convert $ runResourceT (runReaderT (runApp a) config)) topicServer
 
 -- | A WAI 'Network.Wai.Application' which runs the service, using the
 -- given 'Config'.

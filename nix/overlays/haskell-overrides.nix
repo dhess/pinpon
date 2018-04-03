@@ -30,7 +30,7 @@ in
   ## The default Nixpkgs package set. Note that we use hlint tests here.
 
   haskellPackages =
-    withConduit12 (withLocalPinPon pinPonHlintPath (super.haskellPackages.extend (self: super:
+    withUnofficialAmazonka (withLocalPinPon pinPonHlintPath (super.haskellPackages.extend (self: super:
       rec {
       }
   )));
@@ -39,7 +39,7 @@ in
   ## Nixpkgs with GHC 8.4.1. Note that we use hlint tests here.
 
   haskellPackages841 =
-    withConduit12 (withLocalPinPon pinPonHlintPath (self.haskell.packages.ghc841.extend (self: super:
+    withUnofficialAmazonka (withLocalPinPon pinPonHlintPath (self.haskell.packages.ghc841.extend (self: super:
       rec {
         http-media = doJailbreak super.http-media;
         servant = doJailbreak super.servant;
@@ -57,7 +57,7 @@ in
   # Currently, armv7l-linux on Nixpkgs must use ghc802.
 
   haskellPackagesArmv7l =
-    withConduit12 (withLocalPinPon pinPonPath (self.haskell.packages.ghc802.extend (self: super:
+    withUnofficialAmazonka (withLocalPinPon pinPonPath (self.haskell.packages.ghc802.extend (self: super:
       {
         concurrent-output = doJailbreak super.concurrent-output;
         hedgehog = dontCheck super.hedgehog;

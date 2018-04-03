@@ -20,13 +20,12 @@ import Protolude
 import Control.Lens ((^.), (&), (.~), (?~))
 import Control.Monad (void)
 import Control.Monad.Catch (MonadCatch)
-import Control.Monad.Except (MonadError)
 import Control.Monad.Trans.Resource (MonadResource)
 import qualified Data.Set as Set (member)
 import Network.AWS (HasEnv(..))
 import Network.AWS.SNS.Publish
        (publish, pMessageStructure, pSubject, pTargetARN)
-import Servant ((:>), JSON, Post, ReqBody, ServantErr(..), ServerT)
+import Servant ((:>), JSON, Post, ReqBody, ServerT)
 import Servant.HTML.Lucid (HTML)
 
 import Network.PinPon.AWS (runSNS)
@@ -40,7 +39,7 @@ import Network.PinPon.WireTypes.APNS
        (defaultPayload, aps, alert, body, sound, title)
 import Network.PinPon.Util (encodeText)
 
-type MessageMonad m r = (HasConfig r, MonadCatch m, MonadResource m, MonadReader r m, MonadError ServantErr m)
+type MessageMonad m r = (HasConfig r, MonadCatch m, MonadResource m, MonadReader r m)
 type TopicMonad m r = (MessageMonad m r, HasEnv r)
 
 toMessage :: (MessageMonad m r) => Notification -> m Message
