@@ -85,6 +85,7 @@ let
   mainJobsets = with pkgs.lib; mapAttrs (name: settings: defaultSettings // settings) (rec {
     master = {};
     nixpkgs-unstable = mkChannelAlt "master" "nixpkgs-unstable" "master";
+    amazonka = mkChannelAlt "unofficial-amazonka" "nixpkgs-unstable" "master";
 
     # None currently.
     #next-ghc = mkNext "master" "master";
