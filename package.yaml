@@ -93,6 +93,7 @@ library:
   - -Wnoncanonical-monadfail-instances
   source-dirs: src
   other-extensions:
+  - ConstraintKinds
   - DataKinds
   - DeriveGeneric
   - DuplicateRecordFields

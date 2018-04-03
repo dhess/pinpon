@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 395641a89d4598e70e7195ce742dc0f52496ddfefeddf1384fd5d4e173364498
+-- hash: 5314add1096bf1c045d017f2b09646f210f8e94478027498e07e7af9d9dc9f8d
 
 name:                   pinpon
 version:                0.2.0.2
@@ -101,7 +101,7 @@ library
   hs-source-dirs:
       src
   default-extensions: NoImplicitPrelude
-  other-extensions: DataKinds DeriveGeneric DuplicateRecordFields MultiParamTypeClasses OverloadedStrings Safe TemplateHaskell Trustworthy TypeOperators
+  other-extensions: ConstraintKinds DataKinds DeriveGeneric DuplicateRecordFields MultiParamTypeClasses OverloadedStrings Safe TemplateHaskell Trustworthy TypeOperators
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances
   build-depends:
       aeson >=1.1 && <1.3
