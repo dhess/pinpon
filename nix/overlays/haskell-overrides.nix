@@ -53,16 +53,4 @@ in
       }
     )));
 
-
-  # Currently, armv7l-linux on Nixpkgs must use ghc802.
-
-  haskellPackagesArmv7l =
-    withConduit12 (withLocalPinPon pinPonPath (self.haskell.packages.ghc802.extend (self: super:
-      {
-        concurrent-output = doJailbreak super.concurrent-output;
-        hedgehog = dontCheck super.hedgehog;
-        monad-logger = doJailbreak super.monad-logger;
-      }
-    )));
-
 }
