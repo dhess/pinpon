@@ -13,7 +13,6 @@ module Network.PinPon.AWS
 import Protolude hiding (catch)
 import Control.Lens ((^.))
 import Control.Monad.Catch (MonadCatch, catch)
-import Control.Monad.Except (MonadError)
 import Control.Monad.Trans.Resource (MonadResource)
 import Control.Monad.Trans.AWS (runAWST, send)
 import qualified Data.ByteString.Lazy as BL (ByteString)
@@ -22,14 +21,14 @@ import Network.AWS (HasEnv(..))
 import Network.AWS.Data.Text (ToText(..))
 import Network.AWS.Types (AWSRequest, Error(..), Rs, serializeMessage, serviceMessage)
 import Network.HTTP.Client (HttpException(..), HttpExceptionContent(..))
-import Servant (ServantErr(..), err502, err504, throwError)
+import Servant (ServantErr(..), err502, err504)
 
-type ServantSNSMonad m r a = (AWSRequest a, HasEnv r, MonadReader r m, MonadCatch m, MonadResource m, MonadError ServantErr m)
+type ServantSNSMonad m r a = (AWSRequest a, HasEnv r, MonadReader r m, MonadCatch m, MonadResource m)
 
 runSNS :: (ServantSNSMonad m r a) => a -> m (Rs a)
 runSNS req =
   do env <- ask
-     catch (runAWST env $ send req) $ throwError . snsErrToServant
+     catch (runAWST env $ send req) $ throwIO . snsErrToServant
 
 snsErrToServant :: Error -> ServantErr
 snsErrToServant e = (errCode e) { errBody = mconcat ["Upstream AWS SNS error: ", errMsg e ] }

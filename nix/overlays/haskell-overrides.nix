@@ -30,7 +30,7 @@ in
   ## The default Nixpkgs package set. Note that we use hlint tests here.
 
   haskellPackages =
-    withConduit12 (withLocalPinPon pinPonHlintPath (super.haskellPackages.extend (self: super:
+    withUnofficialAmazonka (withLocalPinPon pinPonHlintPath (super.haskellPackages.extend (self: super:
       rec {
       }
   )));
@@ -39,7 +39,7 @@ in
   ## Nixpkgs with GHC 8.4.1. Note that we use hlint tests here.
 
   haskellPackages841 =
-    withConduit12 (withLocalPinPon pinPonHlintPath (self.haskell.packages.ghc841.extend (self: super:
+    withUnofficialAmazonka (withLocalPinPon pinPonHlintPath (self.haskell.packages.ghc841.extend (self: super:
       rec {
         http-media = doJailbreak super.http-media;
         servant = doJailbreak super.servant;
