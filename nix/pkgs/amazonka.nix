@@ -8,9 +8,9 @@ mkDerivation {
   pname = "amazonka";
   version = "1.5.0";
   src = fetchgit {
-    url = "https://github.com/naushadh/amazonka.git";
-    sha256 = "0jx9v9wkidklrp2d4i496453c7c8i3zjfcsnbfg9x9dkw2fn8v8q";
-    rev = "97273545cf37672bec0cdcf78a9d68c274bbb6c2";
+    url = "https://github.com/quixoftic/amazonka";
+    sha256 = "03bfpmpxabsqfbxxnhbpr27xp431rkffwih9yl56sz673m1ypkr1";
+    rev = "fa05d67f7e91a6722af030cf705d65a93cccca31";
   };
   postUnpack = "sourceRoot+=/amazonka; echo source root reset to $sourceRoot";
   libraryHaskellDepends = [
