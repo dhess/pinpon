@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 033ea25a2c896895f65f753344edcfedf28811e2ffc49112701e9268a210c940
+-- hash: 2afe8aa36b6845e9948fb7b0cfaa2b93deac1d06f11223754f308e496094d071
 
 name:                   pinpon
 version:                0.2.0.2
@@ -119,7 +119,7 @@ library
     , lucid >=2.9.9 && <3
     , mtl >=2.2.1 && <2.3
     , protolude ==0.2.*
-    , resourcet >=1.1.9 && <1.3
+    , resourcet ==1.2.*
     , servant ==0.13.*
     , servant-client ==0.13.*
     , servant-client-core ==0.13.*
