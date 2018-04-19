@@ -8,7 +8,7 @@ Fixes:
   
 Changes:
 
-  - Now requires `servant` 0.13.
+  - Now requires `servant` 0.13 and `resourcet` 1.2.
   
   - Drop Stack support until
     `conduit-1.3`/`resourcet-1.2`/`servant`/`amazonka` issues are
