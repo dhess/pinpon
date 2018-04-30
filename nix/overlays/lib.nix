@@ -28,7 +28,7 @@ let
     }
   )));
 
-  withUnofficialAmazonka = hp: (hp.extend (self: super: ({
+  withGitHubAmazonka = hp: (hp.extend (self: super: ({
     amazonka = super.callPackage ../pkgs/amazonka.nix {};
     amazonka-core = super.callPackage ../pkgs/amazonka-core.nix {};
     amazonka-sns = super.callPackage ../pkgs/amazonka-sns.nix {};
@@ -47,7 +47,7 @@ in
 {
   lib = (super.lib or {}) // {
 
-    inherit withLocalPinPon withUnofficialAmazonka withConduit12;
+    inherit withLocalPinPon withGitHubAmazonka withConduit12;
 
     maintainers = super.lib.maintainers // {
       dhess-qx = "Drew Hess <dhess-src@quixoftic.com>";
