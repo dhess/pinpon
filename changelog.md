@@ -2,19 +2,24 @@
 
 Fixes:
 
+  - GHC 8.4.3 support.
+
   - Bump some package upper bounds.
   
   - Pin some packages in Nix for compatibility with recent nixpkgs.
   
 Changes:
 
-  - Now requires `servant` 0.13 and `resourcet` 1.2.
+  - Now requires `servant` >= 0.13 and `resourcet` 1.2.
   
   - Drop Stack support until
     `conduit-1.3`/`resourcet-1.2`/`servant`/`amazonka` issues are
     resolved.
   
   - Disable Travis builds until Stack is supported again.
+
+  - Drop GHC 8.0.2 support (due to package revisions and Stackage
+    breakage).
 
 ## 0.2.0.2
 

@@ -28,26 +28,11 @@ let
     }
   )));
 
-  withGitHubAmazonka = hp: (hp.extend (self: super: ({
-    amazonka = super.callPackage ../pkgs/amazonka.nix {};
-    amazonka-core = super.callPackage ../pkgs/amazonka-core.nix {};
-    amazonka-sns = super.callPackage ../pkgs/amazonka-sns.nix {};
-    amazonka-test = super.callPackage ../pkgs/amazonka-test.nix {};
-  })));
-
-  withConduit12 = hp: (hp.extend (self: super: ({
-    conduit = super.conduit_1_2_13_1;
-    conduit-extra = super.conduit-extra_1_2_3_2;
-    http-conduit = super.http-conduit_2_2_4;
-    resourcet = super.resourcet_1_1_11;
-    xml-conduit = super.xml-conduit_1_7_1_2;
-  })));
-
 in
 {
   lib = (super.lib or {}) // {
 
-    inherit withLocalPinPon withGitHubAmazonka withConduit12;
+    inherit withLocalPinPon;
 
     maintainers = super.lib.maintainers // {
       dhess-qx = "Drew Hess <dhess-src@quixoftic.com>";

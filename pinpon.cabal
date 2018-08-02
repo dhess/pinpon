@@ -1,8 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.27.0.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2afe8aa36b6845e9948fb7b0cfaa2b93deac1d06f11223754f308e496094d071
+-- hash: aeffa0ca8fc6c74142a58a79abe5d07aa261967b343e9ab223e2ce0d2e1964ba
 
 name:                   pinpon
 version:                0.2.0.2
@@ -42,15 +42,13 @@ maintainer:             Drew Hess <dhess-src@quixoftic.com>
 copyright:              Copyright (c) 2018, Quixoftic, LLC
 license:                BSD3
 license-file:           LICENSE
-tested-with:            GHC==8.0.2 GHC==8.2.2 GHC==8.4.1
+tested-with:            GHC==8.2.2 GHC==8.4.3
 build-type:             Simple
 cabal-version:          >= 1.10
-
 extra-source-files:
     changelog.md
     package.yaml
     README.md
-
 data-files:
     swagger.json
 
@@ -104,15 +102,15 @@ library
   other-extensions: ConstraintKinds DataKinds DeriveGeneric DuplicateRecordFields MultiParamTypeClasses OverloadedStrings Safe TemplateHaskell Trustworthy TypeOperators
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances
   build-depends:
-      aeson >=1.1 && <1.3
+      aeson >=1.1 && <1.4
     , aeson-pretty ==0.8.*
-    , amazonka >=1.4.5 && <1.6
-    , amazonka-core >=1.4.5 && <1.6
-    , amazonka-sns >=1.4.5 && <1.6
+    , amazonka ==1.6.*
+    , amazonka-core ==1.6.*
+    , amazonka-sns ==1.6.*
     , base >=4 && <5
     , bytestring >=0.10.8 && <0.11
     , containers >=0.5.7 && <0.6
-    , exceptions >=0.8.3 && <0.9
+    , exceptions >=0.8.3 && <1
     , http-client >=0.5.7 && <0.6
     , http-types >=0.9.1 && <0.13
     , lens >=4 && <5
@@ -120,14 +118,14 @@ library
     , mtl >=2.2.1 && <2.3
     , protolude ==0.2.*
     , resourcet ==1.2.*
-    , servant ==0.13.*
-    , servant-client ==0.13.*
-    , servant-client-core ==0.13.*
+    , servant >=0.13 && <0.15
+    , servant-client >=0.13 && <0.15
+    , servant-client-core >=0.13 && <0.15
     , servant-docs >=0.10 && <0.12
     , servant-lucid >=0.7.1 && <0.9
-    , servant-server ==0.13.*
+    , servant-server >=0.13 && <0.15
     , servant-swagger >=1.1.4 && <1.2
-    , servant-swagger-ui >=0.2.4 && <0.3
+    , servant-swagger-ui >=0.2.4 && <0.4
     , swagger2 >=2.1.6 && <2.3
     , text >=1.2.2 && <1.3
     , time >=1.6 && <1.9
@@ -274,7 +272,7 @@ test-suite spec
   default-extensions: NoImplicitPrelude
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -w -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      QuickCheck >=2.9 && <2.11
+      QuickCheck >=2.9 && <2.12
     , aeson
     , base
     , bytestring

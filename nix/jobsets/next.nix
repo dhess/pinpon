@@ -24,23 +24,12 @@ let
 
   jobs = {
 
-    ghc842 = pkgs.releaseTools.aggregate {
-      name = "ghc842";
-      meta.description = "pinpon built against nixpkgs haskellPackages using GHC 8.4.2";
-      constituents = with jobs; [
-        haskellPackages842.pinpon.x86_64-darwin
-        haskellPackages842.pinpon.x86_64-linux
-      ];
-    };
-
   } // (mapTestOn ({
-
-    haskellPackages842 = packagePlatforms pkgs.haskellPackages842;
 
   }));
 
 in
 {
-  inherit (jobs) ghc842;
+  # inherit (jobs) ghc842;
 }
-// pkgs.lib.testing.enumerateConstituents jobs.ghc842
+#// pkgs.lib.testing.enumerateConstituents jobs.ghc842
