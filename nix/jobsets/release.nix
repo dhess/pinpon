@@ -30,13 +30,24 @@ let
       ];
     };
 
+    lts-12 = pkgs.releaseTools.aggregate {
+      name = "lts-12";
+      meta.description = "pinpon built against Stackage LTS 12 package set";
+      meta.maintainer = lib.maintainers.dhess-qx;
+      constituents = with jobs; [
+        haskellPackages.pinpon.x86_64-darwin
+        haskellPackages.pinpon.x86_64-linux
+      ];
+    };
+
   } // (mapTestOn ({
 
     haskellPackages = packagePlatforms pkgs.haskellPackages;
+    lts12Packages = packagePlatforms pkgs.lts12Packages;
 
   }));
 
 in
 {
-  inherit (jobs) nixpkgs;
+  inherit (jobs) nixpkgs lts-12;
 }

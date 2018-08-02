@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: aeffa0ca8fc6c74142a58a79abe5d07aa261967b343e9ab223e2ce0d2e1964ba
+-- hash: 93ba293dde0bea63df8cc9de6b48502322ca27aec86f93249f48f8cf54690dee
 
 name:                   pinpon
 version:                0.2.0.2
@@ -49,6 +49,8 @@ extra-source-files:
     changelog.md
     package.yaml
     README.md
+    stack-lts-12.yaml
+    stack.yaml
 data-files:
     swagger.json
 

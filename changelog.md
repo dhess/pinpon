@@ -12,12 +12,10 @@ Changes:
 
   - Now requires `servant` >= 0.13 and `resourcet` 1.2.
   
-  - Drop Stack support until
-    `conduit-1.3`/`resourcet-1.2`/`servant`/`amazonka` issues are
-    resolved.
+  - Re-add support for Stack (Stackage LTS 12).
   
-  - Disable Travis builds until Stack is supported again.
-
+  - Re-enable Travis builds.
+  
   - Drop GHC 8.0.2 support (due to package revisions and Stackage
     breakage).
 

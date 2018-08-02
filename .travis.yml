@@ -41,10 +41,6 @@ matrix:
     compiler: ": #stack default"
     addons: {apt: {packages: [libgmp-dev]}}
 
-  - env: BUILD=stack ARGS="--resolver lts-9" STACK_YAML=stack-lts-9.yaml
-    compiler: ": #stack 8.0.2"
-    addons: {apt: {packages: [libgmp-dev]}}
-
 before_install:
 # Using compiler above sets CC to an invalid value, so unset it
 - unset CC
