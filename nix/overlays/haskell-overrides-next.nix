@@ -13,4 +13,10 @@ in
 
   ## Testing with upcoming GHC releases.
 
+  haskellPackages861 =
+    (withLocalPinPon pinPonHlintPath (self.haskell.packages.ghc861.extend (self: super:
+      rec {
+      }
+  )));
+
 }
