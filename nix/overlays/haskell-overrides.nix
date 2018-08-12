@@ -31,6 +31,6 @@ in
   ## Package sets equivalent to the latest(-ish) Stackage LTS sets.
   ## Only supported LTS versions are defined here.
 
-  lts12Packages = (withLocalPinPon pinPonPath (withLts12Extras self.haskell.packages.stackage.lts-122));
+  lts12Packages = (withLocalPinPon pinPonPath (withLts12Extras self.haskell.packages.stackage.lts-124));
 
 }
