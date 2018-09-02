@@ -95,10 +95,6 @@ nix: 	pinpon.cabal
 	cd nix/pkgs && cabal2nix ../../. > pinpon.nix
 	cd nix/pkgs && cabal2nix --flag test-hlint ../../. > pinpon-hlint.nix
 
-pinpon.cabal: package.yaml
-	@echo "*** Running hpack"
-	hpack
-
 clean:
 	cabal clean
 

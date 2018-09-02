@@ -1,11 +1,12 @@
 { mkDerivation, aeson, aeson-pretty, amazonka, amazonka-core
 , amazonka-sns, base, bytestring, containers, doctest, exceptions
-, hlint, hpio, hspec, http-client, http-client-tls, http-types
-, lens, lucid, mtl, network, optparse-applicative, optparse-text
-, protolude, QuickCheck, quickcheck-instances, resourcet, servant
-, servant-client, servant-client-core, servant-docs, servant-lucid
-, servant-server, servant-swagger, servant-swagger-ui, stdenv
-, swagger2, text, time, transformers, transformers-base, wai, warp
+, hlint, hpack, hpio, hspec, http-client, http-client-tls
+, http-types, lens, lucid, mtl, network, optparse-applicative
+, optparse-text, protolude, QuickCheck, quickcheck-instances
+, resourcet, servant, servant-client, servant-client-core
+, servant-docs, servant-lucid, servant-server, servant-swagger
+, servant-swagger-ui, stdenv, swagger2, text, time, transformers
+, transformers-base, wai, warp
 }:
 mkDerivation {
   pname = "pinpon";
@@ -23,6 +24,7 @@ mkDerivation {
     servant-swagger-ui swagger2 text time transformers
     transformers-base wai warp
   ];
+  libraryToolDepends = [ hpack ];
   executableHaskellDepends = [
     amazonka amazonka-sns base bytestring containers exceptions hpio
     http-client http-client-tls http-types lens mtl network
@@ -33,6 +35,7 @@ mkDerivation {
     aeson base bytestring doctest exceptions hlint hspec protolude
     QuickCheck quickcheck-instances servant-swagger
   ];
+  preConfigure = "hpack";
   homepage = "https://github.com/quixoftic/pinpon#readme";
   description = "A gateway for various cloud notification services";
   license = stdenv.lib.licenses.bsd3;
