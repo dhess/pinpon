@@ -2,7 +2,7 @@ self: super:
 
 let
 
-  inherit (self) lib;
+  inherit (self) haskell lib;
 
 
   ## Ignore local files that shouldn't contribute to the Nix hash.
@@ -22,9 +22,15 @@ let
 
   ## Haskell package combinators.
 
-  withLocalPinPon = localPinPonPath: hp: (hp.extend (self: super: (
+  withLocalPinPon = hp: (hp.extend (self: super: (
     {
-      pinpon = myCleanPackage (super.callPackage localPinPonPath {});
+      pinpon = myCleanPackage (super.callCabal2nix "pinpon" ../../. {});
+    }
+  )));
+
+  withLocalPinPonHlint = hp: (hp.extend (self: super: (
+    {
+      pinpon = myCleanPackage (super.callCabal2nixWithOptions "pinpon" ../../. "--flag test-hlint" {});
     }
   )));
 
@@ -32,7 +38,7 @@ in
 {
   lib = (super.lib or {}) // {
 
-    inherit withLocalPinPon;
+    inherit withLocalPinPon withLocalPinPonHlint;
 
     maintainers = super.lib.maintainers // {
       dhess-qx = "Drew Hess <dhess-src@quixoftic.com>";

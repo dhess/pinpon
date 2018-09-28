@@ -3,10 +3,8 @@ self: super:
 let
 
   inherit (self) haskell;
-  inherit (self.lib) withLocalPinPon;
+  inherit (self.lib) withLocalPinPonHlint;
   inherit (haskell.lib) dontCheck doJailbreak noHaddocks;
-
-  pinPonHlintPath = ../pkgs/pinpon-hlint.nix;
 
 in
 {
@@ -14,7 +12,7 @@ in
   ## Testing with upcoming GHC releases.
 
   haskellPackages861 =
-    (withLocalPinPon pinPonHlintPath (self.haskell.packages.ghc861.extend (self: super:
+    (withLocalPinPonHlint (self.haskell.packages.ghc861.extend (self: super:
       rec {
       }
   )));
