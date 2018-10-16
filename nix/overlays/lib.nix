@@ -22,15 +22,20 @@ let
 
   ## Haskell package combinators.
 
+  # On aarch64, pinpon tests trigger
+  # https://ghc.haskell.org/trac/ghc/ticket/15275
+
+  dontCheckAarch64 = pkg: if super.stdenv.hostPlatform.isAarch64 then (haskell.lib.dontCheck pkg) else pkg;
+
   withLocalPinPon = hp: (hp.extend (self: super: (
     {
-      pinpon = myCleanPackage (super.callCabal2nix "pinpon" ../../. {});
+      pinpon = myCleanPackage (dontCheckAarch64 (super.callCabal2nix "pinpon" ../../. {}));
     }
   )));
 
   withLocalPinPonHlint = hp: (hp.extend (self: super: (
     {
-      pinpon = myCleanPackage (super.callCabal2nixWithOptions "pinpon" ../../. "--flag test-hlint" {});
+    pinpon = myCleanPackage (dontCheckAarch64 (super.callCabal2nixWithOptions "pinpon" ../../. "--flag test-hlint" {}));
     }
   )));
 
