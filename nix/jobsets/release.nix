@@ -4,7 +4,7 @@ let
 
 in
 
-{ supportedSystems ? [ "x86_64-darwin" "x86_64-linux" ]
+{ supportedSystems ? [ "x86_64-darwin" "x86_64-linux" "aarch64-linux" ]
 , scrubJobs ? true
 , nixpkgsArgs ? {
     config = { allowUnfree = true; allowBroken = true; inHydra = true; };
@@ -27,6 +27,7 @@ let
       constituents = with jobs; [
         haskellPackages.pinpon.x86_64-darwin
         haskellPackages.pinpon.x86_64-linux
+        haskellPackages.pinpon.aarch64-linux
       ];
     };
 
