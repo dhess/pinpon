@@ -7,7 +7,7 @@
 
 let
 
-  pinponUri = "https://github.com/quixoftic/pinpon.git";
+  pinponUri = "https://github.com/dhess/pinpon.git";
 
   mkFetchGithub = value: {
     inherit value;

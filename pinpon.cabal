@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3b99207b140749abc9b67832487436e78cc98aeaff713ed49e20ce78d4b7d73d
+-- hash: b35d2befe6875777c6cb3c3019cb5aa5948b86e66e85bd1d929284ddba329937
 
 name:                   pinpon
 version:                0.2.0.2
@@ -35,8 +35,8 @@ description:            @pinpon@ is a gateway for various cloud notification ser
                         * Amazon AWS SNS
 category:               Network
 stability:              experimental
-homepage:               https://github.com/quixoftic/pinpon#readme
-bug-reports:            https://github.com/quixoftic/pinpon/issues
+homepage:               https://github.com/dhess/pinpon#readme
+bug-reports:            https://github.com/dhess/pinpon/issues
 author:                 Drew Hess <src@drewhess.com>
 maintainer:             Drew Hess <src@drewhess.com>
 copyright:              Copyright (c) 2018, Drew Hess
@@ -56,7 +56,7 @@ data-files:
 
 source-repository head
   type: git
-  location: https://github.com/quixoftic/pinpon
+  location: https://github.com/dhess/pinpon
 
 flag pinpon-executable
   description: Build pinpon program
