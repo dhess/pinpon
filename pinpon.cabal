@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 93ba293dde0bea63df8cc9de6b48502322ca27aec86f93249f48f8cf54690dee
+-- hash: 3b99207b140749abc9b67832487436e78cc98aeaff713ed49e20ce78d4b7d73d
 
 name:                   pinpon
 version:                0.2.0.2
@@ -37,9 +37,9 @@ category:               Network
 stability:              experimental
 homepage:               https://github.com/quixoftic/pinpon#readme
 bug-reports:            https://github.com/quixoftic/pinpon/issues
-author:                 Drew Hess <dhess-src@quixoftic.com>
-maintainer:             Drew Hess <dhess-src@quixoftic.com>
-copyright:              Copyright (c) 2018, Quixoftic, LLC
+author:                 Drew Hess <src@drewhess.com>
+maintainer:             Drew Hess <src@drewhess.com>
+copyright:              Copyright (c) 2018, Drew Hess
 license:                BSD3
 license-file:           LICENSE
 tested-with:            GHC==8.2.2 GHC==8.4.3

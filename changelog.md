@@ -10,6 +10,8 @@ Fixes:
   
 Changes:
 
+  - The copyright for this project has been assigned to Drew Hess.
+
   - Now requires `servant` >= 0.13 and `resourcet` 1.2.
   
   - Re-add support for Stack (Stackage LTS 12).
