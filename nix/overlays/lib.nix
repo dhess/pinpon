@@ -2,7 +2,7 @@ self: super:
 
 let
 
-  inherit (self) haskell lib;
+  inherit (self) lib;
 
 
   ## Ignore local files that shouldn't contribute to the Nix hash.
@@ -22,20 +22,9 @@ let
 
   ## Haskell package combinators.
 
-  # On aarch64, pinpon tests trigger
-  # https://ghc.haskell.org/trac/ghc/ticket/15275
-
-  dontCheckAarch64 = pkg: if super.stdenv.hostPlatform.isAarch64 then (haskell.lib.dontCheck pkg) else pkg;
-
-  withLocalPinPon = hp: (hp.extend (self: super: (
+  withLocalPinPon = localPinPonPath: hp: (hp.extend (self: super: (
     {
-      pinpon = myCleanPackage (dontCheckAarch64 (super.callCabal2nix "pinpon" ../../. {}));
-    }
-  )));
-
-  withLocalPinPonHlint = hp: (hp.extend (self: super: (
-    {
-    pinpon = myCleanPackage (dontCheckAarch64 (super.callCabal2nixWithOptions "pinpon" ../../. "--flag test-hlint" {}));
+      pinpon = myCleanPackage (super.callPackage localPinPonPath {});
     }
   )));
 
@@ -43,7 +32,7 @@ in
 {
   lib = (super.lib or {}) // {
 
-    inherit withLocalPinPon withLocalPinPonHlint;
+    inherit withLocalPinPon;
 
     maintainers = super.lib.maintainers // {
       dhess-qx = "Drew Hess <src@drewhess.com>";

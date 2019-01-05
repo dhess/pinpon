@@ -10,20 +10,20 @@ nix-build-attr = nix-build --no-out-link nix/jobsets/release.nix -I nixpkgs=$(NI
 
 nix-build = nix-build --no-out-link nix/jobsets/release.nix -I nixpkgs=$(NIXPKGS)
 
-pinpon:	cabal
+pinpon:	nix
 	nix-build --no-out-link nix/jobsets/testing.nix -I nixpkgs=$(NIXPKGS) -A pinpon
 
 nixpkgs:	nix
 		$(call nix-build-attr,nixpkgs)
 
-lts-%:	cabal
+lts-%:	nix
 	$(call nix-build-attr,lts-$*)
 
-release: cabal
+release: nix
 	 $(call nix-build)
 
 # Note: does not depend on nixpkgs.
-next:	cabal
+next:	nix
 	nix-build --no-out-link nix/jobsets/next.nix
 
 doc:	test
@@ -75,7 +75,7 @@ nix-stack = nix-shell -p stack-env zlib libiconv ncurses --run 'stack test --sta
 
 stack-lts:	stack-lts-12
 
-stack-lts-%:	cabal
+stack-lts-%:	nix
 		$(call nix-stack, stack-lts-$*.yaml)
 
 sdist:	check doc
@@ -86,15 +86,16 @@ check:
 	@echo "*** Checking the package for errors"
 	cabal check
 
-configure: cabal
+configure: nix pinpon.cabal
 	@echo "*** Configuring the package"
 	cabal configure -f test-hlint
 
-cabal: 	pinpon.cabal
-	@echo "*** Running hpack"
-	hpack
+nix: 	pinpon.cabal
+	@echo "*** Generating pkgs/pinpon.nix"
+	cd nix/pkgs && cabal2nix ../../. > pinpon.nix
+	cd nix/pkgs && cabal2nix --flag test-hlint ../../. > pinpon-hlint.nix
 
 clean:
 	cabal clean
 
-.PHONY: clean cabal
+.PHONY: clean nix
