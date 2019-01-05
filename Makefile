@@ -16,9 +16,6 @@ pinpon:	nix
 nixpkgs:	nix
 		$(call nix-build-attr,nixpkgs)
 
-lts-%:	nix
-	$(call nix-build-attr,lts-$*)
-
 release: nix
 	 $(call nix-build)
 
@@ -46,7 +43,6 @@ help:
 	@echo
 	@echo "    pinpon    - build pinpon against nixpkgs using nix-build (quick)"
 	@echo "    nixpkgs   - build pinpon against nixpkgs using nix-build"
-	@echo "    lts-12    - build pinpon against LTS 12 package set using nix-build"
 	@echo "    release   - Run nix-build on all release.nix targets"
 	@echo "    next      - Run nix-build on all next.nix targets"
 	@echo
