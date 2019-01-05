@@ -1,5 +1,7 @@
 require-stack-version: ">= 1.1.0"
 pvp-bounds: both
-resolver: lts-12.4
+resolver: lts-13.1
+extra-deps:
+  - hpio-0.9.0.7
 packages:
 - .

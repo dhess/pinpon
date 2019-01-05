@@ -287,5 +287,5 @@ extra-source-files:
 - README.md
 - changelog.md
 - package.yaml
-- stack-lts-12.yaml
+- stack-lts-13.yaml
 - stack.yaml

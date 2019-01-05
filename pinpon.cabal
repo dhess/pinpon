@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b35d2befe6875777c6cb3c3019cb5aa5948b86e66e85bd1d929284ddba329937
+-- hash: 56ca58705b3a41a402f591b5638df269eb1ce58bf2758f5b1853e6690d9173aa
 
 name:                   pinpon
 version:                0.2.0.2
@@ -49,7 +49,7 @@ extra-source-files:
     changelog.md
     package.yaml
     README.md
-    stack-lts-12.yaml
+    stack-lts-13.yaml
     stack.yaml
 data-files:
     swagger.json
@@ -104,14 +104,14 @@ library
   other-extensions: ConstraintKinds DataKinds DeriveGeneric DuplicateRecordFields MultiParamTypeClasses OverloadedStrings Safe TemplateHaskell Trustworthy TypeOperators
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -Wcompat -Wnoncanonical-monad-instances -Wnoncanonical-monadfail-instances
   build-depends:
-      aeson >=1.1 && <1.4
+      aeson >=1.1 && <1.5
     , aeson-pretty ==0.8.*
     , amazonka ==1.6.*
     , amazonka-core ==1.6.*
     , amazonka-sns ==1.6.*
     , base >=4 && <5
     , bytestring >=0.10.8 && <0.11
-    , containers >=0.5.7 && <0.6
+    , containers >=0.5.7 && <0.7
     , exceptions >=0.8.3 && <1
     , http-client >=0.5.7 && <0.6
     , http-types >=0.9.1 && <0.13
@@ -120,15 +120,15 @@ library
     , mtl >=2.2.1 && <2.3
     , protolude ==0.2.*
     , resourcet ==1.2.*
-    , servant >=0.13 && <0.15
-    , servant-client >=0.13 && <0.15
-    , servant-client-core >=0.13 && <0.15
+    , servant >=0.13 && <0.16
+    , servant-client >=0.13 && <0.16
+    , servant-client-core >=0.13 && <0.16
     , servant-docs >=0.10 && <0.12
     , servant-lucid >=0.7.1 && <0.9
-    , servant-server >=0.13 && <0.15
+    , servant-server >=0.13 && <0.16
     , servant-swagger >=1.1.4 && <1.2
     , servant-swagger-ui >=0.2.4 && <0.4
-    , swagger2 >=2.1.6 && <2.3
+    , swagger2 >=2.1.6 && <2.4
     , text >=1.2.2 && <1.3
     , time >=1.6 && <1.9
     , transformers >=0.5.2 && <0.6
@@ -157,7 +157,7 @@ executable pinpon
       , exceptions
       , lens
       , mtl
-      , network >=2.6.3 && <2.7
+      , network >=2.6.3 && <2.9
       , optparse-applicative >=0.13.2 && <0.15
       , optparse-text ==0.1.*
       , pinpon
@@ -274,12 +274,12 @@ test-suite spec
   default-extensions: NoImplicitPrelude
   ghc-options: -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -w -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      QuickCheck >=2.9 && <2.12
+      QuickCheck >=2.9 && <2.13
     , aeson
     , base
     , bytestring
     , exceptions
-    , hspec >=2.4 && <2.6
+    , hspec >=2.4 && <2.7
     , pinpon
     , protolude
     , quickcheck-instances ==0.3.*

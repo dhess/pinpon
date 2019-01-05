@@ -56,7 +56,7 @@ help:
 	@echo "given version of Stackage LTS as configured by the file stack-<target>.yaml."
 	@echo
 	@echo "    stack-lts    [build all supported LTS targets]"
-	@echo "    stack-lts-12"
+	@echo "    stack-lts-13"
 	@echo
 	@echo "General:"
 	@echo
@@ -69,7 +69,7 @@ build:	configure
 
 nix-stack = nix-shell -p stack-env zlib libiconv ncurses --run 'stack test --stack-yaml $(1)'
 
-stack-lts:	stack-lts-12
+stack-lts:	stack-lts-13
 
 stack-lts-%:	nix
 		$(call nix-stack, stack-lts-$*.yaml)
@@ -91,7 +91,11 @@ nix: 	pinpon.cabal
 	cd nix/pkgs && cabal2nix ../../. > pinpon.nix
 	cd nix/pkgs && cabal2nix --flag test-hlint ../../. > pinpon-hlint.nix
 
+pinpon.cabal: package.yaml
+	@echo "*** Running hpack"
+	hpack
+
 clean:
 	cabal clean
 
-.PHONY: clean nix
+.PHONY: clean nix pinpon.cabal
