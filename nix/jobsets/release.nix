@@ -24,9 +24,9 @@ let
       meta.description = "pinpon built against nixpkgs haskellPackages";
       meta.maintainer = lib.maintainers.dhess-qx;
       constituents = with jobs; [
-        haskellPackages.pinpon.x86_64-darwin
-        haskellPackages.pinpon.x86_64-linux
-        haskellPackages.pinpon.aarch64-linux
+        haskellPackages.pinponHlint.x86_64-darwin
+        haskellPackages.pinponHlint.x86_64-linux
+        haskellPackages.pinponHlint.aarch64-linux
       ];
     };
   } // (mapTestOn ({

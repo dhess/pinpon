@@ -23,9 +23,10 @@ let
 
   ## Haskell package combinators.
 
-  withLocalPinPon = localPinPonPath: hp: (properExtend hp (self: super: (
+  withLocalPinPon = hp: (properExtend hp (self: super: (
     {
-      pinpon = myCleanPackage (super.callPackage localPinPonPath {});
+      pinpon = myCleanPackage (super.callPackage ../pkgs/pinpon.nix {});
+      pinponHlint = myCleanPackage (super.callPackage ../pkgs/pinpon-hlint.nix {});
     }
   )));
 

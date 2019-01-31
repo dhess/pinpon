@@ -27,5 +27,5 @@ let
 
 in
 {
-  pinpon = jobs.haskellPackages.pinpon.${builtins.currentSystem};
+  pinpon = jobs.haskellPackages.pinponHlint.${builtins.currentSystem};
 }

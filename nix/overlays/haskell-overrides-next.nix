@@ -6,8 +6,6 @@ let
   inherit (self.lib) withLocalPinPon;
   inherit (haskell.lib) dontCheck doJailbreak noHaddocks;
 
-  pinPonHlintPath = ../pkgs/pinpon-hlint.nix;
-
 in
 {
   ## Testing with upcoming GHC releases.
