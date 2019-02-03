@@ -10,6 +10,8 @@ Fixes:
   
 Changes:
 
+  - Bump copyright date.
+
   - The copyright for this project has been assigned to Drew Hess.
 
   - Now requires `servant` >= 0.13 and `resourcet` 1.2.
