@@ -22,7 +22,7 @@ let
     nixpkgs = pkgs.releaseTools.aggregate {
       name = "nixpkgs";
       meta.description = "pinpon built against nixpkgs haskellPackages";
-      meta.maintainer = lib.maintainers.dhess-qx;
+      meta.maintainer = pkgs.lib.maintainers.dhess-pers;
       constituents = with jobs; [
         haskellPackages.pinponHlint.x86_64-darwin
         haskellPackages.pinponHlint.x86_64-linux

@@ -33,12 +33,6 @@ let
 in
 {
   lib = (super.lib or {}) // {
-
     inherit withLocalPinPon;
-
-    maintainers = super.lib.maintainers // {
-      dhess-qx = "Drew Hess <src@drewhess.com>";
-    };
-
   };
 }
