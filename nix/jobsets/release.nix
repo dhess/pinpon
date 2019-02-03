@@ -18,15 +18,15 @@ with import (fixedNixPkgs + "/pkgs/top-level/release-lib.nix") {
 
 let
 
+  all = pkg: pkgs.lib.testing.enumerateSystems pkg supportedSystems;
+
   jobs = {
     nixpkgs = pkgs.releaseTools.aggregate {
       name = "nixpkgs";
       meta.description = "pinpon built against nixpkgs haskellPackages";
       meta.maintainer = pkgs.lib.maintainers.dhess-pers;
       constituents = with jobs; [
-        haskellPackages.pinponHlint.x86_64-darwin
-        haskellPackages.pinponHlint.x86_64-linux
-        haskellPackages.pinponHlint.aarch64-linux
+        (all haskellPackages.pinponHlint)
       ];
     };
   } // (mapTestOn ({
@@ -36,4 +36,5 @@ let
 in
 {
   inherit (jobs) nixpkgs;
+  inherit (jobs.haskellPackages) pinponHlint;
 }
