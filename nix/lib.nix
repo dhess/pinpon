@@ -27,14 +27,14 @@ let
       then builtins.trace "Using <hpio_override>" try.value
       else (import ./fetch-github.nix) { jsonSpec = builtins.readFile ./hpio-src.json; };
 
+  nixpkgs-lib-quixoftic = import fetchNixPkgsLibQuixoftic;
+  hpio-pkgs = import fetchHpio;
   nixpkgs = import fetchNixPkgs;
   pkgs = nixpkgs {};
   lib = pkgs.lib;
 
 in lib // (rec {
-
-  inherit fetchNixPkgs;
-  inherit fetchNixPkgsLibQuixoftic;
-  inherit fetchHpio;
-
+  inherit fetchNixPkgs nixpkgs;
+  inherit fetchNixPkgsLibQuixoftic nixpkgs-lib-quixoftic;
+  inherit fetchHpio hpio-pkgs;
 })
