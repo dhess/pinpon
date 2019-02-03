@@ -1,8 +1,10 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 56ca58705b3a41a402f591b5638df269eb1ce58bf2758f5b1853e6690d9173aa
+-- hash: bc84f02fc1568ca8ae52d9b1484cb61d7bee0dfd98911d9d67a231a73baf89d2
 
 name:                   pinpon
 version:                0.2.0.2
@@ -39,16 +41,15 @@ homepage:               https://github.com/dhess/pinpon#readme
 bug-reports:            https://github.com/dhess/pinpon/issues
 author:                 Drew Hess <src@drewhess.com>
 maintainer:             Drew Hess <src@drewhess.com>
-copyright:              Copyright (c) 2018, Drew Hess
+copyright:              Copyright (c) 2019, Drew Hess
 license:                BSD3
 license-file:           LICENSE
 tested-with:            GHC==8.2.2 GHC==8.4.3
 build-type:             Simple
-cabal-version:          >= 1.10
 extra-source-files:
+    README.md
     changelog.md
     package.yaml
-    README.md
     stack-lts-13.yaml
     stack.yaml
 data-files:
