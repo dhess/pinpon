@@ -1,1 +1,1 @@
-(import ./default.nix {}).haskellPackagesMaintainer.pinpon.env
+(import ./default.nix {}).maintainer.haskellPackages.pinpon.env

@@ -17,6 +17,7 @@ let
   pinponNixMaintainer = nix/pkgs/pinpon-maintainer.nix;
 
   pinponPkgs = lib.customisation.composeOverlays (lib.singleton pinponOverlays) pkgs;
+  pinponPkgsMaintainer = lib.customisation.composeOverlays (lib.singleton pinponOverlaysMaintainer) pkgs;
 
 in
 {
@@ -24,9 +25,16 @@ in
   # package set builds pinpon *without* maintainer tests.
   inherit (pinponPkgs) haskellPackages;
 
-  # The path to the local pinpon.nix (and pinpon-maintainer.nix, with
-  # maintainer tests enabled), in case you want to make your own.
-  inherit pinponNix pinponNixMaintainer;
+  # The path to the local pinpon.nix, in case you want to make your
+  # own.
+  inherit pinponNix;
+
+  # Same as the above, except with the pinpon package in maintainer
+  # mode.
+  maintainer = {
+    inherit (pinponPkgsMaintainer) haskellPackages;
+    pinponNix = pinponNixMaintainer;
+  };
 
   overlays.pinpon = pinponOverlays;
   overlays.pinponMaintainer = pinponOverlaysMaintainer;
