@@ -1,6 +1,13 @@
+## The full set of packages we build/test, both on Hydra and for more
+## extensive interactive development and testing. This file will
+## create Hydra-style jobs for pinpon built against a fixed Nixpkgs
+## Haskell package set.
+
 let
 
-  fixedNixPkgs = (import ../lib.nix).fetchNixPkgs;
+  lib = import ../lib;
+  fixedNixpkgs = lib.fixedNixpkgs;
+  localPkgs = (import ../..) {};
 
 in
 
@@ -8,25 +15,25 @@ in
 , scrubJobs ? true
 , nixpkgsArgs ? {
     config = { allowUnfree = true; allowBroken = true; inHydra = true; };
-    overlays = [ (import ../../.) ];
+    overlays = [ localPkgs.overlays.pinponMaintainer ];
   }
 }:
 
-with import (fixedNixPkgs + "/pkgs/top-level/release-lib.nix") {
+with import (fixedNixpkgs + "/pkgs/top-level/release-lib.nix") {
   inherit supportedSystems scrubJobs nixpkgsArgs;
 };
 
 let
 
-  all = pkg: pkgs.lib.testing.enumerateSystems pkg supportedSystems;
+  all = pkg: lib.testing.enumerateSystems pkg supportedSystems;
 
   jobs = {
     nixpkgs = pkgs.releaseTools.aggregate {
       name = "nixpkgs";
       meta.description = "pinpon built against nixpkgs haskellPackages";
-      meta.maintainer = pkgs.lib.maintainers.dhess-pers;
+      meta.maintainer = lib.maintainers.dhess-pers;
       constituents = with jobs; [
-        (all haskellPackages.pinponHlint)
+        (all haskellPackages.pinpon)
       ];
     };
   } // (mapTestOn ({
@@ -36,5 +43,5 @@ let
 in
 {
   inherit (jobs) nixpkgs;
-  inherit (jobs.haskellPackages) pinponHlint;
+  inherit (jobs.haskellPackages) pinpon;
 }

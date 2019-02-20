@@ -1,9 +1,10 @@
-## This builds just pinpon (plus hlint tests) for the current system.
+## This builds just pinpon (in maintainer mode) for the current system.
 ## It's useful for development and interactive testing.
 
 let
 
-  fixedNixPkgs = (import ../lib.nix).fetchNixPkgs;
+  fixedNixpkgs = (import ../lib).fixedNixpkgs;
+  localPkgs = (import ../..) {};
 
 in
 
@@ -11,11 +12,11 @@ in
 , scrubJobs ? true
 , nixpkgsArgs ? {
     config = { allowUnfree = true; allowBroken = true; inHydra = true; };
-    overlays = [ (import ../../.) ];
+    overlays = [ localPkgs.overlays.pinponMaintainer ];
   }
 }:
 
-with import (fixedNixPkgs + "/pkgs/top-level/release-lib.nix") {
+with import (fixedNixpkgs + "/pkgs/top-level/release-lib.nix") {
   inherit supportedSystems scrubJobs nixpkgsArgs;
 };
 
@@ -27,5 +28,5 @@ let
 
 in
 {
-  pinpon = jobs.haskellPackages.pinponHlint.${builtins.currentSystem};
+  pinpon = jobs.haskellPackages.pinpon.${builtins.currentSystem};
 }

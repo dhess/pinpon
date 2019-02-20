@@ -19,10 +19,6 @@ nixpkgs:	nix
 release: nix
 	 $(call nix-build)
 
-# Note: does not depend on nixpkgs.
-next:	nix
-	nix-build --no-out-link nix/jobsets/next.nix
-
 doc:	test
 	@echo "*** Generating docs"
 	cabal haddock --hyperlink-source
@@ -44,7 +40,6 @@ help:
 	@echo "    pinpon    - build pinpon against nixpkgs using nix-build (quick)"
 	@echo "    nixpkgs   - build pinpon against nixpkgs using nix-build"
 	@echo "    release   - Run nix-build on all release.nix targets"
-	@echo "    next      - Run nix-build on all next.nix targets"
 	@echo
 	@echo "    test      - configure and build the package, then run the tests"
 	@echo "    build     - configure and build the package"
@@ -89,7 +84,7 @@ configure: nix pinpon.cabal
 nix: 	pinpon.cabal
 	@echo "*** Generating pkgs/pinpon.nix"
 	cd nix/pkgs && cabal2nix ../../. > pinpon.nix
-	cd nix/pkgs && cabal2nix --flag test-hlint ../../. > pinpon-hlint.nix
+	cd nix/pkgs && cabal2nix --flag test-hlint ../../. > pinpon-maintainer.nix
 
 pinpon.cabal: package.yaml
 	@echo "*** Running hpack"

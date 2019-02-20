@@ -1,20 +1,18 @@
-## Build pinpon in non-maintainer mode. This will skip tests that are
-## more picky, are not related to functionality, and should not
-## interfere with continuous integration builds.
+## Build pinpon in maintainer mode.
 
 self: super:
 
 let
 
   lib = (import ../lib);
-  inherit (lib) haskell withLocalPinPon;
+  inherit (lib) haskell withLocalPinPonMaintainer;
   inherit (haskell.lib) doJailbreak properExtend;
 
 in
 {
   ## The default Nixpkgs package set.
   haskellPackages =
-    (withLocalPinPon (properExtend super.haskellPackages (self: super:
+    (withLocalPinPonMaintainer (properExtend super.haskellPackages (self: super:
       {
         servant-docs = doJailbreak super.servant-docs;
         insert-ordered-containers = doJailbreak super.insert-ordered-containers;
