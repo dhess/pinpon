@@ -30,7 +30,7 @@ mkDerivation {
     servant-client-core text time transformers warp
   ];
   testHaskellDepends = [ base doctest protolude ];
-  preConfigure = "hpack";
+  prePatch = "hpack";
   homepage = "https://github.com/dhess/pinpon#readme";
   description = "A gateway for various cloud notification services";
   license = stdenv.lib.licenses.bsd3;

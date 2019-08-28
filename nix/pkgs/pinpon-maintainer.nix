@@ -35,7 +35,7 @@ mkDerivation {
     aeson base bytestring doctest exceptions hlint hspec protolude
     QuickCheck quickcheck-instances servant-swagger
   ];
-  preConfigure = "hpack";
+  prePatch = "hpack";
   homepage = "https://github.com/dhess/pinpon#readme";
   description = "A gateway for various cloud notification services";
   license = stdenv.lib.licenses.bsd3;
