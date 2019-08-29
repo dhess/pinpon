@@ -27,7 +27,7 @@ in
 
   # The path to the local pinpon.nix, in case you want to make your
   # own.
-  inherit pinponNix;
+  inherit pinponNix pinponNixMaintainer;
 
   # Same as the above, except with the pinpon package in maintainer
   # mode.

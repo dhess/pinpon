@@ -21,7 +21,7 @@ import Network.AWS (HasEnv(..))
 import Network.AWS.Data.Text (ToText(..))
 import Network.AWS.Types (AWSRequest, Error(..), Rs, serializeMessage, serviceMessage)
 import Network.HTTP.Client (HttpException(..), HttpExceptionContent(..))
-import Servant (ServantErr(..), err502, err504)
+import Servant.Server (ServerError(..), err502, err504)
 
 type ServantSNSMonad m r a = (AWSRequest a, HasEnv r, MonadReader r m, MonadCatch m, MonadResource m)
 
@@ -30,10 +30,10 @@ runSNS req =
   do env <- ask
      catch (runAWST env $ send req) $ throwIO . snsErrToServant
 
-snsErrToServant :: Error -> ServantErr
+snsErrToServant :: Error -> ServerError
 snsErrToServant e = (errCode e) { errBody = mconcat ["Upstream AWS SNS error: ", errMsg e ] }
 
-errCode :: Error -> ServantErr
+errCode :: Error -> ServerError
 errCode (TransportError (HttpExceptionRequest _ ResponseTimeout)) = err504
 errCode (TransportError (HttpExceptionRequest _ ConnectionTimeout)) = err504
 errCode _ = err502

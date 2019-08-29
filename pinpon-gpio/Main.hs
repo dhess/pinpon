@@ -26,12 +26,12 @@ import Options.Applicative.Text (text)
 import Servant.Client
   ( BaseUrl
   , ClientEnv
-  , ServantError(..)
+  , ClientError(..)
   , mkClientEnv
   , parseBaseUrl
   , runClientM
   )
-import Servant.Client.Core (GenResponse(responseBody, responseStatusCode))
+import Servant.Client.Core (ResponseF(responseBody, responseStatusCode))
 import System.GPIO.Linux.Sysfs (SysfsGpioIO, runSysfsGpioIO)
 import System.GPIO.Monad
        (Pin(..), PinActiveLevel(..), PinInputMode(InputDefault),
@@ -128,8 +128,8 @@ debounce delay action =
     toUsec d = truncate $ d * 1000000
 
 -- Not really that pretty.
-prettyServantError :: ServantError -> Text
-prettyServantError (FailureResponse response) =
+prettyServantError :: ClientError -> Text
+prettyServantError (FailureResponse _ response) =
   T.unwords
     [pack (show $ responseStatusCode response), toS $ responseBody response]
 prettyServantError DecodeFailure{} =
@@ -156,7 +156,7 @@ run (Options quiet SysfsIO edge activeLevel debounceDelay hl msg s pin serviceUr
               Right _ -> output "Notification sent"
               Left e -> outputErr $ T.unwords ["PinPon service error:", prettyServantError e]
   where
-    sendNotification :: Notification -> ClientEnv -> SysfsGpioIO (Either ServantError Notification)
+    sendNotification :: Notification -> ClientEnv -> SysfsGpioIO (Either ClientError Notification)
     sendNotification n env = liftIO $ runClientM (notify n) env
 
     output :: Text -> SysfsGpioIO ()

@@ -16,6 +16,7 @@ in
   haskellPackages =
     (withLocalPinPon (properExtend super.haskellPackages (self: super:
       {
+        amazonka-core = doJailbreak super.amazonka-core;
         servant-docs = doJailbreak super.servant-docs;
         insert-ordered-containers = doJailbreak super.insert-ordered-containers;
         tdigest = doJailbreak super.tdigest;

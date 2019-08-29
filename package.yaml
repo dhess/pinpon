@@ -54,7 +54,7 @@ description: ! '@pinpon@ is a gateway for various cloud notification services, s
 
   * Amazon AWS SNS'
 
-tested-with: GHC==8.2.2 GHC==8.4.3
+tested-with: GHC==8.6.5
 
 flags:
   test-hlint:
@@ -113,22 +113,22 @@ library:
   - bytestring          >=0.10.8 && <0.11
   - containers          >=0.5.7  && <0.7
   - exceptions          >=0.8.3  && <1
-  - http-client         >=0.5.7  && <0.6
+  - http-client         >=0.5.7  && <0.7
   - http-types          >=0.9.1  && <0.13
   - lens                >=4      && <5
   - lucid               >=2.9.9  && <3
   - mtl                 >=2.2.1  && <2.3
   - protolude           ==0.2.*
   - resourcet           ==1.2.*
-  - servant             >=0.13   && <0.16
-  - servant-client      >=0.13   && <0.16
-  - servant-client-core >=0.13   && <0.16
+  - servant             >=0.16   && <0.17
+  - servant-client      >=0.16   && <0.17
+  - servant-client-core >=0.16   && <0.17
   - servant-docs        >=0.10   && <0.12
-  - servant-lucid       >=0.7.1  && <0.9
-  - servant-server      >=0.13   && <0.16
+  - servant-lucid       >=0.9    && <0.10
+  - servant-server      >=0.16   && <0.17
   - servant-swagger     >=1.1.4  && <1.2
   - servant-swagger-ui  >=0.2.4  && <0.4
-  - swagger2            >=2.1.6  && <2.4
+  - swagger2            >=2.4    && <2.5
   - text                >=1.2.2  && <1.3
   - time                >=1.6    && <1.9
   - transformers        >=0.5.2  && <0.6
@@ -244,7 +244,7 @@ tests:
       else:
         dependencies:
         - base
-        - hlint     >=2.0 && <2.2
+        - hlint     >=2.0 && <2.3
         - protolude
   doctest:
     <<: *test
@@ -273,10 +273,10 @@ tests:
     - aeson
     - bytestring
     - exceptions
-    - hspec                >=2.4   && <2.7
+    - hspec                >=2.4   && <2.8
     - pinpon
     - protolude
-    - QuickCheck           >=2.9   && <2.13
+    - QuickCheck           >=2.9   && <2.14
     - quickcheck-instances ==0.3.*
     - servant-swagger
 

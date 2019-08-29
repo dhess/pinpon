@@ -20,12 +20,12 @@ import Options.Applicative
 import Options.Applicative.Text (text)
 import Servant.Client
   ( BaseUrl
-  , ServantError(..)
+  , ClientError(..)
   , mkClientEnv
   , parseBaseUrl
   , runClientM
   )
-import Servant.Client.Core (GenResponse(responseBody, responseStatusCode))
+import Servant.Client.Core (ResponseF(responseBody, responseStatusCode))
 import System.Exit (ExitCode(..), exitSuccess, exitWith)
 
 data Options = Options
@@ -64,8 +64,8 @@ options =
             help "PinPon server base URL")
 
 -- Not really that pretty.
-prettyServantError :: ServantError -> Text
-prettyServantError (FailureResponse response) =
+prettyServantError :: ClientError -> Text
+prettyServantError (FailureResponse _ response) =
   T.unwords
     [pack (show $ responseStatusCode response), toS $ responseBody response]
 prettyServantError DecodeFailure{} =

@@ -32,15 +32,15 @@ let
   );
   cleanSourceLocal = src: lib.sources.cleanSourceWith { filter = filterSourceLocal; inherit src; };
   myCleanSource = src: cleanSourceLocal (lib.sources.cleanSourceAllExtraneous src);
-
+  myCleanPackage = pkg: lib.sources.cleanPackage myCleanSource pkg;
 
   ## Haskell package combinators.
 
   withLocalPinPon = hp: (haskell.lib.properExtend hp (self: super: ({
-    pinpon = lib.sources.cleanPackage myCleanSource (super.callPackage ../pkgs/pinpon.nix {});
+    pinpon = myCleanPackage (super.callPackage ../pkgs/pinpon.nix {});
   })));
   withLocalPinPonMaintainer = hp: (haskell.lib.properExtend hp (self: super: ({
-    pinpon = lib.sources.cleanPackage myCleanSource (super.callPackage ../pkgs/pinpon-maintainer.nix {});
+    pinpon = myCleanPackage (super.callPackage ../pkgs/pinpon-maintainer.nix {});
   })));
 
   overlays = [
